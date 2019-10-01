@@ -1,6 +1,5 @@
 PARSER_BEGIN(Parser)
 
-
 /** ID lister. */
 public class Parser {
 
@@ -73,11 +72,17 @@ ASTNode Exp() :
 }
 
 ASTNode Term() :
-{}
+{ Token op;
+  ASTNode t1, t2; }
 {
-     Fact() ( ( <TIMES> | <DIV> ) Term() )? // T -> F (*/div F)* 
+     t1=Fact() ( ( op=<TIMES> | op=<DIV> ) t2=Term()
+                 { if (op.kind == TIMES)
+                         t1 = new ASTMul(t1,t2);
+                   else  t1 = new ASTDiv(t1,t2);
+                 }
+               ) ?
+     { return t1; }
 }
-
 
 ASTNode Fact() :  { Token n; 
   ASTNode t;}
