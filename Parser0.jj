@@ -1,6 +1,9 @@
 PARSER_BEGIN(Parser)
 
 package parser;
+
+import ast.*;
+
 /** ID lister. */
 public class Parser {
 

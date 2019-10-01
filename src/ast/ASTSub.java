@@ -1,8 +1,9 @@
+package ast;
 public class ASTSub implements ASTNode {
     ASTNode lhs;
     ASTNode rhs;
 
-    ASTSub(ASTNode left, ASTNode right){
+    public ASTSub(ASTNode left, ASTNode right){
         this.lhs = left;
         this.rhs = right;
     }

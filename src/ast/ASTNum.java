@@ -1,8 +1,10 @@
+package ast;
+
 public class ASTNum implements ASTNode {
     int val;
 
-    ASTNum(int value){
-        this.val = value;
+    public ASTNum(int val){
+        this.val = val;
     }
 
     public int eval() {

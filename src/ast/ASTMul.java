@@ -1,8 +1,10 @@
+package ast;
+
 public class ASTMul implements ASTNode {
     ASTNode lhs;
     ASTNode rhs;
 
-    ASTMul(ASTNode left, ASTNode right){
+    public ASTMul(ASTNode left, ASTNode right){
         this.lhs = left;
         this.rhs = right;
     }

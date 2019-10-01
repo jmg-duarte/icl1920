@@ -1,8 +1,10 @@
+package ast;
+
 public class ASTPlus implements ASTNode {
     ASTNode lhs;
     ASTNode rhs;
 
-    ASTPlus(ASTNode left, ASTNode right){
+    public ASTPlus(ASTNode left, ASTNode right){
         this.lhs = left;
         this.rhs = right;
     }

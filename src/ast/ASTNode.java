@@ -1,3 +1,5 @@
-public interface ASTNode {
-    int eval ();
+package ast;
+public interface ASTNode{
+
+    int eval();
 }
