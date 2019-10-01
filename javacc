@@ -5,5 +5,5 @@ case "`uname`" in
      CYGWIN*) JAR="`cygpath --windows -- "$JAR"`" ;;
 esac
 
-java -classpath "$JAR" javacc "$@"
+java -classpath "$JAR" javacc -OUTPUT_DIRECTORY=src/parser "$@"
 
