@@ -1,8 +1,8 @@
 package ast;
 
 public class ASTMul implements ASTNode {
-    ASTNode lhs;
-    ASTNode rhs;
+    private ASTNode lhs;
+    private ASTNode rhs;
 
     public ASTMul(ASTNode left, ASTNode right){
         this.lhs = left;

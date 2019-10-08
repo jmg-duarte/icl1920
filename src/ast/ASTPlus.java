@@ -1,8 +1,8 @@
 package ast;
 
 public class ASTPlus implements ASTNode {
-    ASTNode lhs;
-    ASTNode rhs;
+    private ASTNode lhs;
+    private ASTNode rhs;
 
     public ASTPlus(ASTNode left, ASTNode right){
         this.lhs = left;

@@ -1,7 +1,7 @@
 package ast;
 
 public class ASTNum implements ASTNode {
-    int val;
+    private int val;
 
     public ASTNum(int val){
         this.val = val;

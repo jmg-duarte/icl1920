@@ -1,8 +1,8 @@
 package ast;
 
 public class ASTDiv implements ASTNode {
-    ASTNode lhs;
-    ASTNode rhs;
+    private ASTNode lhs;
+    private ASTNode rhs;
 
     public ASTDiv(ASTNode left, ASTNode right){
         this.lhs = left;
