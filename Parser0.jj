@@ -3,6 +3,7 @@ PARSER_BEGIN(Parser)
 package parser;
 
 import ast.*;
+import env.*;
 
 /** ID lister. */
 public class Parser {
@@ -11,15 +12,16 @@ public class Parser {
   public static void main(String args[]) {
     Parser parser = new Parser(System.in);
     ASTNode exp;
-
+    Environment globalScope = new Environment();
     while (true) {
-    try {
-    exp = parser.Start();
-    System.out.println( exp.eval() );
-    } catch (Exception e) {
-      System.out.println ("Syntax Error!");
-      parser.ReInit(System.in);
-    }
+        try {
+            exp = parser.Start();
+            System.out.println( exp.eval(globalScope) );
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println ("Syntax Error!");
+            parser.ReInit(System.in);
+        }
     }
   }
 
@@ -36,7 +38,9 @@ SKIP :
 
 TOKEN :
 {
-  < Id: ["a"-"z","A"-"Z"] ( ["a"-"z","A"-"Z","0"-"9"] )* >
+    < LET: "let" >
+  | < IN: "in" >
+  | < END: "end" >
   | < Num: (["0"-"9"]) + >
   | < PLUS : "+" >
   | < MINUS : "-">
@@ -45,6 +49,9 @@ TOKEN :
   | < LPAR : "(" >
   | < RPAR : ")" >
   | < EL: "\n" >
+  | < EQUALS: "=" >
+  | < Id: ["a"-"z","A"-"Z"] ( ["a"-"z","A"-"Z","0"-"9"] )* >
+
 }
 
 ASTNode Start(): { 
@@ -71,29 +78,51 @@ ASTNode Term() :
 { Token op;
   ASTNode t1, t2; }
 {
-     t1=Fact() ( ( op=<TIMES> | op=<DIV> ) t2=Term()
-                 { if (op.kind == TIMES)
-                         t1 = new ASTMul(t1,t2);
-                   else  t1 = new ASTDiv(t1,t2);
-                 }
-               ) ?
+     t1=UnaryExp() (
+     ( op=<TIMES> | op=<DIV> )
+       t2=UnaryExp()
+     { if (op.kind == TIMES)
+             t1 = new ASTMul(t1,t2);
+       else  t1 = new ASTDiv(t1,t2);
+     }) ?
      { return t1; }
 }
 
 ASTNode UnaryExp() :
-{ Token op;
-  ASTNode t1; }
+{  ASTNode t1; }
 {
-     ( op=<PLUS> | op=<MINUS> ) t1=Fact()
-                 { if (op.kind == PLUS)
-             t1 = new ASTUnaryPlus(t1);
-       else  t1 = new ASTUnaryMinus(t1);
-       return t1; }
+    ( <MINUS> t1 = UnaryExp() {t1 = new ASTUnaryMinus(t1);}
+    | <PLUS> t1 = UnaryExp() {t1 = new ASTUnaryPlus(t1);}
+    | t1 = Fact()
+    )
+    { return t1; }
 }
 
-ASTNode Fact() :  { Token n; 
-  ASTNode t;}
+ASTNode Fact() :  {
+    Token n;
+    ASTNode t;}
 {
-   (n=<Num> { t = new ASTNum(Integer.parseInt(n.image)); } | <LPAR> t=Exp() <RPAR>  |  t=UnaryExp() )
+   ( n=<Num> {t = new ASTNum(Integer.parseInt(n.image));}
+   | t = Id()
+   | t = Let()
+   | <LPAR> t=Exp() <RPAR>
+   )
    { return t; }
+}
+
+
+
+ASTNode Id() : {
+    Token id;
+} {
+    id = <Id> { return new ASTId(id.image); }
+}
+
+ASTNode Let() : {
+    Token id;
+    ASTNode expression;
+    ASTNode body;
+} {
+    <LET> id=<Id> <EQUALS> expression=Exp() <IN> body=Fact() <END>
+    { return new ASTLetIn(id.image, expression, body); }
 }

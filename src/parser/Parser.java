@@ -3,6 +3,7 @@
 package parser;
 
 import ast.*;
+import env.*;
 
 /** ID lister. */
 public class Parser implements ParserConstants {
@@ -11,15 +12,16 @@ public class Parser implements ParserConstants {
   public static void main(String args[]) {
     Parser parser = new Parser(System.in);
     ASTNode exp;
-
+    Environment globalScope = new Environment();
     while (true) {
-    try {
-    exp = parser.Start();
-    System.out.println( exp.eval() );
-    } catch (Exception e) {
-      System.out.println ("Syntax Error!");
-      parser.ReInit(System.in);
-    }
+        try {
+            exp = parser.Start();
+            System.out.println( exp.eval(globalScope) );
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println ("Syntax Error!");
+            parser.ReInit(System.in);
+        }
     }
   }
 
@@ -70,7 +72,7 @@ if (op.kind == PLUS)
 
   static final public ASTNode Term() throws ParseException {Token op;
   ASTNode t1, t2;
-    t1 = Fact();
+    t1 = UnaryExp();
     switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
     case TIMES:
     case DIV:{
@@ -88,10 +90,10 @@ if (op.kind == PLUS)
         jj_consume_token(-1);
         throw new ParseException();
       }
-      t2 = Term();
+      t2 = UnaryExp();
 if (op.kind == TIMES)
-                         t1 = new ASTMul(t1,t2);
-                   else  t1 = new ASTDiv(t1,t2);
+             t1 = new ASTMul(t1,t2);
+       else  t1 = new ASTDiv(t1,t2);
       break;
       }
     default:
@@ -102,15 +104,25 @@ if (op.kind == TIMES)
     throw new Error("Missing return statement in function");
   }
 
-  static final public ASTNode UnaryExp() throws ParseException {Token op;
-  ASTNode t1;
+  static final public ASTNode UnaryExp() throws ParseException {ASTNode t1;
     switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
-    case PLUS:{
-      op = jj_consume_token(PLUS);
+    case MINUS:{
+      jj_consume_token(MINUS);
+      t1 = UnaryExp();
+t1 = new ASTUnaryMinus(t1);
       break;
       }
-    case MINUS:{
-      op = jj_consume_token(MINUS);
+    case PLUS:{
+      jj_consume_token(PLUS);
+      t1 = UnaryExp();
+t1 = new ASTUnaryPlus(t1);
+      break;
+      }
+    case LET:
+    case Num:
+    case LPAR:
+    case Id:{
+      t1 = Fact();
       break;
       }
     default:
@@ -118,20 +130,24 @@ if (op.kind == TIMES)
       jj_consume_token(-1);
       throw new ParseException();
     }
-    t1 = Fact();
-if (op.kind == PLUS)
-             t1 = new ASTUnaryPlus(t1);
-       else  t1 = new ASTUnaryMinus(t1);
-       {if ("" != null) return t1;}
+{if ("" != null) return t1;}
     throw new Error("Missing return statement in function");
   }
 
   static final public ASTNode Fact() throws ParseException {Token n;
-  ASTNode t;
+    ASTNode t;
     switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
     case Num:{
       n = jj_consume_token(Num);
 t = new ASTNum(Integer.parseInt(n.image));
+      break;
+      }
+    case Id:{
+      t = Id();
+      break;
+      }
+    case LET:{
+      t = Let();
       break;
       }
     case LPAR:{
@@ -140,17 +156,32 @@ t = new ASTNum(Integer.parseInt(n.image));
       jj_consume_token(RPAR);
       break;
       }
-    case PLUS:
-    case MINUS:{
-      t = UnaryExp();
-      break;
-      }
     default:
       jj_la1[5] = jj_gen;
       jj_consume_token(-1);
       throw new ParseException();
     }
 {if ("" != null) return t;}
+    throw new Error("Missing return statement in function");
+  }
+
+  static final public ASTNode Id() throws ParseException {Token id;
+    id = jj_consume_token(Id);
+{if ("" != null) return new ASTId(id.image);}
+    throw new Error("Missing return statement in function");
+  }
+
+  static final public ASTNode Let() throws ParseException {Token id;
+    ASTNode expression;
+    ASTNode body;
+    jj_consume_token(LET);
+    id = jj_consume_token(Id);
+    jj_consume_token(EQUALS);
+    expression = Exp();
+    jj_consume_token(IN);
+    body = Fact();
+    jj_consume_token(END);
+{if ("" != null) return new ASTLetIn(id.image, expression, body);}
     throw new Error("Missing return statement in function");
   }
 
@@ -170,7 +201,7 @@ t = new ASTNum(Integer.parseInt(n.image));
       jj_la1_init_0();
    }
    private static void jj_la1_init_0() {
-      jj_la1_0 = new int[] {0xc0,0xc0,0x300,0x300,0xc0,0x4e0,};
+      jj_la1_0 = new int[] {0x300,0x300,0xc00,0xc00,0x11390,0x11090,};
    }
 
   /** Constructor with InputStream. */
@@ -308,7 +339,7 @@ t = new ASTNum(Integer.parseInt(n.image));
   /** Generate ParseException. */
   static public ParseException generateParseException() {
     jj_expentries.clear();
-    boolean[] la1tokens = new boolean[13];
+    boolean[] la1tokens = new boolean[17];
     if (jj_kind >= 0) {
       la1tokens[jj_kind] = true;
       jj_kind = -1;
@@ -322,7 +353,7 @@ t = new ASTNum(Integer.parseInt(n.image));
         }
       }
     }
-    for (int i = 0; i < 13; i++) {
+    for (int i = 0; i < 17; i++) {
       if (la1tokens[i]) {
         jj_expentry = new int[1];
         jj_expentry[0] = i;

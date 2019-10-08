@@ -1,5 +1,7 @@
 package ast;
 
+import env.Environment;
+
 public class ASTNum implements ASTNode {
     private int val;
 
@@ -7,7 +9,7 @@ public class ASTNum implements ASTNode {
         this.val = val;
     }
 
-    public int eval() {
+    public int eval(Environment env) {
         return val;
     }
 }

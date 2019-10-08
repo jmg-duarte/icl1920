@@ -1,5 +1,7 @@
 package ast;
 
+import env.Environment;
+
 public class ASTUnaryMinus implements ASTNode{
 
     private ASTNode expr;
@@ -10,7 +12,7 @@ public class ASTUnaryMinus implements ASTNode{
 
 
     @Override
-    public int eval() {
-        return - this.expr.eval();
+    public int eval(Environment env) {
+        return - this.expr.eval(env);
     }
 }

@@ -1,5 +1,7 @@
 package ast;
 
+import env.Environment;
+
 public class ASTPlus implements ASTNode {
     private ASTNode lhs;
     private ASTNode rhs;
@@ -9,9 +11,9 @@ public class ASTPlus implements ASTNode {
         this.rhs = right;
     }
 
-    public int eval(){
-        int o1 = lhs.eval();
-        int o2 = rhs.eval();
+    public int eval(Environment env){
+        int o1 = lhs.eval(env);
+        int o2 = rhs.eval(env);
         return o1 + o2;
     }
 }
