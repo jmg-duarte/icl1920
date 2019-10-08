@@ -91,8 +91,8 @@ ASTNode Term() :
 ASTNode UnaryExp() :
 {  ASTNode t1; }
 {
-    ( <MINUS> t1 = UnaryExp() {t1 = new ASTUnaryMinus(t1);}
-    | <PLUS> t1 = UnaryExp() {t1 = new ASTUnaryPlus(t1);}
+    ( <MINUS> t1 = UnaryExp() { t1 = new ASTUnaryMinus(t1); }
+    | <PLUS> t1 = UnaryExp() { t1 = new ASTUnaryPlus(t1); }
     | t1 = Fact()
     )
     { return t1; }
@@ -123,6 +123,6 @@ ASTNode Let() : {
     ASTNode expression;
     ASTNode body;
 } {
-    <LET> id=<Id> <EQUALS> expression=Exp() <IN> body=Fact() <END>
+    <LET> id=<Id> <EQUALS> expression=Exp() <IN> body=Exp() <END>
     { return new ASTLetIn(id.image, expression, body); }
 }

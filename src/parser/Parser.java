@@ -179,7 +179,7 @@ t = new ASTNum(Integer.parseInt(n.image));
     jj_consume_token(EQUALS);
     expression = Exp();
     jj_consume_token(IN);
-    body = Fact();
+    body = Exp();
     jj_consume_token(END);
 {if ("" != null) return new ASTLetIn(id.image, expression, body);}
     throw new Error("Missing return statement in function");
