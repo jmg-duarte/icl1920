@@ -1,8 +1,8 @@
 #!/bin/sh
 JAR="javacc-6.0/bin/lib/javacc.jar"
 
-case "`uname`" in
-     CYGWIN*) JAR="`cygpath --windows -- "$JAR"`" ;;
+case "$(uname)" in
+     CYGWIN*) JAR="$(cygpath --windows -- "$JAR")" ;;
 esac
 
 java -classpath "$JAR" javacc -OUTPUT_DIRECTORY=src/parser "$@"
