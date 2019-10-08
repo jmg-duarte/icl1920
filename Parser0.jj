@@ -37,27 +37,19 @@ SKIP :
 TOKEN :
 {
   < Id: ["a"-"z","A"-"Z"] ( ["a"-"z","A"-"Z","0"-"9"] )* >
-  |
-  < Num: (["0"-"9"]) + >
-  |
-  < PLUS : "+" >
-  |
-  < MINUS : "-">
-  |
-  < TIMES : "*">
-  |
-  < DIV : "/">
-  |
-  < LPAR : "(" >
-  |
-  < RPAR : ")" >
-  |
-  < EL: "\n" >
+  | < Num: (["0"-"9"]) + >
+  | < PLUS : "+" >
+  | < MINUS : "-">
+  | < TIMES : "*">
+  | < DIV : "/">
+  | < LPAR : "(" >
+  | < RPAR : ")" >
+  | < EL: "\n" >
 }
 
-ASTNode Start():
-{ ASTNode t; }
-{
+ASTNode Start(): { 
+  ASTNode t; 
+} {
    t = Exp() <EL>
    { return t; }
 }
@@ -88,24 +80,20 @@ ASTNode Term() :
      { return t1; }
 }
 
+ASTNode UnaryExp() :
+{ Token op;
+  ASTNode t1; }
+{
+     ( op=<PLUS> | op=<MINUS> ) t1=Fact()
+                 { if (op.kind == PLUS)
+             t1 = new ASTUnaryPlus(t1);
+       else  t1 = new ASTUnaryMinus(t1);
+       return t1; }
+}
+
 ASTNode Fact() :  { Token n; 
   ASTNode t;}
 {
-   ( n=<Num> { t = new ASTNum(Integer.parseInt(n.image)); } | <LPAR> t=Exp() <RPAR> )
+   (n=<Num> { t = new ASTNum(Integer.parseInt(n.image)); } | <LPAR> t=Exp() <RPAR>  |  t=UnaryExp() )
    { return t; }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
