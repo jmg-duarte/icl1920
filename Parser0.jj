@@ -65,12 +65,12 @@ ASTNode Exp() :
 { Token op;
   ASTNode t1, t2; }
 {
-     t1=Term() ( ( op=<PLUS> | op=<MINUS> ) t2=Term() 
-                 { if (op.kind == PLUS) 
-                         t1 = new ASTPlus(t1,t2);
-                   else  t1 = new ASTSub(t1,t2);
-                 } 
-               ) *
+     t1=Term() ( ( op=<PLUS> | op=<MINUS> ) t2=Term() {
+        if (op.kind == PLUS) {
+            t1 = new ASTPlus(t1,t2);
+        } else {
+            t1 = new ASTSub(t1,t2);
+        } } ) *
      { return t1; } 
 }
 
@@ -78,14 +78,13 @@ ASTNode Term() :
 { Token op;
   ASTNode t1, t2; }
 {
-     t1=UnaryExp() (
-     ( op=<TIMES> | op=<DIV> )
-       t2=UnaryExp()
-     { if (op.kind == TIMES)
-             t1 = new ASTMul(t1,t2);
-       else  t1 = new ASTDiv(t1,t2);
-     }) ?
-     { return t1; }
+    t1=UnaryExp() (( op=<TIMES> | op=<DIV> ) t2=UnaryExp() {
+    if (op.kind == TIMES) {
+        t1 = new ASTMul(t1,t2);
+    } else {
+        t1 = new ASTDiv(t1,t2);
+    } } ) ?
+    { return t1; }
 }
 
 ASTNode UnaryExp() :
