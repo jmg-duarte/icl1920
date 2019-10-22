@@ -65,11 +65,8 @@ public class Parser implements ParserConstants {
         throw new ParseException();
       }
       t2 = Term();
-if (op.kind == PLUS)
-                         t1 = new ASTPlus(t1,t2);
-                   else  t1 = new ASTSub(t1,t2);
     }
-{if ("" != null) return t1;}
+{if ("" != null) return new ASTBinaryOp(op.image, t1, t2);}
     throw new Error("Missing return statement in function");
   }
 
@@ -94,16 +91,13 @@ if (op.kind == PLUS)
         throw new ParseException();
       }
       t2 = UnaryExp();
-if (op.kind == TIMES)
-             t1 = new ASTMul(t1,t2);
-       else  t1 = new ASTDiv(t1,t2);
       break;
       }
     default:
       jj_la1[3] = jj_gen;
       ;
     }
-{if ("" != null) return t1;}
+{if ("" != null) return new ASTBinaryOp(op.image, t1, t2);}
     throw new Error("Missing return statement in function");
   }
 
@@ -177,7 +171,7 @@ t = new ASTNum(Integer.parseInt(n.image));
   static final public ASTNode Let() throws ParseException {Token id;
     ASTNode expression;
     ASTNode body;
-    Map<String, ASTNode> expressions = new HashMap();
+    Map<String, ASTNode> expressions = new HashMap<String, ASTNode>();
     jj_consume_token(LET);
     id = jj_consume_token(Id);
     jj_consume_token(EQUALS);
@@ -198,7 +192,9 @@ expressions.put(id.image,expression);
       id = jj_consume_token(Id);
       jj_consume_token(EQUALS);
       expression = Exp();
-expressions.put(id.image,expression);
+if (expressions.put(id.image,expression) != null) {
+                {if (true) throw new RuntimeException("duplicate assignment");}
+            }
     }
     jj_consume_token(IN);
     body = Exp();

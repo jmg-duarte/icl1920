@@ -1,5 +1,6 @@
 package ast;
 
+import compiler.Compiler;
 import env.Environment;
 
 public class ASTNum implements ASTNode {
@@ -9,7 +10,13 @@ public class ASTNum implements ASTNode {
         this.val = val;
     }
 
+    @Override
     public int eval(Environment env) {
         return val;
+    }
+
+    @Override
+    public void compile(Compiler compiler, Environment env) {
+        String code = "sipush " + val;
     }
 }

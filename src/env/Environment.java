@@ -1,7 +1,5 @@
 package env;
 
-import ast.ASTNode;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -9,6 +7,7 @@ public class Environment {
 
     private Map<String, Integer> scope;
     private Environment parent;
+    private String name;
 
     public Environment() {
         scope = new HashMap<>();
@@ -17,6 +16,11 @@ public class Environment {
     public Environment(Environment parent) {
         this();
         this.parent = parent;
+    }
+
+    public Environment(Environment parent, String name) {
+        this(parent);
+        this.name = name;
     }
 
     public int find(String id) {
@@ -34,6 +38,10 @@ public class Environment {
         }
     }
 
+    public Integer findInScope(String id) {
+        return scope.get(id);
+    }
+
     public void associate(String id, int value) {
         scope.put(id, value);
     }
@@ -46,4 +54,7 @@ public class Environment {
         return parent;
     }
 
+    public String getName() {
+        return name;
+    }
 }

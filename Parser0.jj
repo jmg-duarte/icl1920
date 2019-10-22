@@ -69,26 +69,16 @@ ASTNode Exp() :
 { Token op;
   ASTNode t1, t2; }
 {
-     t1=Term() ( ( op=<PLUS> | op=<MINUS> ) t2=Term() {
-        if (op.kind == PLUS) {
-            t1 = new ASTPlus(t1,t2);
-        } else {
-            t1 = new ASTSub(t1,t2);
-        } } ) *
-     { return t1; } 
+     t1=Term() ( ( op=<PLUS> | op=<MINUS> ) t2=Term() ) *
+     { return new ASTBinaryOp(op.image, t1, t2); }
 }
 
 ASTNode Term() :
 { Token op;
   ASTNode t1, t2; }
 {
-    t1=UnaryExp() (( op=<TIMES> | op=<DIV> ) t2=UnaryExp() {
-    if (op.kind == TIMES) {
-        t1 = new ASTMul(t1,t2);
-    } else {
-        t1 = new ASTDiv(t1,t2);
-    } } ) ?
-    { return t1; }
+    t1=UnaryExp() (( op=<TIMES> | op=<DIV> ) t2=UnaryExp()  ) ?
+    { return new ASTBinaryOp(op.image, t1, t2); }
 }
 
 
@@ -126,12 +116,16 @@ ASTNode Let() : {
     Token id;
     ASTNode expression;
     ASTNode body;
-    Map<String, ASTNode> expressions = new HashMap();
+    Map<String, ASTNode> expressions = new HashMap<String, ASTNode>();
 } {
     <LET> id=<Id> <EQUALS> expression=Exp()
         {expressions.put(id.image,expression);}
         (<COMMA> id=<Id> <EQUALS> expression=Exp()
-        {expressions.put(id.image,expression);} )*
+        {
+            if (expressions.put(id.image,expression) != null) {
+                throw new RuntimeException("duplicate assignment");
+            }
+        } )*
          <IN> body=Exp() <END>
     {
         return new ASTLetIn(expressions, body);
