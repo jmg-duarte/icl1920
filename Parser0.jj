@@ -2,6 +2,9 @@ PARSER_BEGIN(Parser)
 
 package parser;
 
+import java.util.Map;
+import java.util.HashMap;
+
 import ast.*;
 import env.*;
 
@@ -41,6 +44,7 @@ TOKEN :
     < LET: "let" >
   | < IN: "in" >
   | < END: "end" >
+  | <COMMA: "," >
   | < Num: (["0"-"9"]) + >
   | < PLUS : "+" >
   | < MINUS : "-">
@@ -87,6 +91,7 @@ ASTNode Term() :
     { return t1; }
 }
 
+
 ASTNode UnaryExp() :
 {  ASTNode t1; }
 {
@@ -121,7 +126,14 @@ ASTNode Let() : {
     Token id;
     ASTNode expression;
     ASTNode body;
+    Map<String, ASTNode> expressions = new HashMap();
 } {
-    <LET> id=<Id> <EQUALS> expression=Exp() <IN> body=Exp() <END>
-    { return new ASTLetIn(id.image, expression, body); }
+    <LET> id=<Id> <EQUALS> expression=Exp()
+        {expressions.put(id.image,expression);}
+        (<COMMA> id=<Id> <EQUALS> expression=Exp()
+        {expressions.put(id.image,expression);} )*
+         <IN> body=Exp() <END>
+    {
+        return new ASTLetIn(expressions, body);
+    }
 }

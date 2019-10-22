@@ -2,24 +2,30 @@ package ast;
 
 import env.Environment;
 
+import java.util.Map;
+import java.util.Map.Entry;
+
 public class ASTLetIn implements ASTNode {
 
-    private String id;
-    private ASTNode expression;
+   // private String id;
+    //private ASTNode expression;
+    private Map<String,ASTNode> expressions; //map with all the associations
     private ASTNode body;
 
-    public ASTLetIn(String id, ASTNode expression, ASTNode body) {
-        this.id = id;
-        this.expression = expression;
+    public ASTLetIn( Map<String,ASTNode> expressions, ASTNode body) {
+        //this.id = id;
+        this.expressions = expressions;
         this.body = body;
     }
 
     @Override
     public int eval(Environment env) {
-        int expressionResult = expression.eval(env);
-        Environment innerScope = (env == null) ? new Environment() : env.startScope();
-        innerScope.associate(id, expressionResult);
+        Environment innerScope = env.startScope();
+        for(Entry<String, ASTNode> e : expressions.entrySet()) {
+            innerScope.associate(e.getKey(), e.getValue().eval(env));
+        }
         innerScope.endScope();
         return body.eval(innerScope);
+
     }
 }
