@@ -5,6 +5,7 @@ import compiler.CoreCompiler;
 import compiler.LineBuilder;
 import env.Environment;
 
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -34,7 +35,7 @@ public class ASTLetIn implements ASTNode {
     @Override
     public Assembler compile(CoreCompiler compiler, Environment env) {
         LineBuilder lb = new LineBuilder();
-
+        String oldFrame = compiler.oldFrame();
         String currentFrame = compiler.newFrame();
 
         lb.appendLine("new " + currentFrame);
@@ -42,7 +43,13 @@ public class ASTLetIn implements ASTNode {
         lb.appendLine("invokespecial " + currentFrame + "/<init>()V");
         lb.appendLine("dup");
         lb.appendLine("aload 4");
-        lb.appendLine("putfield " + currentFrame + "/sl L" + compiler.oldFrame());
+        lb.appendLine("putfield " + currentFrame + "/sl L" + oldFrame);
+        lb.appendLine("astore 4");
+
+       // Iterator<String> idsIterator = expressions.keySet().iterator();
+       // while(idsIterator.hasNext()){
+       // }
+      //  body.compile()
 
         return new Assembler(lb.toString(), 0);
     }

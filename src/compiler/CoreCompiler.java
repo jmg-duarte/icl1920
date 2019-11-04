@@ -11,11 +11,14 @@ public class CoreCompiler {
     private Environment globalEnvironment = new Environment();
 
     private int frameID = 0;
+    private String frameName;
 
     private ASTNode root;
 
     public CoreCompiler(ASTNode root) {
         this.root = root;
+        frameName = "java/lang/Object;";
+        frameID = 0;
     }
 
     public void compile(ASTNode root) {
@@ -30,12 +33,14 @@ public class CoreCompiler {
     }
 
     public String oldFrame() {
-        return "Frame_" + (frameID - 1);
-
+        return frameName;
+        //return "Frame_" + (frameID - 1);
     }
 
     public String newFrame() {
-        return "Frame_" + frameID++;
+        frameName = "Frame_" + frameID++;
+        return frameName;
+        //return "Frame_" + frameID++;
     }
 
 }
