@@ -12,17 +12,17 @@ public class LineBuilder {
 
     public void append(String... lines) {
         for (String l : lines) {
-            sb.append(l);
+            this.appendLine(l);
         }
     }
 
     public void append(Assembler assembly) {
-        sb.append(assembly.toString());
+        this.appendLine(assembly.toString());
     }
 
     public void append(Assembler... assemblies) {
         for (Assembler assembly : assemblies) {
-            sb.append(assembly.toString());
+            this.appendLine(assembly.toString());
         }
     }
 
@@ -33,6 +33,7 @@ public class LineBuilder {
 
     public void writeToFile(String filename) throws IOException {
         Path p = Paths.get(filename);
+        System.out.println(sb.toString());
         Files.write(p, sb.toString().getBytes(), StandardOpenOption.CREATE, StandardOpenOption.WRITE);
     }
 

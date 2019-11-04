@@ -37,12 +37,12 @@ public class ASTLetIn implements ASTNode {
 
         String currentFrame = compiler.newFrame();
 
-        lb.append("new " + currentFrame);
-        lb.append("dup");
-        lb.append("invokespecial " + currentFrame + "/<init>()V");
-        lb.append("dup");
-        lb.append("aload 4");
-        lb.append("putfield " + currentFrame + "/sl L" + compiler.oldFrame());
+        lb.appendLine("new " + currentFrame);
+        lb.appendLine("dup");
+        lb.appendLine("invokespecial " + currentFrame + "/<init>()V");
+        lb.appendLine("dup");
+        lb.appendLine("aload 4");
+        lb.appendLine("putfield " + currentFrame + "/sl L" + compiler.oldFrame());
 
         return new Assembler(lb.toString(), 0);
     }
