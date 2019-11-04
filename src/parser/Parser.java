@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.HashMap;
 
 import ast.*;
+import compiler.*;
 import env.*;
 
 /** ID lister. */
@@ -16,9 +17,11 @@ public class Parser implements ParserConstants {
     Parser parser = new Parser(System.in);
     ASTNode exp;
     Environment globalScope = new Environment();
+    CoreCompiler c = new CoreCompiler(exp);
     while (true) {
         try {
             exp = parser.Start();
+            c.compile(exp);
             System.out.println( exp.eval(globalScope) );
         } catch (Exception e) {
             e.printStackTrace();
@@ -101,18 +104,17 @@ public class Parser implements ParserConstants {
     throw new Error("Missing return statement in function");
   }
 
-  static final public ASTNode UnaryExp() throws ParseException {ASTNode t1;
+  static final public ASTNode UnaryExp() throws ParseException {Token op;
+    ASTNode t1;
     switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
     case MINUS:{
-      jj_consume_token(MINUS);
-      t1 = UnaryExp();
-t1 = new ASTUnaryMinus(t1);
+      op = jj_consume_token(MINUS);
       break;
       }
     case PLUS:{
-      jj_consume_token(PLUS);
+      op = jj_consume_token(PLUS);
       t1 = UnaryExp();
-t1 = new ASTUnaryPlus(t1);
+t1 = new ASTUnaryOp(op.image, t1);
       break;
       }
     case LET:

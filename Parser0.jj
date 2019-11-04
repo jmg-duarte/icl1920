@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.HashMap;
 
 import ast.*;
+import compiler.*;
 import env.*;
 
 /** ID lister. */
@@ -16,9 +17,11 @@ public class Parser {
     Parser parser = new Parser(System.in);
     ASTNode exp;
     Environment globalScope = new Environment();
+    CoreCompiler c = new CoreCompiler(exp);
     while (true) {
         try {
             exp = parser.Start();
+            c.compile(exp);
             System.out.println( exp.eval(globalScope) );
         } catch (Exception e) {
             e.printStackTrace();
@@ -83,10 +86,10 @@ ASTNode Term() :
 
 
 ASTNode UnaryExp() :
-{  ASTNode t1; }
+{  Token op;
+   ASTNode t1; }
 {
-    ( <MINUS> t1 = UnaryExp() { t1 = new ASTUnaryMinus(t1); }
-    | <PLUS> t1 = UnaryExp() { t1 = new ASTUnaryPlus(t1); }
+    ( op = <MINUS> | op = <PLUS> t1 = UnaryExp() { t1 = new ASTUnaryOp(op.image, t1); }
     | t1 = Fact()
     )
     { return t1; }

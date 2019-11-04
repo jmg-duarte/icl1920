@@ -1,6 +1,8 @@
 package ast;
 
-import compiler.Compiler;
+import compiler.Assembler;
+import compiler.CoreCompiler;
+import compiler.LineBuilder;
 import env.Environment;
 
 import java.util.Map;
@@ -30,7 +32,18 @@ public class ASTLetIn implements ASTNode {
     }
 
     @Override
-    public void compile(Compiler compiler, Environment env) {
+    public Assembler compile(CoreCompiler compiler, Environment env) {
+        LineBuilder lb = new LineBuilder();
 
+        String currentFrame = compiler.newFrame();
+
+        lb.append("new " + currentFrame);
+        lb.append("dup");
+        lb.append("invokespecial " + currentFrame + "/<init>()V");
+        lb.append("dup");
+        lb.append("aload 4");
+        lb.append("putfield " + currentFrame + "/sl L" + compiler.oldFrame());
+
+        return new Assembler(lb.toString(), 0);
     }
 }

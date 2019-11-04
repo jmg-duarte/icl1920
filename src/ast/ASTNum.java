@@ -1,6 +1,7 @@
 package ast;
 
-import compiler.Compiler;
+import compiler.Assembler;
+import compiler.CoreCompiler;
 import env.Environment;
 
 public class ASTNum implements ASTNode {
@@ -16,7 +17,8 @@ public class ASTNum implements ASTNode {
     }
 
     @Override
-    public void compile(Compiler compiler, Environment env) {
+    public Assembler compile(CoreCompiler compiler, Environment env) {
         String code = "sipush " + val;
+        return new Assembler(code, 1);
     }
 }

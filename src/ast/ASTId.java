@@ -1,7 +1,7 @@
 package ast;
 
 import compiler.Assembler;
-import compiler.Compiler;
+import compiler.CoreCompiler;
 import compiler.LineBuilder;
 import env.Environment;
 
@@ -19,7 +19,7 @@ public class ASTId implements ASTNode {
     }
 
     @Override
-    public Assembler compile(Compiler compiler, Environment env) {
+    public Assembler compile(CoreCompiler compiler, Environment env) {
         LineBuilder lb = new LineBuilder();
         lb.appendLine("aload_0");
 
