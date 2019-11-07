@@ -18,10 +18,10 @@ public class Environment {
         this.parent = parent;
     }
 
-    public Environment(Environment parent, String name) {
+  /*  public Environment(Environment parent, String name) {
         this(parent);
         this.name = name;
-    }
+    }*/
 
     public int find(String id) {
         Environment env = this;
@@ -47,6 +47,7 @@ public class Environment {
     }
 
     public Environment startScope() {
+
         return new Environment(this);
     }
 

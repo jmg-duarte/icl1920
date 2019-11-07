@@ -46,10 +46,13 @@ public class ASTLetIn implements ASTNode {
         lb.appendLine("putfield " + currentFrame + "/sl L" + oldFrame);
         lb.appendLine("astore 4");
 
-       // Iterator<String> idsIterator = expressions.keySet().iterator();
-       // while(idsIterator.hasNext()){
-       // }
-      //  body.compile()
+        Environment compEnv = env.startScope();
+        int counter = 0;
+        for (String expression : expressions.keySet()){
+            compEnv.associate(expression, counter++);
+        }
+
+        body.compile(compiler,compEnv);
 
         return new Assembler(lb.toString(), 0);
     }

@@ -18,13 +18,15 @@ public class ASTId implements ASTNode {
         return env.find(id);
     }
 
+
+
     @Override
     public Assembler compile(CoreCompiler compiler, Environment env) {
         LineBuilder lb = new LineBuilder();
         lb.appendLine("aload_0");
-
         while (true) {
             Integer current = env.findInScope(id);
+            int[] framePositions = env.findFrame(id); //TODO mudar aqui para ter o numero da frame e a posicao na frame
             if (current == null) {
                 lb.append("getfield ",
                         env.getName(),

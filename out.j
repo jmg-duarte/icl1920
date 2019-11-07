@@ -22,9 +22,13 @@
        ; place your bytecodes between START and END
        ; START ======================================================================
 
-sipush 3
-sipush 1
-isub
+new Frame_0
+dup
+invokespecial Frame_0/<init>()V
+dup
+aload 4
+putfield Frame_0/sl Ljava/lang/Object;
+astore 4
 
 
        ; END ====================================================================
@@ -33,6 +37,12 @@ isub
        invokestatic java/lang/String/valueOf(I)Ljava/lang/String;
        ; call println 
        invokevirtual java/io/PrintStream/println(Ljava/lang/String;)V
+
+       return
+
+.end method
+
+
 
        return
 

@@ -10,7 +10,7 @@ public class CoreCompiler {
     private LineBuilder lineBuilder = new LineBuilder();
     private Environment globalEnvironment = new Environment();
 
-    private int frameID = 0;
+    private int frameCounter = 0;
     private String frameName;
 
     private ASTNode root;
@@ -18,7 +18,7 @@ public class CoreCompiler {
     public CoreCompiler(ASTNode root) {
         this.root = root;
         frameName = "java/lang/Object;";
-        frameID = 0;
+        frameCounter = 0;
     }
 
     public void compile(ASTNode root) {
@@ -32,13 +32,18 @@ public class CoreCompiler {
         }
     }
 
+    public int frameDepth(){
+        return frameCounter;
+    }
+
     public String oldFrame() {
         return frameName;
         //return "Frame_" + (frameID - 1);
     }
 
     public String newFrame() {
-        frameName = "Frame_" + frameID++;
+        frameName = "Frame_" + frameCounter++;
+        Frame frame = new Frame(frameName);
         return frameName;
         //return "Frame_" + frameID++;
     }
