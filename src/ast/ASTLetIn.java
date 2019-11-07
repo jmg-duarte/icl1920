@@ -2,10 +2,10 @@ package ast;
 
 import compiler.Assembler;
 import compiler.CoreCompiler;
+import compiler.Frame;
 import compiler.LineBuilder;
 import env.Environment;
 
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -35,25 +35,32 @@ public class ASTLetIn implements ASTNode {
     @Override
     public Assembler compile(CoreCompiler compiler, Environment env) {
         LineBuilder lb = new LineBuilder();
-        String oldFrame = compiler.oldFrame();
-        String currentFrame = compiler.newFrame();
+        Frame oldFrame = compiler.getOldFrame();
+        Frame currentFrame = compiler.newFrame();
 
         lb.appendLine("new " + currentFrame);
         lb.appendLine("dup");
         lb.appendLine("invokespecial " + currentFrame + "/<init>()V");
         lb.appendLine("dup");
         lb.appendLine("aload 4");
-        lb.appendLine("putfield " + currentFrame + "/sl L" + oldFrame);
+        lb.appendLine("putfield " + currentFrame + "/sl L" + oldFrame + ";");
         lb.appendLine("astore 4");
 
-        Environment compEnv = env.startScope();
+        Environment compEnv = env.startScope(currentFrame.getFrameID());
         int counter = 0;
-        for (String expression : expressions.keySet()){
-            compEnv.associate(expression, counter++);
+        for (String field : expressions.keySet()) {
+            compEnv.associate(field, counter++);
+            currentFrame.addField(field);
+            lb.appendLine("aload 4");
+            lb.append(expressions.get(field).compile(compiler, compEnv));
+            lb.appendLine("putfield " + currentFrame + "/" + field + " I");
         }
 
-        body.compile(compiler,compEnv);
+        lb.append(body.compile(compiler, compEnv));
 
+        lb.appendLine("aload 4");
+        lb.appendLine("getfield " + currentFrame + "/sl L" + oldFrame + ";");
+        lb.appendLine("astore 4");
         return new Assembler(lb.toString(), 0);
     }
 }

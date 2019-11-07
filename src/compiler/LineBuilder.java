@@ -1,48 +1,38 @@
 package compiler;
 
+import java.io.File;
 import java.io.IOException;
-import java.nio.file.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 
 public class LineBuilder {
     private final StringBuilder sb = new StringBuilder();
 
     private static final String HEADER =
             ".class public Main\n" +
-            ".super java/lang/Object\n" +
-            "\n"+
-            ";\n"+
-            "; standard initializer\n"+ ".method public <init>()V\n" +
-            "   aload_0\n" +
-            "   invokenonvirtual java/lang/Object/<init>()V\n"+
-            "   return\n"+
-            ".end method\n"+
-            "\n"+
-            ".method public static main([Ljava/lang/String;)V\n"+
-            "       ; set limits used by this method\n"+
-            "       .limit locals 10 \n"+
-            "       .limit stack 256\n"+
-            "\n"+
-            "       ; setup local variables:\n"+
-            "\n"+
-            "       ;    1 - the PrintStream object held in java.lang.System.out\n"+
-            "       getstatic java/lang/System/out Ljava/io/PrintStream;\n"+
-            "\n"+
-            "       ; place your bytecodes between START and END\n"+
-            "       ; START ======================================================================\n"+
-            "\n";
+                    ".super java/lang/Object\n" +
+                    "\n" +
+                    ".method public <init>()V\n" +
+                    "   aload_0\n" +
+                    "   invokenonvirtual java/lang/Object/<init>()V\n" +
+                    "   return\n" +
+                    ".end method\n" + ";\n" +
+                    "\n" +
+                    ".method public static main([Ljava/lang/String;)V\n" +
+                    "       .limit locals 10 \n" +
+                    "       .limit stack 256\n" +
+                    "\n" +
+                    "       getstatic java/lang/System/out Ljava/io/PrintStream;\n" +
+                    "\n" + "aconst_null\n" +
+                    "astore 4\n";
 
     private static final String FOOTER = "\n" +
-            "       ; END ====================================================================\n"+
-            "\n" +
-            "       ; convert to String;\n"+
-            "       invokestatic java/lang/String/valueOf(I)Ljava/lang/String;\n"+
-            "       ; call println \n"+
-            "       invokevirtual java/io/PrintStream/println(Ljava/lang/String;)V\n"+
-            "\n"+
-            "       return\n"+
-            "\n"+
-            ".end method\n"+
-            "\n";
+            "       invokestatic java/lang/String/valueOf(I)Ljava/lang/String;\n" +
+            "       invokevirtual java/io/PrintStream/println(Ljava/lang/String;)V\n" +
+            "       return\n" +
+            ".end method\n";
 
     public void append(String line) {
         sb.append(line);
@@ -50,7 +40,7 @@ public class LineBuilder {
 
     public void append(String... lines) {
         for (String l : lines) {
-            this.appendLine(l);
+            this.append(l);
         }
     }
 
@@ -69,11 +59,20 @@ public class LineBuilder {
         sb.append("\n");
     }
 
+    public void addHeader() {
+        sb.insert(0, HEADER);
+    }
+
+    public void addFooter() {
+        sb.append(FOOTER);
+    }
+
     public void writeToFile(String filename) throws IOException {
-        Path p = Paths.get(filename);
+        new File("./jout").mkdirs();
+        Path p = Paths.get("./jout/" + filename);
         System.out.println(sb.toString());
-        Files.write(p,(HEADER+sb.toString()+FOOTER).getBytes(), StandardOpenOption.CREATE, StandardOpenOption.WRITE);
-        sb.delete(0,sb.length()-1);
+        Files.write(p, sb.toString().getBytes(), StandardOpenOption.CREATE, StandardOpenOption.WRITE);
+        sb.delete(0, sb.length() - 1);
     }
 
     @Override

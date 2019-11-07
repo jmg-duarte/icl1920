@@ -18,6 +18,11 @@ public class Environment {
         this.parent = parent;
     }
 
+    public Environment(Environment parent, String name) {
+        this(parent);
+        this.name = name;
+    }
+
   /*  public Environment(Environment parent, String name) {
         this(parent);
         this.name = name;
@@ -47,8 +52,11 @@ public class Environment {
     }
 
     public Environment startScope() {
-
         return new Environment(this);
+    }
+
+    public Environment startScope(String name) {
+        return new Environment(this, name);
     }
 
     public Environment endScope() {
