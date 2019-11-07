@@ -7,6 +7,8 @@ import java.io.IOException;
 
 public class CoreCompiler {
 
+    
+
     private LineBuilder lineBuilder = new LineBuilder();
     private Environment globalEnvironment = new Environment();
 
