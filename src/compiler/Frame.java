@@ -21,7 +21,7 @@ public class Frame {
     }
 
     public Frame(int counter, Frame parent) {
-        this("Frame_" + counter, parent);
+        this("f" + counter, parent);
     }
 
     public String getFrameID() {
@@ -29,7 +29,7 @@ public class Frame {
     }
 
     public void addField(String fieldID) {
-        lb.appendLine(".field public " + fieldID + " I");
+        lb.appendLine(".field public _" + fieldID + " I");
     }
 
     public void dumpFrame() throws IOException {

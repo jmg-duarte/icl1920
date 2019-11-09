@@ -21,7 +21,7 @@ public class ASTId implements ASTNode {
     @Override
     public Assembler compile(CoreCompiler compiler, Environment env) {
         LineBuilder lb = new LineBuilder();
-        lb.appendLine("aload_0");
+        lb.appendLine("aload 4");
         while (true) {
             Integer current = env.findInScope(id);
             // int[] framePositions = env.findFrame(id); //TODO mudar aqui para ter o numero da frame e a posicao na frame

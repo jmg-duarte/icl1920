@@ -13,7 +13,7 @@ import env.*;
 public class Parser implements ParserConstants {
 
   /** Main entry point. */
-  public static void main(String args[]) {
+  public static void main(String[] args) {
     Parser parser = new Parser(System.in);
     ASTNode exp;
     Environment globalScope = new Environment();

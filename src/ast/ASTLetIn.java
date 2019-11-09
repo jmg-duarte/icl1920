@@ -1,9 +1,6 @@
 package ast;
 
-import compiler.Assembler;
-import compiler.CoreCompiler;
-import compiler.Frame;
-import compiler.LineBuilder;
+import compiler.*;
 import env.Environment;
 
 import java.util.Map;
@@ -35,11 +32,13 @@ public class ASTLetIn implements ASTNode {
     @Override
     public Assembler compile(CoreCompiler compiler, Environment env) {
         LineBuilder lb = new LineBuilder();
-        Frame oldFrame = compiler.getOldFrame();
-        Frame currentFrame = compiler.newFrame();
+        FrameStack frameStack = compiler.getfStack();
+        Frame oldFrame = frameStack.getOldFrame();
+        Frame currentFrame = frameStack.newFrame();
 
         lb.appendLine("new " + currentFrame);
         lb.appendLine("dup");
+
         lb.appendLine("invokespecial " + currentFrame + "/<init>()V");
         lb.appendLine("dup");
         lb.appendLine("aload 4");
@@ -53,7 +52,7 @@ public class ASTLetIn implements ASTNode {
             currentFrame.addField(field);
             lb.appendLine("aload 4");
             lb.append(expressions.get(field).compile(compiler, compEnv));
-            lb.appendLine("putfield " + currentFrame + "/" + field + " I");
+            lb.appendLine("putfield " + currentFrame + "/_" + field + " I");
         }
 
         lb.append(body.compile(compiler, compEnv));
