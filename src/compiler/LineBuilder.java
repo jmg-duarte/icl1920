@@ -15,23 +15,23 @@ public class LineBuilder {
                     ".super java/lang/Object\n" +
                     "\n" +
                     ".method public <init>()V\n" +
-                    "   aload_0\n" +
-                    "   invokenonvirtual java/lang/Object/<init>()V\n" +
-                    "   return\n" +
-                    ".end method\n" + ";\n" +
+                    "aload_0\n" +
+                    "invokenonvirtual java/lang/Object/<init>()V\n" +
+                    "return\n" +
+                    ".end method\n" +
                     "\n" +
                     ".method public static main([Ljava/lang/String;)V\n" +
-                    "       .limit locals 10 \n" +
-                    "       .limit stack 256\n" +
+                    ".limit locals 10 \n" +
+                    ".limit stack 256\n" +
                     "\n" +
-                    "       getstatic java/lang/System/out Ljava/io/PrintStream;\n" +
-                    "\n" + "aconst_null\n" +
+                    "getstatic java/lang/System/out Ljava/io/PrintStream;\n" +
+                    "\n"+ "aconst_null\n" +
                     "astore 4\n";
 
     private static final String FOOTER = "\n" +
-            "       invokestatic java/lang/String/valueOf(I)Ljava/lang/String;\n" +
-            "       invokevirtual java/io/PrintStream/println(Ljava/lang/String;)V\n" +
-            "       return\n" +
+            "invokestatic java/lang/String/valueOf(I)Ljava/lang/String;\n" +
+            "invokevirtual java/io/PrintStream/println(Ljava/lang/String;)V\n" +
+            "return\n" +
             ".end method\n";
 
     public void append(String line) {
