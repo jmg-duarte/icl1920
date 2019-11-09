@@ -6,30 +6,13 @@ import java.util.Map;
 import java.util.HashMap;
 
 import ast.*;
+import compiler.*;
 import env.*;
 
 /** ID lister. */
 public class Parser {
 
-  /** Main entry point. */
-  public static void main(String args[]) {
-    Parser parser = new Parser(System.in);
-    ASTNode exp;
-    Environment globalScope = new Environment();
-    while (true) {
-        try {
-            exp = parser.Start();
-            System.out.println( exp.eval(globalScope) );
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println ("Syntax Error!");
-            parser.ReInit(System.in);
-        }
-    }
-  }
-
 }
-
 PARSER_END(Parser)
 
 SKIP :
@@ -69,24 +52,32 @@ ASTNode Exp() :
 { Token op;
   ASTNode t1, t2; }
 {
-     t1=Term() ( ( op=<PLUS> | op=<MINUS> ) t2=Term() ) *
-     { return new ASTBinaryOp(op.image, t1, t2); }
+    t1=Term() (
+    ( op=<PLUS> | op=<MINUS> ) t2=Term()
+        { t1 = new ASTBinaryOp(op.image, t1, t2); }
+    ) *
+    {return t1;}
 }
 
 ASTNode Term() :
 { Token op;
   ASTNode t1, t2; }
 {
-    t1=UnaryExp() (( op=<TIMES> | op=<DIV> ) t2=UnaryExp()  ) ?
-    { return new ASTBinaryOp(op.image, t1, t2); }
+    t1=UnaryExp() (
+        ( op=<TIMES> | op=<DIV> ) t2=UnaryExp() {
+            t1 = new ASTBinaryOp(op.image, t1, t2);
+            }
+        ) *
+    { return t1; }
 }
 
 
 ASTNode UnaryExp() :
-{  ASTNode t1; }
+{  Token op;
+   ASTNode t1; }
 {
-    ( <MINUS> t1 = UnaryExp() { t1 = new ASTUnaryMinus(t1); }
-    | <PLUS> t1 = UnaryExp() { t1 = new ASTUnaryPlus(t1); }
+    ( (op = <MINUS> | op = <PLUS>) t1 = UnaryExp()
+        { t1 = new ASTUnaryOp(op.image, t1); }
     | t1 = Fact()
     )
     { return t1; }

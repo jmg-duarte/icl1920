@@ -1,7 +1,7 @@
 package ast;
 
 import compiler.Assembler;
-import compiler.Compiler;
+import compiler.CoreCompiler;
 import compiler.LineBuilder;
 import env.Environment;
 
@@ -19,23 +19,23 @@ public class ASTId implements ASTNode {
     }
 
     @Override
-    public Assembler compile(Compiler compiler, Environment env) {
+    public Assembler compile(CoreCompiler compiler, Environment env) {
         LineBuilder lb = new LineBuilder();
-        lb.appendLine("aload_0");
-
+        lb.appendLine("aload 4");
         while (true) {
             Integer current = env.findInScope(id);
+            // int[] framePositions = env.findFrame(id); //TODO mudar aqui para ter o numero da frame e a posicao na frame
             if (current == null) {
-                lb.append("getfield ",
-                        env.getName(),
-                        "/parent L",
-                        env.endScope().getName(),
-                        ";");
+                lb.appendLine("getfield " +
+                        env.getName() +
+                        "/sl L" +
+                        env.endScope().getName() + ";");
+                env = env.endScope();
             } else {
-                lb.append("getfield ",
-                        env.getName(),
-                        "/_ ",
-                        id,
+                lb.appendLine("getfield " +
+                        env.getName() +
+                        "/_" +
+                        id +
                         " I");
                 break;
             }

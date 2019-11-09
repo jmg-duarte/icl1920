@@ -4,6 +4,7 @@ package parser;
 import java.util.Map;
 import java.util.HashMap;
 import ast.*;
+import compiler.*;
 import env.*;
 
 /** Token Manager. */

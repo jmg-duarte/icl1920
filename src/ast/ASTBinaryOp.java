@@ -1,7 +1,7 @@
 package ast;
 
 import compiler.Assembler;
-import compiler.Compiler;
+import compiler.CoreCompiler;
 import compiler.LineBuilder;
 import env.Environment;
 
@@ -37,7 +37,7 @@ public class ASTBinaryOp implements ASTNode {
     }
 
     @Override
-    public Assembler compile(Compiler compiler, Environment env) {
+    public Assembler compile(CoreCompiler compiler, Environment env) {
         Assembler leftAssembly = lhs.compile(compiler, env);
         Assembler rightAssembly = rhs.compile(compiler, env);
 

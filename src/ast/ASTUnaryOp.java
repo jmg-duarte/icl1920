@@ -1,7 +1,7 @@
 package ast;
 
 import compiler.Assembler;
-import compiler.Compiler;
+import compiler.CoreCompiler;
 import compiler.LineBuilder;
 import env.Environment;
 
@@ -28,7 +28,7 @@ public class ASTUnaryOp implements ASTNode {
     }
 
     @Override
-    public Assembler compile(Compiler compiler, Environment env) {
+    public Assembler compile(CoreCompiler compiler, Environment env) {
         Assembler asm = expr.compile(compiler, env);
         LineBuilder lb = new LineBuilder();
         lb.append(asm);
