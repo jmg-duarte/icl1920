@@ -70,7 +70,7 @@ public class LineBuilder {
     public void writeToFile(String filename) throws IOException {
         new File("./jout").mkdirs();
         Path p = Paths.get("./jout/" + filename);
-        System.out.println(sb.toString());
+        // System.out.println(sb.toString());
         Files.write(p, sb.toString().getBytes(), StandardOpenOption.CREATE, StandardOpenOption.WRITE);
         sb.delete(0, sb.length() - 1);
     }

@@ -12,24 +12,6 @@ import env.*;
 /** ID lister. */
 public class Parser {
 
-  /** Main entry point. */
-  public static void main(String[] args) {
-    Parser parser = new Parser(System.in);
-    ASTNode exp;
-    Environment globalScope = new Environment();
-    while (true) {
-        try {
-            exp = parser.Start();
-            CoreCompiler c = new CoreCompiler(exp);
-            c.compile(exp);
-            System.out.println( exp.eval(globalScope) );
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println ("Syntax Error!");
-            parser.ReInit(System.in);
-        }
-    }
-  }
 }
 PARSER_END(Parser)
 
