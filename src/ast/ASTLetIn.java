@@ -48,10 +48,14 @@ public class ASTLetIn implements ASTNode {
         Environment compEnv = env.startScope(currentFrame.getFrameID());
         int counter = 0;
         for (String field : expressions.keySet()) {
+            final ASTNode exp = expressions.get(field);
+            final Assembler assembly = exp.compile(compiler, compEnv);
+
             compEnv.associate(field, counter++);
             currentFrame.addField(field);
+
             lb.appendLine("aload 4");
-            lb.append(expressions.get(field).compile(compiler, compEnv));
+            lb.append(assembly);
             lb.appendLine("putfield " + currentFrame + "/_" + field + " I");
         }
 
