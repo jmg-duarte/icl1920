@@ -12,5 +12,5 @@ public class VBool implements IValue{
         return value;
     }
 
-    public String toString() {return value + "";}
+    public String toString() {return Boolean.toString(value);}
 }
