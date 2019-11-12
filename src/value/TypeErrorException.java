@@ -1,8 +1,8 @@
 package value;
 
-public class TypeErrorException extends Exception {
+public class TypeErrorException extends RuntimeException {
 
-    public TypeErrorException(String msg){
-        super(msg);
+    public TypeErrorException(){
+        super("illegal arguments");
     }
 }
