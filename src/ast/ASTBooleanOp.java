@@ -7,34 +7,38 @@ import value.IValue;
 import value.TypeErrorException;
 import value.VBool;
 
-public class ASTBooleanOp implements ASTNode{
+public class ASTBooleanOp implements ASTNode {
 
-    ASTNode exp1;
-    ASTNode exp2;
-    String op;
+    public static final String AND = "&&";
+    public static final String OR = "||";
+    private final ASTNode lhs;
+    private final ASTNode rhs;
+    private final String op;
 
-    public ASTBooleanOp(ASTNode exp1, ASTNode exp2, String op){
-        this.exp1 = exp1;
-        this.exp2 = exp2;
+    public ASTBooleanOp(String op, ASTNode lhs, ASTNode rhs) {
+        this.lhs = lhs;
+        this.rhs = rhs;
         this.op = op;
     }
 
     @Override
     public IValue eval(Environment env) throws TypeErrorException {
-        IValue v1 = exp1.eval(env);
-        IValue v2 = exp2.eval(env);
-        if (v1 instanceof VBool && v2 instanceof VBool)
-            if (op.equals("&&"))
-                return new VBool(((VBool) v1).getValue() && ((VBool) v2).getValue());
-            else
-                return new VBool(((VBool) v1).getValue() || ((VBool) v2).getValue());
-        throw new TypeErrorException("wrong arguments");
+        VBool v1 = VBool.check(lhs.eval(env));
+        VBool v2 = VBool.check(rhs.eval(env));
+
+        switch (op) {
+            case AND:
+                return VBool.and(v1, v2);
+            case OR:
+                return VBool.or(v1, v2);
+            default:
+                throw new UnexpectedOperatorException(op);
+        }
     }
 
     @Override
     public Assembler compile(CoreCompiler compiler, Environment env) {
         return null;
     }
-
 
 }
