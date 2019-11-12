@@ -1,4 +1,3 @@
 package value;
 
-public interface IValue {
-}
+public interface IValue {}

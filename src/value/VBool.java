@@ -13,4 +13,19 @@ public class VBool implements IValue{
     }
 
     public String toString() {return Boolean.toString(value);}
+
+    public static VBool and(VBool v1, VBool v2) {
+        return new VBool(v1.value && v2.value);
+    }
+
+    public static VBool or(VBool v1, VBool v2) {
+        return new VBool(v1.value || v2.value);
+    }
+
+    public static VBool check(IValue value) {
+        if (!(value instanceof VBool)) {
+            throw new TypeErrorException();
+        }
+        return (VBool) value;
+    }
 }
