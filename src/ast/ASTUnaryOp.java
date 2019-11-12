@@ -4,6 +4,9 @@ import compiler.Assembler;
 import compiler.CoreCompiler;
 import compiler.LineBuilder;
 import env.Environment;
+import value.IValue;
+import value.TypeErrorException;
+import value.VInt;
 
 public class ASTUnaryOp implements ASTNode {
 
@@ -16,12 +19,15 @@ public class ASTUnaryOp implements ASTNode {
     }
 
     @Override
-    public int eval(Environment env) {
+    public IValue eval(Environment env) throws TypeErrorException {
+        IValue v1 = expr.eval(env);
         switch (operator) {
             case Operator.ADD:
-                return expr.eval(env);
+                if (v1 instanceof VInt)
+                    return v1;
             case Operator.SUB:
-                return -expr.eval(env);
+                if (v1 instanceof VInt)
+                    return new VInt(-((VInt) v1).getValue());
             default:
                 throw new IllegalStateException("unexpected operator: " + operator);
         }

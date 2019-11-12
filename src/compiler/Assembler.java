@@ -12,7 +12,7 @@ public class Assembler {
     private final int stack;
 
     public Assembler(String code, int stack) {
-       // this.code = code.endsWith("\n") ? code : code + "\n";
+        // this.code = code.endsWith("\n") ? code : code + "\n";
         this.code = code;
         this.stack = stack;
     }

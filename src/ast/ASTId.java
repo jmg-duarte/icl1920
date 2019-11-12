@@ -4,6 +4,7 @@ import compiler.Assembler;
 import compiler.CoreCompiler;
 import compiler.LineBuilder;
 import env.Environment;
+import value.IValue;
 
 public class ASTId implements ASTNode {
 
@@ -14,7 +15,7 @@ public class ASTId implements ASTNode {
     }
 
     @Override
-    public int eval(Environment env) {
+    public IValue eval(Environment env) {
         return env.find(id);
     }
 
@@ -23,7 +24,7 @@ public class ASTId implements ASTNode {
         LineBuilder lb = new LineBuilder();
         lb.appendLine("aload 4");
         while (true) {
-            Integer current = env.findInScope(id);
+            IValue current = env.findInScope(id);
             // int[] framePositions = env.findFrame(id); //TODO mudar aqui para ter o numero da frame e a posicao na frame
             if (current == null) {
                 lb.appendLine("getfield " +

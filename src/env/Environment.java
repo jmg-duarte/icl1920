@@ -1,11 +1,13 @@
 package env;
 
+import value.IValue;
+
 import java.util.HashMap;
 import java.util.Map;
 
 public class Environment {
 
-    private Map<String, Integer> scope;
+    private Map<String, IValue> scope;
     private Environment parent;
     private String name;
 
@@ -28,13 +30,13 @@ public class Environment {
         this.name = name;
     }*/
 
-    public Integer find(String id) {
+    public IValue find(String id) {
         Environment env = this;
         while (true) {
             if (env == null) {
                 throw new RuntimeException(id + " was not declared");
             }
-            Integer value = env.scope.get(id);
+            IValue value = env.scope.get(id);
             if (value == null) {
                 env = env.parent;
             } else {
@@ -43,11 +45,11 @@ public class Environment {
         }
     }
 
-    public Integer findInScope(String id) {
+    public IValue findInScope(String id) {
         return scope.get(id);
     }
 
-    public void associate(String id, int value) {
+    public void associate(String id, IValue value) {
         scope.put(id, value);
     }
 

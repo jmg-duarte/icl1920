@@ -4,6 +4,9 @@ import compiler.Assembler;
 import compiler.CoreCompiler;
 import compiler.LineBuilder;
 import env.Environment;
+import value.IValue;
+import value.TypeErrorException;
+import value.VInt;
 
 public class ASTBinaryOp implements ASTNode {
     private final String operator;
@@ -16,24 +19,27 @@ public class ASTBinaryOp implements ASTNode {
         this.rhs = right;
     }
 
-    public int eval(Environment env) {
-        int o1 = lhs.eval(env);
-        int o2 = rhs.eval(env);
+    public IValue eval(Environment env) throws TypeErrorException {
+        IValue o1 = lhs.eval(env);
+        IValue o2 = rhs.eval(env);
 
-        switch (operator) {
-            case Operator.ADD:
-                return o1 + o2;
-            case Operator.MUL:
-                return o1 * o2;
-            case Operator.DIV:
-                return o1 / o2;
-            case Operator.SUB:
-                return o1 - o2;
-            case Operator.REM:
-                return o1 % o2;
-            default:
-                throw new IllegalStateException("unexpected operator: " + operator);
+        if (o1 instanceof VInt && o2 instanceof VInt) {
+            switch (operator) {
+                case Operator.ADD:
+                    return new VInt(((VInt) o1).getValue() + ((VInt) o2).getValue());
+                case Operator.MUL:
+                    return new VInt(((VInt) o1).getValue() * ((VInt) o2).getValue());
+                case Operator.DIV:
+                    return new VInt(((VInt) o1).getValue() / ((VInt) o2).getValue());
+                case Operator.SUB:
+                    return new VInt(((VInt) o1).getValue() - ((VInt) o2).getValue());
+                case Operator.REM:
+                    return new VInt(((VInt) o1).getValue() % ((VInt) o2).getValue());
+                default:
+                    throw new IllegalStateException("unexpected operator: " + operator);
+            }
         }
+        throw new TypeErrorException("wrong arguments");
     }
 
     @Override

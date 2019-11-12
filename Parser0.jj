@@ -20,6 +20,7 @@ SKIP :
   " "
 | "\t"
 | "\r"
+| "\n"
 }
 
 TOKEN :
@@ -27,7 +28,16 @@ TOKEN :
     < LET: "let" >
   | < IN: "in" >
   | < END: "end" >
-  | <COMMA: "," >
+  | < NEW: "new" >
+  | < IF: "if" >
+  | < THEN: "then" >
+  | < ELSE: "else">
+  | < WHILE: "while" >
+  | < DO: "do" >
+  | < NOT: "~">
+  | < AND: "&&" >
+  | < OR: "||">
+  | < COMMA: "," >
   | < Num: (["0"-"9"]) + >
   | < PLUS : "+" >
   | < MINUS : "-">
@@ -35,8 +45,12 @@ TOKEN :
   | < DIV : "/">
   | < LPAR : "(" >
   | < RPAR : ")" >
-  | < EL: "\n" >
+  | < EL: ";;" >
+  | < SEQ:  ";" >
   | < EQUALS: "=" >
+  | < DEREF: "!" >
+  | < ASSIGN: ":=" >
+  | < BOOL: ("true" | "false") >
   | < Id: ["a"-"z","A"-"Z"] ( ["a"-"z","A"-"Z","0"-"9"] )* >
 
 }
@@ -44,8 +58,28 @@ TOKEN :
 ASTNode Start(): { 
   ASTNode t; 
 } {
-   t = Exp() <EL>
+   t = BooleanOr() <EL>
    { return t; }
+}
+
+ASTNode BooleanOr() :
+{ ASTNode exp1, exp2;}
+{
+    exp1=BooleanAnd() (
+        <OR> exp2=BooleanAnd()
+            { exp1 = new ASTBooleanOp(exp1, exp2, "||"); }
+        ) *
+        {return exp1;}
+}
+
+ASTNode BooleanAnd() :
+{ ASTNode exp1, exp2; }
+{
+    exp1=Exp() (
+        <AND> exp2=Exp()
+            { exp1 = new ASTBooleanOp(exp1, exp2, "&&"); }
+        ) *
+        {return exp1;}
 }
 
 ASTNode Exp() :
@@ -88,13 +122,15 @@ ASTNode Fact() :  {
     ASTNode t;}
 {
    ( n=<Num> {t = new ASTNum(Integer.parseInt(n.image));}
+   | t = Bool()
    | t = Id()
    | t = Let()
+   //| t = If()
+   //| t = While()
    | <LPAR> t=Exp() <RPAR>
    )
    { return t; }
 }
-
 
 
 ASTNode Id() : {
@@ -103,6 +139,36 @@ ASTNode Id() : {
     id = <Id> { return new ASTId(id.image); }
 }
 
+ASTNode Bool() : {
+    Token bool;
+} {
+    bool = <BOOL> {
+        if(bool.image.equals("true"))
+            return new ASTBool(true);
+         else
+           return new ASTBool(false);
+    }
+}
+
+/*
+ASTNode If() : {
+    ASTNode exp1;
+    ASTNode exp2;
+    ASTNode exp3;
+   } {
+        <IF> exp1 = Exp() <THEN> exp2 = Exp() <ELSE> exp3 = Exp() <END>
+    return new ASTIf(exp1, exp2, exp3);
+}
+
+ASTNode While() : {
+    ASTNode exp1;
+    ASTNode exp2;
+    {
+    <WHILE> exp1 = Exp() <DO> exp2 = Exp() <END>
+    }
+    return new ASTWhile(exp1, exp2);
+}
+*/
 ASTNode Let() : {
     Token id;
     ASTNode expression;

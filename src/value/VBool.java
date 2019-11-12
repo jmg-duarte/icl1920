@@ -11,4 +11,6 @@ public class VBool implements IValue{
     public boolean getValue() {
         return value;
     }
+
+    public String toString() {return value + "";}
 }

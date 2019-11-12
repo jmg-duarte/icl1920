@@ -3,6 +3,8 @@ package ast;
 import compiler.Assembler;
 import compiler.CoreCompiler;
 import env.Environment;
+import value.IValue;
+import value.VInt;
 
 public class ASTNum implements ASTNode {
     private int val;
@@ -12,8 +14,8 @@ public class ASTNum implements ASTNode {
     }
 
     @Override
-    public int eval(Environment env) {
-        return val;
+    public IValue eval(Environment env) {
+        return new VInt(val);
     }
 
     @Override

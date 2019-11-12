@@ -2,6 +2,9 @@ package ast;
 
 import compiler.*;
 import env.Environment;
+import value.IValue;
+import value.TypeErrorException;
+import value.VInt;
 
 import java.util.Map;
 import java.util.Map.Entry;
@@ -20,7 +23,7 @@ public class ASTLetIn implements ASTNode {
     }
 
     @Override
-    public int eval(Environment env) {
+    public IValue eval(Environment env) throws TypeErrorException {
         Environment innerScope = env.startScope();
         for (Entry<String, ASTNode> e : expressions.entrySet()) {
             innerScope.associate(e.getKey(), e.getValue().eval(env));
@@ -51,7 +54,7 @@ public class ASTLetIn implements ASTNode {
             final ASTNode exp = expressions.get(field);
             final Assembler assembly = exp.compile(compiler, compEnv);
 
-            compEnv.associate(field, counter++);
+            compEnv.associate(field, new VInt(counter++));
             currentFrame.addField(field);
 
             lb.appendLine("aload 4");
