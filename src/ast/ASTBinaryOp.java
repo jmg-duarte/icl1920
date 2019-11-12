@@ -19,27 +19,24 @@ public class ASTBinaryOp implements ASTNode {
         this.rhs = right;
     }
 
-    public IValue eval(Environment env) throws TypeErrorException {
-        IValue o1 = lhs.eval(env);
-        IValue o2 = rhs.eval(env);
+    public IValue eval(Environment env) {
+        VInt o1 = VInt.check(lhs.eval(env));
+        VInt o2 = VInt.check(rhs.eval(env));
 
-        if (o1 instanceof VInt && o2 instanceof VInt) {
-            switch (operator) {
-                case Operator.ADD:
-                    return new VInt(((VInt) o1).getValue() + ((VInt) o2).getValue());
-                case Operator.MUL:
-                    return new VInt(((VInt) o1).getValue() * ((VInt) o2).getValue());
-                case Operator.DIV:
-                    return new VInt(((VInt) o1).getValue() / ((VInt) o2).getValue());
-                case Operator.SUB:
-                    return new VInt(((VInt) o1).getValue() - ((VInt) o2).getValue());
-                case Operator.REM:
-                    return new VInt(((VInt) o1).getValue() % ((VInt) o2).getValue());
-                default:
-                    throw new IllegalStateException("unexpected operator: " + operator);
-            }
+        switch (operator) {
+            case Operator.ADD:
+                return VInt.add(o1, o2);
+            case Operator.MUL:
+                return VInt.mul(o1, o2);
+            case Operator.DIV:
+                return VInt.div(o1, o2);
+            case Operator.SUB:
+                return VInt.sub(o1, o2);
+            case Operator.REM:
+                return VInt.mod(o1, o2);
+            default:
+                throw new IllegalStateException("unexpected operator: " + operator);
         }
-        throw new TypeErrorException("wrong arguments");
     }
 
     @Override

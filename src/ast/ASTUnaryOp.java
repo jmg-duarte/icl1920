@@ -20,17 +20,15 @@ public class ASTUnaryOp implements ASTNode {
 
     @Override
     public IValue eval(Environment env) throws TypeErrorException {
-        IValue v1 = expr.eval(env);
+        VInt v = VInt.check(expr.eval(env));
+
         switch (operator) {
             case Operator.ADD:
-                if (v1 instanceof VInt)
-                    return v1;
+                break;
             case Operator.SUB:
-                if (v1 instanceof VInt)
-                    return new VInt(-((VInt) v1).getValue());
-            default:
-                throw new IllegalStateException("unexpected operator: " + operator);
+                v = VInt.negate(v);
         }
+        return v;
     }
 
     @Override
