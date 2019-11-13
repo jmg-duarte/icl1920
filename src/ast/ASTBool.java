@@ -9,7 +9,7 @@ import value.VBool;
 
 public class ASTBool implements ASTNode {
 
-    Boolean exp1;
+    private final Boolean exp1;
 
     public ASTBool(Boolean exp1){
         this.exp1 = exp1;
@@ -24,4 +24,13 @@ public class ASTBool implements ASTNode {
     public Assembler compile(CoreCompiler compiler, Environment env) {
         return null;
     }
+
+    public static ASTBool True() {
+        return new ASTBool(true);
+    }
+
+    public static ASTBool False() {
+        return new ASTBool(false);
+    }
+
 }
