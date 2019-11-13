@@ -4,6 +4,14 @@ public class VRef implements IValue {
 
     private IValue value;
 
+    public VRef(IValue value) {
+        this.value = value;
+    }
+
+    public VRef() {
+        this(new VInt(0));
+    }
+
     public IValue get() {
         return value;
     }
