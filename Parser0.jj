@@ -10,9 +10,7 @@ import compiler.*;
 import env.*;
 
 /** ID lister. */
-public class Parser {
-
-}
+public class Parser{}
 PARSER_END(Parser)
 
 SKIP :
@@ -143,10 +141,10 @@ ASTNode Bool() : {
     Token bool;
 } {
     bool = <BOOL> {
-        if(bool.image.equals("true"))
-            return new ASTBool(true);
-         else
-           return new ASTBool(false);
+        switch(bool.image) {
+            case "true": return ASTBool.True();
+            case "false": return ASTBool.False();
+        }
     }
 }
 
