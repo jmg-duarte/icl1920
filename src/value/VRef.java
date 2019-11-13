@@ -11,4 +11,11 @@ public class VRef implements IValue {
     public void set(IValue value) {
         this.value = value;
     }
+
+    public static VRef check(IValue value) {
+        if (!(value instanceof VRef)) {
+            throw new TypeErrorException();
+        }
+        return (VRef) value;
+    }
 }
