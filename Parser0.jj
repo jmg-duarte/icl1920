@@ -39,6 +39,12 @@ TOKEN :
   | < Num: (["0"-"9"]) + >
   | < PLUS : "+" >
   | < MINUS : "-">
+  | < EQ : "==" >
+  | < DF : "!=" >
+  | < GT: ">" >
+  | < GE: ">=" >
+  | < LT : "<" >
+  | < LE : "<=" >
   | < TIMES : "*">
   | < DIV : "/">
   | < LPAR : "(" >
@@ -65,7 +71,7 @@ ASTNode BooleanOr() :
 {
     exp1=BooleanAnd() (
         <OR> exp2=BooleanAnd()
-            { exp1 = new ASTBooleanOp(exp1, exp2, "||"); }
+            { exp1 = new ASTBooleanOp("||", exp1, exp2); }
         ) *
         {return exp1;}
 }
@@ -73,11 +79,22 @@ ASTNode BooleanOr() :
 ASTNode BooleanAnd() :
 { ASTNode exp1, exp2; }
 {
-    exp1=Exp() (
-        <AND> exp2=Exp()
-            { exp1 = new ASTBooleanOp(exp1, exp2, "&&"); }
+    exp1=Comparation() (
+        <AND> exp2=Comparation()
+            { exp1 = new ASTBooleanOp("&&", exp1, exp2); }
         ) *
         {return exp1;}
+}
+
+ASTNode Comparation() :
+{ Token op; ASTNode exp1, exp2;
+}
+{
+    exp1=Exp() (
+            (op = <EQ> | op=<LT> | op=<GT> | op=<GE> | op=<LE> | op=<DF>) exp2=Exp()
+                { exp1 = new ASTComparationOp(op.image, exp1, exp2); }
+            ) *
+            {return exp1;}
 }
 
 ASTNode Exp() :
@@ -121,6 +138,7 @@ ASTNode Fact() :  {
 {
    ( n=<Num> {t = new ASTNum(Integer.parseInt(n.image));}
    | t = Bool()
+   | <NEW> t = Fact() { t = new ASTNew(t); }
    | t = Id()
    | t = Let()
    //| t = If()
