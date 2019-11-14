@@ -8,12 +8,12 @@ import value.TypeErrorException;
 import value.VBool;
 import value.VInt;
 
-public class ASTComparationOp implements ASTNode {
+public class ASTComparisonOp implements ASTNode {
     ASTNode exp1;
     ASTNode exp2;
     String op;
 
-    public ASTComparationOp(String op, ASTNode exp1, ASTNode exp2){
+    public ASTComparisonOp(String op, ASTNode exp1, ASTNode exp2){
         this.exp1 = exp1;
         this.exp2 = exp2;
         this.op = op;

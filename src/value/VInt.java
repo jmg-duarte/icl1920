@@ -42,4 +42,6 @@ public class VInt implements IValue {
         }
         return (VInt) value;
     }
+
+    public String toString() {return Integer.toString(value);}
 }

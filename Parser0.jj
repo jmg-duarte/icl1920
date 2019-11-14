@@ -79,20 +79,20 @@ ASTNode BooleanOr() :
 ASTNode BooleanAnd() :
 { ASTNode exp1, exp2; }
 {
-    exp1=Comparation() (
-        <AND> exp2=Comparation()
+    exp1=Comparison() (
+        <AND> exp2=Comparison()
             { exp1 = new ASTBooleanOp("&&", exp1, exp2); }
         ) *
         {return exp1;}
 }
 
-ASTNode Comparation() :
+ASTNode Comparison() :
 { Token op; ASTNode exp1, exp2;
 }
 {
     exp1=Exp() (
             (op = <EQ> | op=<LT> | op=<GT> | op=<GE> | op=<LE> | op=<DF>) exp2=Exp()
-                { exp1 = new ASTComparationOp(op.image, exp1, exp2); }
+                { exp1 = new ASTComparisonOp(op.image, exp1, exp2); }
             ) *
             {return exp1;}
 }
