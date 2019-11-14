@@ -143,7 +143,7 @@ ASTNode Fact() :  {
    | t = Id()
    | t = Let()
    | t = If()
-   //| t = While()
+   | t = While()
    | <LPAR> t=Exp() <RPAR>
    )
    { return t; }
@@ -177,16 +177,15 @@ ASTNode If() : {
         {return new ASTIf(exp1, exp2, exp3);}
 }
 
-/*
+
 ASTNode While() : {
     ASTNode exp1;
     ASTNode exp2;
-    {
-    <WHILE> exp1 = Exp() <DO> exp2 = Exp() <END>
-    }
-    return new ASTWhile(exp1, exp2);
+    } {
+    <WHILE> exp1 = BooleanOr() <DO> exp2 = BooleanOr() <END>
+    {return new ASTWhile(exp1, exp2);}
 }
-*/
+
 ASTNode Let() : {
     Token id;
     ASTNode expression;
