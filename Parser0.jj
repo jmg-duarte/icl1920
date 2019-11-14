@@ -32,6 +32,7 @@ TOKEN :
   | < ELSE: "else">
   | < WHILE: "while" >
   | < DO: "do" >
+  | < BOOL: ("true" | "false") >
   | < NOT: "~">
   | < AND: "&&" >
   | < OR: "||">
@@ -54,7 +55,6 @@ TOKEN :
   | < EQUALS: "=" >
   | < DEREF: "!" >
   | < ASSIGN: ":=" >
-  | < BOOL: ("true" | "false") >
   | < Id: ["a"-"z","A"-"Z"] ( ["a"-"z","A"-"Z","0"-"9"] )* >
 
 }
@@ -62,16 +62,29 @@ TOKEN :
 ASTNode Start(): { 
   ASTNode t; 
 } {
-   t = Assign() <EL>
+   t = Expression() <EL>
    { return t; }
+}
+
+ASTNode Expression() : {
+    ASTNode head, tail;
+} {
+    head = Assign() (
+        <SEQ> tail = Assign()
+            {head = new ASTSequence(head, tail);}
+        )*
+    { return head; }
 }
 
 ASTNode Assign() : {
     ASTNode left, right;
-    } {
-        left = BooleanOr() <ASSIGN> right = BooleanOr()
-         { return new ASTBooleanOp(left, right); }
-    }
+} {
+    left = BooleanOr() (
+        <ASSIGN> right = BooleanOr()
+            {left = new ASTAssign(left, right);}
+        )*
+    { return left; }
+}
 
 ASTNode BooleanOr() :
 { ASTNode exp1, exp2;}
@@ -141,17 +154,18 @@ ASTNode UnaryExp() :
 
 ASTNode Fact() :  {
     Token n;
-    ASTNode t;}
-{
+    ASTNode t;
+} {
    ( n=<Num> {t = new ASTNum(Integer.parseInt(n.image));}
    | <NEW> t = Fact() { t = new ASTNew(t); }
    | <NOT> t = Fact() { t = new ASTNot(t); }
-   | t = Id()
+   | <DEREF> t = Fact() { t = new ASTDeref(t); }
+   | t = Bool()
    | t = Let()
    | t = If()
-   | t = Bool()
    | t = While()
-   | <LPAR> t=Exp() <RPAR>
+   | t = Id()
+   | <LPAR> t = Expression() <RPAR>
    )
    { return t; }
 }
@@ -174,13 +188,12 @@ ASTNode Bool() : {
     }
 }
 
-
 ASTNode If() : {
     ASTNode exp1;
     ASTNode exp2;
     ASTNode exp3;
    } {
-        <IF> exp1 = BooleanOr() <THEN> exp2 = BooleanOr() <ELSE> exp3 = BooleanOr() <END>
+        <IF> exp1 = Expression() <THEN> exp2 = Expression() <ELSE> exp3 = Expression() <END>
         {return new ASTIf(exp1, exp2, exp3);}
 }
 
@@ -189,9 +202,10 @@ ASTNode While() : {
     ASTNode exp1;
     ASTNode exp2;
     } {
-    <WHILE> exp1 = BooleanOr() <DO> exp2 = BooleanOr() <END>
+    <WHILE> exp1 = Expression() <DO> exp2 = Expression() <END>
     {return new ASTWhile(exp1, exp2);}
 }
+
 
 ASTNode Let() : {
     Token id;
@@ -199,15 +213,15 @@ ASTNode Let() : {
     ASTNode body;
     Map<String, ASTNode> expressions = new HashMap<String, ASTNode>();
 } {
-    <LET> id=<Id> <EQUALS> expression=Exp()
+    <LET> id=<Id> <EQUALS> expression=Expression()
         {expressions.put(id.image,expression);}
-        (<COMMA> id=<Id> <EQUALS> expression=Exp()
+        (<COMMA> id=<Id> <EQUALS> expression=Expression()
         {
             if (expressions.put(id.image,expression) != null) {
                 throw new RuntimeException("duplicate assignment");
             }
         } )*
-         <IN> body=Exp() <END>
+         <IN> body=Expression() <END>
     {
         return new ASTLetIn(expressions, body);
     }
