@@ -62,9 +62,16 @@ TOKEN :
 ASTNode Start(): { 
   ASTNode t; 
 } {
-   t = BooleanOr() <EL>
+   t = Assign() <EL>
    { return t; }
 }
+
+ASTNode Assign() : {
+    ASTNode left, right;
+    } {
+        left = BooleanOr() <ASSIGN> right = BooleanOr()
+         { return new ASTBooleanOp(left, right); }
+    }
 
 ASTNode BooleanOr() :
 { ASTNode exp1, exp2;}
@@ -137,12 +144,12 @@ ASTNode Fact() :  {
     ASTNode t;}
 {
    ( n=<Num> {t = new ASTNum(Integer.parseInt(n.image));}
-   | t = Bool()
    | <NEW> t = Fact() { t = new ASTNew(t); }
    | <NOT> t = Fact() { t = new ASTNot(t); }
    | t = Id()
    | t = Let()
    | t = If()
+   | t = Bool()
    | t = While()
    | <LPAR> t=Exp() <RPAR>
    )
