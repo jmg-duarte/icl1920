@@ -142,7 +142,7 @@ ASTNode Fact() :  {
    | <NOT> t = Fact() { t = new ASTNot(t); }
    | t = Id()
    | t = Let()
-   //| t = If()
+   | t = If()
    //| t = While()
    | <LPAR> t=Exp() <RPAR>
    )
@@ -167,16 +167,17 @@ ASTNode Bool() : {
     }
 }
 
-/*
+
 ASTNode If() : {
     ASTNode exp1;
     ASTNode exp2;
     ASTNode exp3;
    } {
-        <IF> exp1 = Exp() <THEN> exp2 = Exp() <ELSE> exp3 = Exp() <END>
-    return new ASTIf(exp1, exp2, exp3);
+        <IF> exp1 = BooleanOr() <THEN> exp2 = BooleanOr() <ELSE> exp3 = BooleanOr() <END>
+        {return new ASTIf(exp1, exp2, exp3);}
 }
 
+/*
 ASTNode While() : {
     ASTNode exp1;
     ASTNode exp2;
