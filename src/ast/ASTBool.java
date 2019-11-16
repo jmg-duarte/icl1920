@@ -22,7 +22,14 @@ public class ASTBool implements ASTNode {
 
     @Override
     public Assembler compile(CoreCompiler compiler, Environment env) {
-        return null;
+       VBool result = VBool.check(eval(env));
+       String code;
+       if (result.getValue()) {
+           code = "sipush 1";
+       } else {
+           code = "sipush 0";
+       }
+        return new Assembler(code, 1);
     }
 
     public static ASTBool True() {
