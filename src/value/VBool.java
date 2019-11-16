@@ -28,4 +28,12 @@ public class VBool implements IValue{
         }
         return (VBool) value;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof VBool)) {
+            throw new TypeErrorException();
+        }
+        return value == ((VBool) obj).value;
+    }
 }

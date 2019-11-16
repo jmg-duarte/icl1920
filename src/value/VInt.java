@@ -43,5 +43,14 @@ public class VInt implements IValue {
         return (VInt) value;
     }
 
+    @Override
     public String toString() {return Integer.toString(value);}
+
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof VInt)) {
+            throw new TypeErrorException();
+        }
+        return value == ((VInt) obj).value;
+    }
 }

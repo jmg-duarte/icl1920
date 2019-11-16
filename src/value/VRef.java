@@ -8,10 +8,6 @@ public class VRef implements IValue {
         this.value = value;
     }
 
-    public VRef() {
-        this(new VInt(0));
-    }
-
     public IValue get() {
         return value;
     }
@@ -25,5 +21,13 @@ public class VRef implements IValue {
             throw new TypeErrorException();
         }
         return (VRef) value;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof VRef)) {
+            throw new TypeErrorException();
+        }
+        return value.equals(((VRef) obj).value);
     }
 }
