@@ -8,6 +8,9 @@ public class Assembler {
     public static final String INTEGER_ADDITION = "iadd";
     public static final String INTEGER_SUBTRACTION = "isub";
 
+    public static final String BOOLEAN_AND = "iand";
+    public static final String BOOLEAN_OR = "ior";
+
     private final String code;
     private final int stack;
 

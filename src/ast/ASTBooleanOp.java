@@ -2,6 +2,7 @@ package ast;
 
 import compiler.Assembler;
 import compiler.CoreCompiler;
+import compiler.LineBuilder;
 import env.Environment;
 import value.IValue;
 import value.TypeErrorException;
@@ -38,7 +39,24 @@ public class ASTBooleanOp implements ASTNode {
 
     @Override
     public Assembler compile(CoreCompiler compiler, Environment env) {
-        return null;
+        Assembler leftAssembly = lhs.compile(compiler, env);
+        Assembler rightAssembly = rhs.compile(compiler, env);
+
+        LineBuilder lb = new LineBuilder();
+        lb.append(leftAssembly, rightAssembly);
+
+        switch(op){
+            case AND:
+                lb.appendLine(Assembler.BOOLEAN_AND);
+                break;
+            case OR:
+                lb.appendLine(Assembler.BOOLEAN_OR);
+                break;
+            default:
+                throw new IllegalStateException("unexpected operator: " + op);
+        }
+
+        return new Assembler(lb.toString(), leftAssembly.getStack() + rightAssembly.getStack());
     }
 
 }
