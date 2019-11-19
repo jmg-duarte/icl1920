@@ -26,3 +26,5 @@ hs_err_pid*
 src/parser/
 
 .idea/misc.xml
+
+.idea/icl1920.iml
