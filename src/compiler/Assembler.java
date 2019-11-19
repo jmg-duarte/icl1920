@@ -7,9 +7,10 @@ public class Assembler {
     public static final String INTEGER_MULTIPLICATION = "imul";
     public static final String INTEGER_ADDITION = "iadd";
     public static final String INTEGER_SUBTRACTION = "isub";
-
     public static final String BOOLEAN_AND = "iand";
     public static final String BOOLEAN_OR = "ior";
+    public static final String IF_EQUALS = "ifeq";
+    public static final String GO_TO = "goto";
 
     private final String code;
     private final int stack;

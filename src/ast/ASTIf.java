@@ -2,6 +2,8 @@ package ast;
 
 import compiler.Assembler;
 import compiler.CoreCompiler;
+import compiler.LabelMaker;
+import compiler.LineBuilder;
 import env.Environment;
 import value.IValue;
 import value.TypeErrorException;
@@ -35,8 +37,27 @@ public class ASTIf implements ASTNode {
     //TODO ASTIf compile method
     @Override
     public Assembler compile(CoreCompiler compiler, Environment env) {
-        return null;
+        Assembler condAssembly = conditional.compile(compiler, env);
+        Assembler trueAssembly = ifTrue.compile(compiler, env);
+        Assembler falseAssembly = ifFalse.compile(compiler, env);
+
+        String labelFalse = LabelMaker.getLabel();
+        String labelTrue = LabelMaker.getLabel();
+
+        LineBuilder lb = new LineBuilder();
+        lb.append(condAssembly);
+        lb.appendLine(Assembler.IF_EQUALS + " " + labelFalse);
+        lb.append(trueAssembly);
+        lb.appendLine(Assembler.GO_TO + " " + labelTrue);
+        lb.appendLine(labelFalse + ":");
+        lb.append(falseAssembly);
+        lb.appendLine(labelTrue + ":");
+
+        return new Assembler(lb.toString(), condAssembly.getStack() +
+                trueAssembly.getStack() +
+                falseAssembly.getStack());
     }
-
-
 }
+
+
+
