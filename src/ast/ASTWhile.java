@@ -2,6 +2,8 @@ package ast;
 
 import compiler.Assembler;
 import compiler.CoreCompiler;
+import compiler.LabelMaker;
+import compiler.LineBuilder;
 import env.Environment;
 import value.IValue;
 import value.VBool;
@@ -29,6 +31,21 @@ public class ASTWhile implements ASTNode {
 
     @Override
     public Assembler compile(CoreCompiler compiler, Environment env) {
-        return null;
+        Assembler condAssembly = conditional.compile(compiler, env);
+        Assembler bodyAssembly = body.compile(compiler, env);
+
+        String labelTrue = LabelMaker.getLabel();
+        String labelFalse = LabelMaker.getLabel();
+
+        LineBuilder lb = new LineBuilder();
+        lb.appendLine(labelTrue + ":");
+        lb.append(condAssembly);
+        lb.appendLine(Assembler.IF_EQUALS + " " + labelFalse);
+        lb.append(bodyAssembly);
+        lb.appendLine(Assembler.GO_TO + " " + labelTrue);
+        lb.appendLine(labelFalse + ":");
+
+        return new Assembler(lb.toString(), condAssembly.getStack() +
+                bodyAssembly.getStack());
     }
 }
