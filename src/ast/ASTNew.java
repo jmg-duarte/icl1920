@@ -2,6 +2,7 @@ package ast;
 
 import compiler.Assembler;
 import compiler.CoreCompiler;
+import compiler.LineBuilder;
 import env.Environment;
 import value.IValue;
 import value.VInt;
@@ -22,6 +23,15 @@ public class ASTNew implements ASTNode {
 
     @Override
     public Assembler compile(CoreCompiler compiler, Environment env) {
-        return null;
+       /* LineBuilder lb = new LineBuilder();
+
+        Assembler asm = num.compile(compiler,env);
+
+
+        lb.appendLine("new "+asm);
+        lb.appendLine("invokespecial " + currentFrame + "/<init>()V");
+        lb.appendLine("dup");
+        lb.appendLine("putfield " + currentFrame + "/v I");*/
+       return null;
     }
 }
