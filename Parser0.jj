@@ -31,6 +31,7 @@ TOKEN :
   | < THEN: "then" >
   | < ELSE: "else">
   | < WHILE: "while" >
+  | < FUNC: "func" >
   | < DO: "do" >
   | < BOOL: ("true" | "false") >
   | < NOT: "~">
@@ -39,15 +40,16 @@ TOKEN :
   | < COMMA: "," >
   | < Num: (["0"-"9"]) + >
   | < PLUS : "+" >
-  | < MINUS : "-">
   | < EQ : "==" >
   | < DF : "!=" >
+  | < ARROW : "->" >
+  | < MINUS : "-">
   | < GT: ">" >
   | < GE: ">=" >
   | < LT : "<" >
   | < LE : "<=" >
-  | < TIMES : "*">
   | < DIV : "/">
+  | < TIMES : "*">
   | < LPAR : "(" >
   | < RPAR : ")" >
   | < EL: ";;" >
@@ -162,6 +164,12 @@ ASTNode UnaryExp() :
     { return t1; }
 }
 
+ASTNode FunApplication() : {
+
+} {
+
+}
+
 ASTNode Fact() :  {
     Token n;
     ASTNode t;
@@ -174,6 +182,7 @@ ASTNode Fact() :  {
    | t = Let()
    | t = If()
    | t = While()
+   | t = Func()
    | t = Id()
    | <LPAR> t = Expression() <RPAR>
    )
@@ -214,6 +223,27 @@ ASTNode While() : {
     } {
     <WHILE> exp1 = Expression() <DO> exp2 = Expression() <END>
     {return new ASTWhile(exp1, exp2);}
+}
+
+ASTNode Func() : {
+    List<String> parameters = new LinkedList<String>();
+    ASTNode body;
+} {
+    <FUNC> id=<Id> { parameters.add(id.image); }
+    (<COMMA> id=<Id> { parameters.add(id.image); } )*
+    <ARROW> body = Expression() <END>
+    {
+    return new ASTFunc(parameters, body);
+    }
+}
+
+ASTNode FuncApp() : {
+Token id;
+ASTNode expr;
+List<ASTNode> args;
+} {
+    <LPAR> expr=Expression() {args.add(expr);} ( <COMMA> expr=Expression() {args.add(expr);} )* <RPAR>
+    {return new ASTFuncApp(id.image, args);}
 }
 
 

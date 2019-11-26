@@ -14,6 +14,10 @@ public class ASTId implements ASTNode {
         this.id = id;
     }
 
+    public String getId() {
+        return id;
+    }
+
     @Override
     public IValue eval(Environment env) {
         return env.find(id);
