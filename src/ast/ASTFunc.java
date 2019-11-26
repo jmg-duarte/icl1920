@@ -9,10 +9,10 @@ import value.VFunc;
 import java.util.List;
 
 public class ASTFunc implements ASTNode {
-    private final List<ASTId> parameters;
+    private final List<String> parameters;
     private final ASTNode body;
 
-    public ASTFunc(List<ASTId> parameters, ASTNode body) {
+    public ASTFunc(List<String> parameters, ASTNode body) {
         this.parameters = parameters;
         this.body = body;
     }

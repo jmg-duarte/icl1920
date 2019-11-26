@@ -2,8 +2,7 @@ PARSER_BEGIN(Parser)
 
 package parser;
 
-import java.util.Map;
-import java.util.HashMap;
+import java.util.*;
 
 import ast.*;
 import compiler.*;
@@ -159,15 +158,19 @@ ASTNode UnaryExp() :
 {
     ( (op = <MINUS> | op = <PLUS>) t1 = UnaryExp()
         { t1 = new ASTUnaryOp(op.image, t1); }
-    | t1 = Fact()
+    | t1 = FunApplication()
     )
     { return t1; }
 }
 
 ASTNode FunApplication() : {
-
-} {
-
+    ASTNode node;
+    List<ASTNode> args;}
+{
+    node=Fact() ((args=FuncArgs()
+        {node = new ASTFuncApp(node, args);}
+    )+)?
+    {return node;}
 }
 
 ASTNode Fact() :  {
@@ -226,6 +229,7 @@ ASTNode While() : {
 }
 
 ASTNode Func() : {
+    Token id;
     List<String> parameters = new LinkedList<String>();
     ASTNode body;
 } {
@@ -237,13 +241,12 @@ ASTNode Func() : {
     }
 }
 
-ASTNode FuncApp() : {
-Token id;
-ASTNode expr;
-List<ASTNode> args;
+List<ASTNode> FuncArgs() : {
+    ASTNode expr;
+    List<ASTNode> args = new LinkedList<ASTNode>();
 } {
     <LPAR> expr=Expression() {args.add(expr);} ( <COMMA> expr=Expression() {args.add(expr);} )* <RPAR>
-    {return new ASTFuncApp(id.image, args);}
+    {return args;}
 }
 
 
