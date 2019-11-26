@@ -2,6 +2,8 @@ package ast;
 
 import compiler.Assembler;
 import compiler.CoreCompiler;
+import compiler.LabelMaker;
+import compiler.LineBuilder;
 import env.Environment;
 import value.IValue;
 import value.TypeErrorException;
@@ -39,6 +41,37 @@ public class ASTComparisonOp implements ASTNode {
 
     @Override
     public Assembler compile(CoreCompiler compiler, Environment env) {
-        return null;
+        Assembler leftAssembly = exp1.compile(compiler, env);
+        Assembler rightAssembly = exp2.compile(compiler, env);
+
+        String labelTrue = LabelMaker.getLabel();
+        String labelFalse = LabelMaker.getLabel();
+
+        LineBuilder lb = new LineBuilder();
+        lb.append(leftAssembly, rightAssembly);
+        lb.appendLine(Assembler.INTEGER_SUBTRACTION);
+
+        switch(op){
+            case ">":
+                lb.appendLine(Assembler.IF_GREATER + " " + labelTrue);
+                break;
+            case "<":
+                lb.appendLine(Assembler.IF_LESS+ " " + labelTrue);
+                break;
+            case ">=":
+                lb.appendLine(Assembler.IF_GREATER_EQ+ " " + labelTrue);
+                break;
+            case "<=":
+                lb.appendLine(Assembler.IF_LESS_EQ+ " " + labelTrue);
+                break;
+            default:
+                throw new IllegalStateException("unexpected operator: " + op);
+        }
+
+        lb.appendLine(Assembler.BOOLEAN_FALSE);
+        lb.appendLine(Assembler.GO_TO + " " + labelFalse);
+        lb.appendLine(labelTrue + ": " + Assembler.BOOLEAN_TRUE);
+        lb.appendLine(labelFalse + ": ");
+        return new Assembler(lb.toString(), leftAssembly.getStack() + rightAssembly.getStack());
     }
 }

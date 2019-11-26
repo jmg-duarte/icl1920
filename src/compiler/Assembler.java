@@ -10,7 +10,14 @@ public class Assembler {
     public static final String BOOLEAN_AND = "iand";
     public static final String BOOLEAN_OR = "ior";
     public static final String IF_EQUALS = "ifeq";
+    public static final String IF_NOT_EQUALS = "ifne";
+    public static final String IF_GREATER_EQ = "ifeq";
+    public static final String IF_GREATER = "ifgt";
+    public static final String IF_LESS = "iflt";
+    public static final String IF_LESS_EQ = "ifle";
     public static final String GO_TO = "goto";
+    public static final String BOOLEAN_FALSE = "sipush 0";
+    public static final String BOOLEAN_TRUE = "sipush 1";
 
     private final String code;
     private final int stack;

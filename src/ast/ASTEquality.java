@@ -2,6 +2,8 @@ package ast;
 
 import compiler.Assembler;
 import compiler.CoreCompiler;
+import compiler.LabelMaker;
+import compiler.LineBuilder;
 import env.Environment;
 import value.IValue;
 import value.VBool;
@@ -34,6 +36,33 @@ public class ASTEquality implements ASTNode {
 
     @Override
     public Assembler compile(CoreCompiler compiler, Environment env) {
-        return null;
+        Assembler leftAssembly = left.compile(compiler, env);
+        Assembler rightAssembly = right.compile(compiler, env);
+
+        String labelTrue = LabelMaker.getLabel();
+        String labelFalse = LabelMaker.getLabel();
+
+        LineBuilder lb = new LineBuilder();
+        lb.append(leftAssembly, rightAssembly);
+        lb.appendLine(Assembler.INTEGER_SUBTRACTION);
+
+        switch(op){
+            case "==":
+                lb.appendLine(Assembler.IF_EQUALS + " " + labelTrue);
+                break;
+            case "!=":
+                lb.appendLine(Assembler.IF_NOT_EQUALS + " " + labelTrue);
+                break;
+            default:
+                throw new IllegalStateException("unexpected operator: " + op);
+        }
+
+        lb.appendLine(Assembler.BOOLEAN_FALSE);
+        lb.appendLine(Assembler.GO_TO + " " + labelFalse);
+        lb.appendLine(labelTrue + ": ");
+        lb.appendLine(Assembler.BOOLEAN_TRUE);
+        lb.appendLine(labelFalse + ": ");
+
+        return new Assembler(lb.toString(), leftAssembly.getStack() + rightAssembly.getStack());
     }
 }
