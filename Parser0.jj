@@ -60,8 +60,8 @@ TOKEN :
 
 }
 
-ASTNode Start(): { 
-  ASTNode t; 
+ASTNode Start(): {
+  ASTNode t;
 } {
    t = Expression() <EL>
    { return t; }

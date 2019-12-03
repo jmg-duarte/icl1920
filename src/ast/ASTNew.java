@@ -2,10 +2,9 @@ package ast;
 
 import compiler.Assembler;
 import compiler.CoreCompiler;
-import compiler.LineBuilder;
 import env.Environment;
+import types.IType;
 import value.IValue;
-import value.VInt;
 import value.VRef;
 
 public class ASTNew implements ASTNode {
@@ -33,5 +32,10 @@ public class ASTNew implements ASTNode {
         lb.appendLine("dup");
         lb.appendLine("putfield " + currentFrame + "/v I");*/
        return null;
+    }
+
+    @Override
+    public IType typecheck(Environment<IType> env) {
+        return null;
     }
 }

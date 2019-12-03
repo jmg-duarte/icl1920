@@ -4,6 +4,8 @@ import compiler.Assembler;
 import compiler.CoreCompiler;
 import compiler.LineBuilder;
 import env.Environment;
+import types.IType;
+import types.TInt;
 import value.IValue;
 import value.TypeErrorException;
 import value.VInt;
@@ -68,5 +70,18 @@ public class ASTBinaryOp implements ASTNode {
         }
 
         return new Assembler(lb.toString(), leftAssembly.getStack() + rightAssembly.getStack());
+    }
+
+    @Override
+    public IType typecheck(Environment<IType> env) {
+        IType o1 = lhs.typecheck(env);
+        IType o2 = rhs.typecheck(env);
+
+        if(o1 instanceof TInt && o2 instanceof TInt){
+            return new TInt();
+        } else {
+            throw new TypeErrorException(); //TODO confirmar
+        }
+
     }
 }

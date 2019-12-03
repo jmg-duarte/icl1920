@@ -3,6 +3,8 @@ package ast;
 import compiler.Assembler;
 import compiler.CoreCompiler;
 import env.Environment;
+import types.IType;
+import types.TInt;
 import value.IValue;
 import value.VInt;
 
@@ -22,5 +24,10 @@ public class ASTNum implements ASTNode {
     public Assembler compile(CoreCompiler compiler, Environment env) {
         String code = "sipush " + val;
         return new Assembler(code, 1);
+    }
+
+    @Override
+    public IType typecheck(Environment<IType> env) {
+        return new TInt();
     }
 }

@@ -2,6 +2,7 @@ package ast;
 
 import compiler.*;
 import env.Environment;
+import types.IType;
 import value.IValue;
 import value.TypeErrorException;
 import value.VInt;
@@ -68,5 +69,10 @@ public class ASTLetIn implements ASTNode {
         lb.appendLine("getfield " + currentFrame + "/sl L" + oldFrame + ";");
         lb.appendLine("astore 4");
         return new Assembler(lb.toString(), 0);
+    }
+
+    @Override
+    public IType typecheck(Environment<IType> env) {
+        return null;
     }
 }

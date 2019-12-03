@@ -4,6 +4,8 @@ import compiler.Assembler;
 import compiler.CoreCompiler;
 import compiler.LineBuilder;
 import env.Environment;
+import types.IType;
+import types.TBool;
 import value.IValue;
 import value.TypeErrorException;
 import value.VBool;
@@ -57,6 +59,19 @@ public class ASTBooleanOp implements ASTNode {
         }
 
         return new Assembler(lb.toString(), leftAssembly.getStack() + rightAssembly.getStack());
+    }
+
+    @Override
+    public IType typecheck(Environment<IType> env) {
+        IType o1 = lhs.typecheck(env);
+        IType o2 = rhs.typecheck(env);
+
+        if(o1 instanceof TBool && o2 instanceof TBool){
+            return new TBool();
+        } else {
+            throw new TypeErrorException(); //TODO confirmar
+        }
+
     }
 
 }

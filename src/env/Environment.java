@@ -1,13 +1,11 @@
 package env;
 
-import value.IValue;
-
 import java.util.HashMap;
 import java.util.Map;
 
-public class Environment {
+public class Environment<T> {
 
-    private Map<String, IValue> scope;
+    private Map<String, T> scope;
     private Environment parent;
     private String name;
 
@@ -15,7 +13,7 @@ public class Environment {
         scope = new HashMap<>();
     }
 
-    public Environment(Environment parent) {
+    public Environment(Environment<T> parent) {
         this();
         this.parent = parent;
     }
@@ -30,13 +28,13 @@ public class Environment {
         this.name = name;
     }*/
 
-    public IValue find(String id) {
-        Environment env = this;
+    public T find(String id) {
+        Environment<T> env = this;
         while (true) {
             if (env == null) {
                 throw new RuntimeException(id + " was not declared");
             }
-            IValue value = env.scope.get(id);
+            T value = (T) env.scope.get(id);
             if (value == null) {
                 env = env.parent;
             } else {
@@ -45,23 +43,23 @@ public class Environment {
         }
     }
 
-    public IValue findInScope(String id) {
+    public T findInScope(String id) {
         return scope.get(id);
     }
 
-    public void associate(String id, IValue value) {
+    public void associate(String id, T value) {
         scope.put(id, value);
     }
 
-    public Environment startScope() {
+    public Environment<T> startScope() {
         return new Environment(this);
     }
 
-    public Environment startScope(String name) {
+    public Environment<T> startScope(String name) {
         return new Environment(this, name);
     }
 
-    public Environment endScope() {
+    public Environment<T> endScope() {
         return parent;
     }
 

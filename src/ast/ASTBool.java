@@ -3,6 +3,8 @@ package ast;
 import compiler.Assembler;
 import compiler.CoreCompiler;
 import env.Environment;
+import types.IType;
+import types.TBool;
 import value.IValue;
 import value.TypeErrorException;
 import value.VBool;
@@ -30,6 +32,11 @@ public class ASTBool implements ASTNode {
            code = "sipush 0";
        }
         return new Assembler(code, 1);
+    }
+
+    @Override
+    public IType typecheck(Environment<IType> env) {
+        return new TBool();
     }
 
     public static ASTBool True() {

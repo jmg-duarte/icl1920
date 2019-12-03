@@ -5,27 +5,23 @@ import compiler.CoreCompiler;
 import env.Environment;
 import types.IType;
 import value.IValue;
-import value.VFunc;
 
-import java.util.List;
+public class ASTPrint implements ASTNode {
+    ASTNode exp;
 
-public class ASTFunc implements ASTNode {
-    private final List<String> parameters;
-    private final ASTNode body;
-
-    public ASTFunc(List<String> parameters, ASTNode body) {
-        this.parameters = parameters;
-        this.body = body;
+    public ASTPrint(ASTNode exp){
+        this.exp = exp;
     }
 
     @Override
     public IValue eval(Environment env) {
-        return new VFunc(parameters, body, env);
+        return exp.eval(env);
     }
 
     @Override
     public Assembler compile(CoreCompiler compiler, Environment env) {
         return null;
+        //ir ao rodape -> converte para string e faz o método print ;
     }
 
     @Override

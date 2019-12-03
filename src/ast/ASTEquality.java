@@ -5,7 +5,11 @@ import compiler.CoreCompiler;
 import compiler.LabelMaker;
 import compiler.LineBuilder;
 import env.Environment;
+import types.IType;
+import types.TBool;
+import types.TInt;
 import value.IValue;
+import value.TypeErrorException;
 import value.VBool;
 
 public class ASTEquality implements ASTNode {
@@ -64,5 +68,17 @@ public class ASTEquality implements ASTNode {
         lb.appendLine(labelFalse + ": ");
 
         return new Assembler(lb.toString(), leftAssembly.getStack() + rightAssembly.getStack());
+    }
+
+    @Override
+    public IType typecheck(Environment<IType> env) {
+        IType o1 = left.typecheck(env);
+        IType o2 = right.typecheck(env);
+
+        if(o1 instanceof TBool && o2 instanceof TBool || o1 instanceof TInt && o2 instanceof TInt){
+            return new TBool();
+        } else {
+            throw new TypeErrorException(); //TODO confirmar
+        }
     }
 }

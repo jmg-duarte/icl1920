@@ -1,7 +1,6 @@
 import ast.ASTNode;
 import compiler.CoreCompiler;
 import env.Environment;
-import parser.ParseException;
 import parser.Parser;
 
 import java.io.*;
@@ -25,6 +24,10 @@ public class Main {
             }
             case "-c": {
                 compile(args[1]);
+                break;
+            }
+            case "-t": {
+                typecheck();
                 break;
             }
         }
@@ -74,6 +77,22 @@ public class Main {
             try {
                 exp = Parser.Start();
                 System.out.println( exp.eval(globalScope) );
+            } catch (Exception e) {
+                e.printStackTrace();
+                System.out.println ("Syntax Error!");
+                Parser.ReInit(System.in);
+            }
+        }
+    }
+
+    private static void typecheck() {
+        new Parser(System.in);
+        ASTNode exp;
+        Environment globalScope = new Environment();
+        while (true) {
+            try {
+                exp = Parser.Start();
+                System.out.println( exp.typecheck(globalScope) );
             } catch (Exception e) {
                 e.printStackTrace();
                 System.out.println ("Syntax Error!");

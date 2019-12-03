@@ -4,6 +4,7 @@ import compiler.Assembler;
 import compiler.CoreCompiler;
 import compiler.LineBuilder;
 import env.Environment;
+import types.IType;
 import value.IValue;
 import value.TypeErrorException;
 import value.VInt;
@@ -48,5 +49,10 @@ public class ASTUnaryOp implements ASTNode {
                 throw new IllegalStateException("unexpected operator: " + operator);
         }
         return new Assembler(lb.toString(), asm.getStack());
+    }
+
+    @Override
+    public IType typecheck(Environment<IType> env) {
+        return null;
     }
 }

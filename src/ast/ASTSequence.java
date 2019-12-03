@@ -3,6 +3,7 @@ package ast;
 import compiler.Assembler;
 import compiler.CoreCompiler;
 import env.Environment;
+import types.IType;
 import value.IValue;
 
 public class ASTSequence implements ASTNode {
@@ -22,6 +23,11 @@ public class ASTSequence implements ASTNode {
 
     @Override
     public Assembler compile(CoreCompiler compiler, Environment env) {
+        return null;
+    }
+
+    @Override
+    public IType typecheck(Environment<IType> env) {
         return null;
     }
 }

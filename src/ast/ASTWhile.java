@@ -5,6 +5,7 @@ import compiler.CoreCompiler;
 import compiler.LabelMaker;
 import compiler.LineBuilder;
 import env.Environment;
+import types.IType;
 import value.IValue;
 import value.VBool;
 
@@ -47,5 +48,10 @@ public class ASTWhile implements ASTNode {
 
         return new Assembler(lb.toString(), condAssembly.getStack() +
                 bodyAssembly.getStack());
+    }
+
+    @Override
+    public IType typecheck(Environment<IType> env) {
+        return null;
     }
 }

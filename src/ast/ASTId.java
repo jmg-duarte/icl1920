@@ -4,6 +4,7 @@ import compiler.Assembler;
 import compiler.CoreCompiler;
 import compiler.LineBuilder;
 import env.Environment;
+import types.IType;
 import value.IValue;
 
 public class ASTId implements ASTNode {
@@ -19,12 +20,12 @@ public class ASTId implements ASTNode {
     }
 
     @Override
-    public IValue eval(Environment env) {
+    public IValue eval(Environment<IValue> env) {
         return env.find(id);
     }
 
     @Override
-    public Assembler compile(CoreCompiler compiler, Environment env) {
+    public Assembler compile(CoreCompiler compiler, Environment<IValue> env) {
         LineBuilder lb = new LineBuilder();
         lb.appendLine("aload 4");
         while (true) {
@@ -45,7 +46,11 @@ public class ASTId implements ASTNode {
                 break;
             }
         }
-
         return new Assembler(lb.toString(), 1);
+    }
+
+    @Override
+    public IType typecheck(Environment<IType> env) {
+        return null;
     }
 }

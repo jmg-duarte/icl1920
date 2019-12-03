@@ -5,6 +5,7 @@ import compiler.CoreCompiler;
 import compiler.LabelMaker;
 import compiler.LineBuilder;
 import env.Environment;
+import types.IType;
 import value.IValue;
 import value.TypeErrorException;
 import value.VBool;
@@ -56,6 +57,11 @@ public class ASTIf implements ASTNode {
         return new Assembler(lb.toString(), condAssembly.getStack() +
                 trueAssembly.getStack() +
                 falseAssembly.getStack());
+    }
+
+    @Override
+    public IType typecheck(Environment<IType> env) {
+        return null;
     }
 }
 
