@@ -10,4 +10,5 @@ public class TBool implements IType {
     public String toString() {
         return "Bool";
     }
+
 }

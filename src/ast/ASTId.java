@@ -51,6 +51,6 @@ public class ASTId implements ASTNode {
 
     @Override
     public IType typecheck(Environment<IType> env) {
-        return null;
+        return env.find(id);
     }
 }

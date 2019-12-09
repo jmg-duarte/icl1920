@@ -7,6 +7,7 @@ import java.util.*;
 import ast.*;
 import compiler.*;
 import env.*;
+import types.*;
 
 /** ID lister. */
 public class Parser{}
@@ -30,8 +31,11 @@ TOKEN :
   | < THEN: "then" >
   | < ELSE: "else">
   | < WHILE: "while" >
-  | < FUNC: "func" >
+  | < FUNC: "fun" >
   | < DO: "do" >
+  | < INT: "int" >
+  | < BOOLEAN: "bool">
+  | < REF : "ref">
   | < BOOL: ("true" | "false") >
   | < NOT: "~">
   | < AND: "&&" >
@@ -47,6 +51,7 @@ TOKEN :
   | < GE: ">=" >
   | < LT : "<" >
   | < LE : "<=" >
+  | < COL : ":" >
   | < DIV : "/">
   | < TIMES : "*">
   | < LPAR : "(" >
@@ -152,6 +157,7 @@ ASTNode Term() :
 }
 
 
+//TODO por isto dentro do fact ??
 ASTNode UnaryExp() :
 {  Token op;
    ASTNode t1; }
@@ -163,6 +169,7 @@ ASTNode UnaryExp() :
     { return t1; }
 }
 
+//TODO subir isto para o lado do assign
 ASTNode FunApplication() : {
     ASTNode node;
     List<ASTNode> args;}
@@ -230,15 +237,28 @@ ASTNode While() : {
 
 ASTNode Func() : {
     Token id;
-    List<String> parameters = new LinkedList<String>();
-    ASTNode body;
+    Map<String, IType> parameters = new HashMap<String, IType>();
+    ASTNode body; IType type;
 } {
-    <FUNC> id=<Id> { parameters.add(id.image); }
-    (<COMMA> id=<Id> { parameters.add(id.image); } )*
+    <FUNC> id=<Id> <COL> type=Type() { parameters.put(id.image, type); }
+    (<COMMA> id=<Id> <COL> type=Type() { parameters.put(id.image, type); })*
     <ARROW> body = Expression() <END>
     {
     return new ASTFunc(parameters, body);
     }
+}
+
+IType Type(): {
+    List<IType> paramsTypes = new LinkedList();
+    IType type;
+    Token t;
+}{
+  ( t = <INT>   {type = new TInt();}
+  | t = <BOOLEAN>  {type = new TBool();}
+  | t = <REF> type=Type()  {type = new TRef(type);}
+  | t = <LPAR> type=Type() {paramsTypes.add(type);} (<COMMA> type=Type() {paramsTypes.add(type);})* <RPAR> type=Type() {type = new TFun(paramsTypes,type);}
+  )
+  {return type;}
 }
 
 List<ASTNode> FuncArgs() : {

@@ -6,6 +6,7 @@ import compiler.LabelMaker;
 import compiler.LineBuilder;
 import env.Environment;
 import types.IType;
+import types.TBool;
 import value.IValue;
 import value.TypeErrorException;
 import value.VBool;
@@ -61,7 +62,19 @@ public class ASTIf implements ASTNode {
 
     @Override
     public IType typecheck(Environment<IType> env) {
-        return null;
+        IType conditionalType = conditional.typecheck(env);
+        IType ifTrueType = ifTrue.typecheck(env);
+        IType ifFalseType = ifFalse.typecheck(env);
+
+        if (!(conditionalType instanceof TBool)){
+            throw new TypeErrorException();
+        }
+
+        if (!(ifTrueType.equals(ifFalseType))){
+            throw new TypeErrorException();
+        }
+
+        return ifTrueType;
     }
 }
 

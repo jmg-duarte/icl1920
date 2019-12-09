@@ -36,6 +36,9 @@ public class ASTFuncApp implements ASTNode {
 
     @Override
     public IType typecheck(Environment<IType> env) {
+        for(ASTNode arg: args) {
+            IType argType = arg.typecheck(env);
+        }
         return null;
     }
 }

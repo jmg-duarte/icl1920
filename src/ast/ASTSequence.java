@@ -28,6 +28,8 @@ public class ASTSequence implements ASTNode {
 
     @Override
     public IType typecheck(Environment<IType> env) {
-        return null;
+        IType headType = head.typecheck(env);
+        IType tailType = tail.typecheck(env);
+        return tailType;
     }
 }

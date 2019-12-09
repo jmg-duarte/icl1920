@@ -15,6 +15,7 @@ public class ASTLetIn implements ASTNode {
     // private String id;
     //private ASTNode expression;
     private Map<String, ASTNode> expressions; //map with all the associations
+    private Map<String, IType> expTypes;
     private ASTNode body;
 
     public ASTLetIn(Map<String, ASTNode> expressions, ASTNode body) {
@@ -73,6 +74,11 @@ public class ASTLetIn implements ASTNode {
 
     @Override
     public IType typecheck(Environment<IType> env) {
-        return null;
+        Environment innerScope = env.startScope();
+        for (Entry<String, ASTNode> e : expressions.entrySet()) {
+            innerScope.associate(e.getKey(), e.getValue().typecheck(env));
+        }
+        innerScope.endScope();
+        return body.typecheck(innerScope);
     }
 }

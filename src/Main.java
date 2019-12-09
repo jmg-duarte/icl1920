@@ -85,7 +85,7 @@ public class Main {
         }
     }
 
-    private static void typecheck() {
+   private static void typecheck() {
         new Parser(System.in);
         ASTNode exp;
         Environment globalScope = new Environment();

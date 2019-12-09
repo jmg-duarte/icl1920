@@ -15,7 +15,8 @@ public class ASTPrint implements ASTNode {
 
     @Override
     public IValue eval(Environment env) {
-        return exp.eval(env);
+        System.out.println(exp.eval(env));
+        return null;
     }
 
     @Override

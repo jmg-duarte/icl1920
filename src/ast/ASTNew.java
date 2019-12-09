@@ -1,17 +1,19 @@
 package ast;
 
-import compiler.Assembler;
-import compiler.CoreCompiler;
+import compiler.*;
 import env.Environment;
 import types.IType;
+import types.TRef;
 import value.IValue;
 import value.VRef;
 
 public class ASTNew implements ASTNode {
     ASTNode num;
+    IType referenceType;
 
     public ASTNew(ASTNode num){
         this.num = num;
+        referenceType = null;
     }
 
     @Override
@@ -22,20 +24,23 @@ public class ASTNew implements ASTNode {
 
     @Override
     public Assembler compile(CoreCompiler compiler, Environment env) {
-       /* LineBuilder lb = new LineBuilder();
+        LineBuilder lb = new LineBuilder();
+        FrameStack frameStack = compiler.getfStack();
+        Frame currentFrame = frameStack.newFrame();
 
-        Assembler asm = num.compile(compiler,env);
-
-
-        lb.appendLine("new "+asm);
+        lb.appendLine("new " + currentFrame);
+        lb.appendLine("dup");
         lb.appendLine("invokespecial " + currentFrame + "/<init>()V");
         lb.appendLine("dup");
-        lb.appendLine("putfield " + currentFrame + "/v I");*/
-       return null;
+        Assembler asm = num.compile(compiler,env);
+        lb.appendLine("putfield " + currentFrame + "/v "+referenceType.getType()); //TODO change to type
+
+       return new Assembler(lb.toString(),0);
     }
 
     @Override
     public IType typecheck(Environment<IType> env) {
-        return null;
+        referenceType = num.typecheck(env);
+        return new TRef(referenceType);
     }
 }

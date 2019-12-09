@@ -14,6 +14,9 @@ public class TRef implements IType {
 
     @Override
     public String toString() {
-        return "Ref";
+        return "ref";
+        //"LJava/lang/Object";
+
     }
+
 }

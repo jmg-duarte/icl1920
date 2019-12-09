@@ -5,6 +5,7 @@ import compiler.CoreCompiler;
 import compiler.LineBuilder;
 import env.Environment;
 import types.IType;
+import types.TInt;
 import value.IValue;
 import value.TypeErrorException;
 import value.VInt;
@@ -53,6 +54,7 @@ public class ASTUnaryOp implements ASTNode {
 
     @Override
     public IType typecheck(Environment<IType> env) {
-        return null;
+        //TODO ver isto
+        return new TInt();
     }
 }

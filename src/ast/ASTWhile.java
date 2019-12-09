@@ -6,7 +6,9 @@ import compiler.LabelMaker;
 import compiler.LineBuilder;
 import env.Environment;
 import types.IType;
+import types.TBool;
 import value.IValue;
+import value.TypeErrorException;
 import value.VBool;
 
 public class ASTWhile implements ASTNode {
@@ -52,6 +54,11 @@ public class ASTWhile implements ASTNode {
 
     @Override
     public IType typecheck(Environment<IType> env) {
-        return null;
+        IType conditionalType = conditional.typecheck(env);
+        IType bodyType = body.typecheck(env);
+        if (!(conditionalType instanceof TBool)) {
+            throw new TypeErrorException();
+        }
+        return new TBool();
     }
 }

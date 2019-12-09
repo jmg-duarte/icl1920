@@ -1,1 +1,1 @@
-while 1 do true end;;
+~true;;
