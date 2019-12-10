@@ -2,13 +2,18 @@ package types;
 
 public class TBool implements IType {
     @Override
-    public String getType() {
-        return null;
+    public IType getType() {
+        return new TBool();
     }
 
     @Override
     public String toString() {
-        return "Bool";
+        return "I";
+    }
+
+    @Override
+    public boolean equals(Object object){
+        return object instanceof TBool;
     }
 
 }

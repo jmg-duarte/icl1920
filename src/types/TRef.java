@@ -1,22 +1,26 @@
 package types;
 
 public class TRef implements IType {
-    IType cellType;
+    IType contentType; //content type
 
     public TRef(IType cellType){
-        this.cellType = cellType;
+        this.contentType = cellType;
     }
 
     @Override
-    public String getType() {
-        return "Ref("+cellType.getType()+")";
+    public IType getType() {
+        return contentType;
     }
 
     @Override
     public String toString() {
-        return "ref";
-        //"LJava/lang/Object";
+       // return "Ref("+contentType.getType()+")";
+        return "LJava/lang/Object";
+    }
 
+    @Override
+    public boolean equals(Object object){
+        return object instanceof TRef && contentType.equals(((TRef) object).getType());
     }
 
 }

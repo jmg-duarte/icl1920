@@ -37,6 +37,8 @@ public class Main {
         new Parser(new FileInputStream(arg));
         ASTNode exp = Parser.Start();
         CoreCompiler c = new CoreCompiler(exp);
+        Environment globalScope = new Environment();
+        exp.typecheck(globalScope);
         c.compile(exp);
         try (Stream<Path> walk = Files.walk(Paths.get("./jout/"))) {
             List<String> result = walk.filter(Files::isRegularFile).map(Path::toString).collect(Collectors.toList());
@@ -89,15 +91,13 @@ public class Main {
         new Parser(System.in);
         ASTNode exp;
         Environment globalScope = new Environment();
-        while (true) {
-            try {
-                exp = Parser.Start();
-                System.out.println( exp.typecheck(globalScope) );
-            } catch (Exception e) {
-                e.printStackTrace();
-                System.out.println ("Syntax Error!");
-                Parser.ReInit(System.in);
-            }
+        try {
+            exp = Parser.Start();
+            System.out.println( exp.typecheck(globalScope) );
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println ("Syntax Error!");
+            Parser.ReInit(System.in);
         }
     }
 

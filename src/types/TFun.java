@@ -1,21 +1,19 @@
 package types;
 
+import java.util.Iterator;
 import java.util.List;
 
 public class TFun implements IType {
 
-    List<IType> paramTypes;
-    IType bodyType;
+    public List<IType> paramTypes;
+    public IType bodyType;
 
     public TFun(List<IType> paramTypes, IType bodyType){
         this.paramTypes = paramTypes;
         this.bodyType = bodyType;
     }
 
-    @Override
-    public String getType() {
-        return bodyType.getType();
-    }
+    public IType getType() {return bodyType; }
 
     @Override
     public String toString() {
@@ -27,5 +25,27 @@ public class TFun implements IType {
         return result;
     }
 
+    public List<IType> getParameters(){
+        return paramTypes;
+    }
 
+    @Override
+    public boolean equals(Object object){
+        if(!( object instanceof TFun )){
+            return false;
+        }
+        if(!(this.getType().equals(((TFun) object).getType()))) {
+            return false;
+        }
+        if(!(paramTypes.size() == ((TFun)object).getParameters().size())) {
+            return false;
+        }
+        Iterator<IType> typesIt = ((TFun)object).getParameters().iterator();
+        for(IType paramType : paramTypes) {
+            if(!paramType.equals(typesIt.next())){
+                return false;
+            }
+        }
+        return true;
+    }
 }
