@@ -7,6 +7,7 @@ import value.IValue;
 import value.TypeErrorException;
 import value.VInt;
 
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -14,14 +15,17 @@ public class ASTLetIn implements ASTNode {
 
     // private String id;
     //private ASTNode expression;
-    private Map<String, ASTNode> expressions; //map with all the associations
-    private Map<String, IType> expTypes;
+    private Map<String, ASTNode> expressions; //map with all the associations -> inits
+    private Map<String, ASTNode> expTypes; //map with all the associations -> types
+    private Map<String, IType> types;
     private ASTNode body;
 
-    public ASTLetIn(Map<String, ASTNode> expressions, ASTNode body) {
+    public ASTLetIn(Map<String, ASTNode> expressions, ASTNode body, Map<String, ASTNode> expTypes) {
         //this.id = id;
         this.expressions = expressions;
         this.body = body;
+        this.expTypes = expTypes;
+        this.types = null;
     }
 
     @Override
@@ -75,8 +79,10 @@ public class ASTLetIn implements ASTNode {
     @Override
     public IType typecheck(Environment<IType> env) {
         Environment innerScope = env.startScope();
-        for (Entry<String, ASTNode> e : expressions.entrySet()) {
-            innerScope.associate(e.getKey(), e.getValue().typecheck(env));
+        types = new LinkedHashMap<>();
+        for (Entry<String, ASTNode> e : expTypes.entrySet()) {
+            IType paramType = e.getValue().typecheck(env);
+            types.put(e.getKey(), paramType);
         }
         innerScope.endScope();
         return body.typecheck(innerScope);
