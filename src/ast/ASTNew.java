@@ -1,8 +1,12 @@
 package ast;
 
-import compiler.*;
+import compiler.Assembler;
+import compiler.CoreCompiler;
+import compiler.LineBuilder;
 import env.Environment;
 import types.IType;
+import types.TBool;
+import types.TInt;
 import types.TRef;
 import value.IValue;
 import value.VRef;
@@ -25,17 +29,24 @@ public class ASTNew implements ASTNode {
     @Override
     public Assembler compile(CoreCompiler compiler, Environment env) {
         LineBuilder lb = new LineBuilder();
-        FrameStack frameStack = compiler.getfStack();
-        Frame currentFrame = frameStack.newFrame();
-
-        lb.appendLine("new " + currentFrame);
-        lb.appendLine("dup");
-        lb.appendLine("invokespecial " + currentFrame + "/<init>()V");
-        lb.appendLine("dup");
         Assembler asm = num.compile(compiler,env);
-        lb.appendLine("putfield " + currentFrame + "/v "+referenceType.getType()); //TODO change to type
-
-       return new Assembler(lb.toString(),0);
+        if (referenceType instanceof TBool || referenceType instanceof TInt){
+            lb.appendLine("new ref_int");
+            lb.appendLine("dup");
+            lb.appendLine("invokespecial ref_int/<init>()V");
+            lb.appendLine("dup");
+            lb.append(asm);
+            lb.appendLine("putfield ref_int/v "+referenceType.toString());
+        }
+        if (referenceType instanceof TRef) {
+            lb.appendLine("new ref_class");
+            lb.appendLine("dup");
+            lb.appendLine("invokespecial ref_class/<init>()V");
+            lb.appendLine("dup");
+            lb.append(asm);
+            lb.appendLine("putfield ref_class/v "+referenceType.toString());
+        }
+       return new Assembler(lb.toString(),asm.getStack());
     }
 
     @Override
