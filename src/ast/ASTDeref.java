@@ -5,6 +5,8 @@ import compiler.CoreCompiler;
 import compiler.LineBuilder;
 import env.Environment;
 import types.IType;
+import types.TBool;
+import types.TInt;
 import types.TRef;
 import value.IValue;
 import value.TypeErrorException;
@@ -31,12 +33,19 @@ public class ASTDeref implements ASTNode {
 
     @Override
     public Assembler compile(CoreCompiler compiler, Environment env) {
-        expression.compile(compiler,env);
         LineBuilder lb = new LineBuilder();
-        lb.appendLine("checkcast ");
-       // lb.appendLine("getfield "+ref+"/v Ljava/lang/Object");
-        //TODO ver o tamanho da stack
-        return new Assembler(lb.toString(),0);
+        Assembler expAsm = expression.compile(compiler, env);
+        if (contentType instanceof TBool || contentType instanceof TInt) {
+            lb.append(expAsm);
+            lb.appendLine("checkcast ref_int");
+            lb.appendLine("getfield ref_int/v " + contentType.toString());
+        }
+        if (contentType instanceof TRef) {
+            lb.append(expAsm);
+            lb.appendLine("checkcast ref_class");
+            lb.appendLine("getfield ref_class/v " + contentType.toString());
+        }
+        return new Assembler(lb.toString(),expAsm.getStack());
     }
 
     @Override
