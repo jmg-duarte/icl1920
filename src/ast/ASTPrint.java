@@ -2,6 +2,7 @@ package ast;
 
 import compiler.Assembler;
 import compiler.CoreCompiler;
+import compiler.LineBuilder;
 import env.Environment;
 import types.IType;
 import value.IValue;
@@ -21,8 +22,13 @@ public class ASTPrint implements ASTNode {
 
     @Override
     public Assembler compile(CoreCompiler compiler, Environment env) {
-        return null;
-        //ir ao rodape -> converte para string e faz o método print ;
+        LineBuilder lb = new LineBuilder();
+        Assembler printAsm = exp.compile(compiler,env);
+        lb.appendLine("getstatic java/lang/System/out Ljava/io/PrintStream;");
+        lb.append(printAsm);
+        lb.appendLine("invokestatic java/lang/String/valueOf(I)Ljava/lang/String;");
+        lb.appendLine("invokevirtual java/io/PrintStream/println(Ljava/lang/String;)V");
+        return new Assembler(lb.toString(), printAsm.getStack());
     }
 
     @Override
