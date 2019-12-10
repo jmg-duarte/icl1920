@@ -9,17 +9,21 @@ import value.IValue;
 import value.VFunc;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 public class ASTFunc implements ASTNode {
-    private final Map<String,IType> parameters;
+    private final Map<String,ASTNode> parameters;
+    private List<IType> paramTypes;
     private final ASTNode body;
     private IType bodyType;
 
-    public ASTFunc(Map<String, IType> parameters, ASTNode body) {
+    public ASTFunc(Map<String, ASTNode> parameters, ASTNode body) {
         this.parameters = parameters;
         this.body = body;
         bodyType = null;
+        paramTypes = null;
     }
 
     @Override
@@ -35,12 +39,15 @@ public class ASTFunc implements ASTNode {
     @Override
     public IType typecheck(Environment<IType> env) {
         Environment<IType> innerScope = env.startScope();
+        paramTypes = new LinkedList<>();
 
-        for(Map.Entry<String, IType> param : parameters.entrySet()){
-            innerScope.associate(param.getKey(),param.getValue());
+        for(Map.Entry<String, ASTNode> param : parameters.entrySet()){
+            IType paramType = param.getValue().typecheck(innerScope);
+            innerScope.associate(param.getKey(),paramType);
+            paramTypes.add(paramType);
         }
         bodyType = body.typecheck(innerScope);
-        return new TFun(new ArrayList<>(parameters.values()), bodyType);
+        return new TFun(paramTypes, bodyType);
     }
 
 }
