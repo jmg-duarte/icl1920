@@ -237,8 +237,8 @@ ASTNode While() : {
 
 ASTNode Func() : {
     Token id;
-    Map<String, IType> parameters = new HashMap<String, IType>();
-    ASTNode body; IType type;
+    Map<String, ASTNode> parameters = new HashMap<String, ASTNode>();
+    ASTNode body; ASTNode type;
 } {
     <FUNC> id=<Id> <COL> type=Type() { parameters.put(id.image, type); }
     (<COMMA> id=<Id> <COL> type=Type() { parameters.put(id.image, type); })*
@@ -248,15 +248,15 @@ ASTNode Func() : {
     }
 }
 
-IType Type(): {
-    List<IType> paramsTypes = new LinkedList();
-    IType type;
+ASTNode Type(): {
+    List<ASTNode> paramsTypes = new LinkedList();
+    ASTNode type;
     Token t;
 }{
-  ( t = <INT>   {type = new TInt();}
-  | t = <BOOLEAN>  {type = new TBool();}
-  | t = <REF> type=Type()  {type = new TRef(type);}
-  | t = <LPAR> type=Type() {paramsTypes.add(type);} (<COMMA> type=Type() {paramsTypes.add(type);})* <RPAR> type=Type() {type = new TFun(paramsTypes,type);}
+  ( t = <INT>   {type = new ASTIntType();}
+  | t = <BOOLEAN>  {type = new ASTBoolType();}
+  | t = <REF> type=Type()  {type = new ASTRefType(type);}
+  | t = <LPAR> type=Type() {paramsTypes.add(type);} (<COMMA> type=Type() {paramsTypes.add(type);})* <RPAR> type=Type() {type = new ASTFunType(paramsTypes,type);}
   )
   {return type;}
 }
@@ -274,18 +274,21 @@ ASTNode Let() : {
     Token id;
     ASTNode expression;
     ASTNode body;
-    Map<String, ASTNode> expressions = new HashMap<String, ASTNode>();
+    ASTNode type;
+    Map<String, ASTNode> types = new LinkedHashMap<String, ASTNode>();
+    Map<String, ASTNode> expressions = new LinkedHashMap<String, ASTNode>();
 } {
-    <LET> id=<Id> <EQUALS> expression=Expression()
-        {expressions.put(id.image,expression);}
-        (<COMMA> id=<Id> <EQUALS> expression=Expression()
+    <LET> id=<Id> <COL> type=Type() <EQUALS> expression=Expression()
+        {expressions.put(id.image,expression); types.put(id.image, type);}
+        (id=<Id> <COL> type=Type() <EQUALS> expression=Expression()
         {
             if (expressions.put(id.image,expression) != null) {
                 throw new RuntimeException("duplicate assignment");
             }
+            types.put(id.image, type);
         } )*
          <IN> body=Expression() <END>
     {
-        return new ASTLetIn(expressions, body);
+        return new ASTLetIn(expressions, body, types);
     }
 }
