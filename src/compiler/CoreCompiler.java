@@ -2,6 +2,7 @@ package compiler;
 
 import ast.ASTNode;
 import env.Environment;
+import value.IValue;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -10,7 +11,7 @@ import java.util.Map;
 public class CoreCompiler {
 
     private LineBuilder lineBuilder = new LineBuilder();
-    private Environment globalEnvironment = new Environment();
+    private Environment<IValue> globalEnvironment = new Environment();
     private FrameStack fStack = new FrameStack();
 
     private ASTNode root;

@@ -25,7 +25,7 @@ public class ASTBooleanOp implements ASTNode {
     }
 
     @Override
-    public IValue eval(Environment env) throws TypeErrorException {
+    public IValue eval(Environment<IValue> env) throws TypeErrorException {
         VBool v1 = VBool.check(lhs.eval(env));
         VBool v2 = VBool.check(rhs.eval(env));
 
@@ -40,7 +40,7 @@ public class ASTBooleanOp implements ASTNode {
     }
 
     @Override
-    public Assembler compile(CoreCompiler compiler, Environment env) {
+    public Assembler compile(CoreCompiler compiler, Environment<IValue> env) {
         Assembler leftAssembly = lhs.compile(compiler, env);
         Assembler rightAssembly = rhs.compile(compiler, env);
 

@@ -6,7 +6,7 @@ import java.util.Map;
 public class Environment<T> {
 
     private Map<String, T> scope;
-    private Environment parent;
+    private Environment<T> parent;
     private String name;
 
     public Environment() {
@@ -18,7 +18,7 @@ public class Environment<T> {
         this.parent = parent;
     }
 
-    public Environment(Environment parent, String name) {
+    public Environment(Environment<T> parent, String name) {
         this(parent);
         this.name = name;
     }
@@ -34,7 +34,7 @@ public class Environment<T> {
             if (env == null) {
                 throw new RuntimeException(id + " was not declared");
             }
-            T value = (T) env.scope.get(id);
+            T value = env.scope.get(id);
             if (value == null) {
                 env = env.parent;
             } else {
@@ -52,11 +52,11 @@ public class Environment<T> {
     }
 
     public Environment<T> startScope() {
-        return new Environment(this);
+        return new Environment<>(this);
     }
 
     public Environment<T> startScope(String name) {
-        return new Environment(this, name);
+        return new Environment<>(this, name);
     }
 
     public Environment<T> endScope() {
