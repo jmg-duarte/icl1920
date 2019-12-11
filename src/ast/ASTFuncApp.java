@@ -41,11 +41,12 @@ public class ASTFuncApp implements ASTNode {
     @Override
     public IType typecheck(Environment<IType> env) {
         IType expType = expr.typecheck(env);
-        List<IType> params = ((TFun) expType).getParameters();
 
         if(!(expType instanceof TFun)) {
             throw new TypeErrorException(); //"Not function type"
         }
+
+        List<IType> params = ((TFun) expType).getParameters();
 
         if (params.size() != args.size()) {
             throw new TypeErrorException(); //"Incorrect number of arguments"

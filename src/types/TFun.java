@@ -1,14 +1,15 @@
 package types;
 
-import java.util.Iterator;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class TFun implements IType {
 
-    public List<IType> paramTypes;
-    public IType bodyType;
+    private final Map<String, IType> paramTypes;
+    private final IType bodyType;
 
-    public TFun(List<IType> paramTypes, IType bodyType){
+    public TFun(Map<String, IType> paramTypes, IType bodyType){
         this.paramTypes = paramTypes;
         this.bodyType = bodyType;
     }
@@ -17,16 +18,17 @@ public class TFun implements IType {
 
     @Override
     public String toString() {
-        String result = "(";
-        for (IType paramType : paramTypes){
-            result += paramTypes.toString();
+        final StringBuilder result = new StringBuilder("(");
+        for (Map.Entry<String, IType> paramType : paramTypes.entrySet()){
+            final String s = String.format("%s:%s", paramType.getKey(), paramType.getValue().toString());
+            result.append(s);
         }
-        result += ")"+bodyType;
-        return result;
+        result.append(")").append(bodyType);
+        return result.toString();
     }
 
     public List<IType> getParameters(){
-        return paramTypes;
+        return new ArrayList<>(paramTypes.values());
     }
 
     @Override
@@ -34,15 +36,16 @@ public class TFun implements IType {
         if(!( object instanceof TFun )){
             return false;
         }
-        if(!(this.getType().equals(((TFun) object).getType()))) {
+        final TFun fun = (TFun) object;
+        if(!(this.getType().equals(fun.getType()))) {
             return false;
         }
-        if(!(paramTypes.size() == ((TFun)object).getParameters().size())) {
+        final List<IType> funParameters = fun.getParameters();
+        if(!(paramTypes.size() == funParameters.size())) {
             return false;
         }
-        Iterator<IType> typesIt = ((TFun)object).getParameters().iterator();
-        for(IType paramType : paramTypes) {
-            if(!paramType.equals(typesIt.next())){
+        for (int i = 0; i < this.getParameters().size(); i++) {
+            if (!this.getParameters().get(i).equals(funParameters.get(i))){
                 return false;
             }
         }

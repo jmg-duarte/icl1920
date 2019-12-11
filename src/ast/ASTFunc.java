@@ -8,14 +8,11 @@ import types.TFun;
 import value.IValue;
 import value.VFunc;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class ASTFunc implements ASTNode {
     private final Map<String,ASTNode> parameters;
-    private List<IType> paramTypes;
+    private final Map<String, IType> paramTypes = new LinkedHashMap<>();
     private final ASTNode body;
     private IType bodyType;
 
@@ -23,28 +20,31 @@ public class ASTFunc implements ASTNode {
         this.parameters = parameters;
         this.body = body;
         bodyType = null;
-        paramTypes = null;
+
     }
 
     @Override
     public IValue eval(Environment env) {
+
         return new VFunc(new ArrayList<>(parameters.keySet()), body, env);
     }
 
     @Override
     public Assembler compile(CoreCompiler compiler, Environment env) {
+        Environment newEnv = env.startScope();
+        //body.compile(newEnv, )
         return null;
     }
 
     @Override
     public IType typecheck(Environment<IType> env) {
         Environment<IType> innerScope = env.startScope();
-        paramTypes = new LinkedList<>();
 
         for(Map.Entry<String, ASTNode> param : parameters.entrySet()){
-            IType paramType = param.getValue().typecheck(innerScope);
-            innerScope.associate(param.getKey(),paramType);
-            paramTypes.add(paramType);
+            final IType paramType = param.getValue().typecheck(innerScope);
+            final String key = param.getKey();
+            innerScope.associate(key,paramType);
+            paramTypes.put(key, paramType);
         }
         bodyType = body.typecheck(innerScope);
         return new TFun(paramTypes, bodyType);

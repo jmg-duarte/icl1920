@@ -249,7 +249,7 @@ ASTNode Func() : {
 }
 
 ASTNode Type(): {
-    List<ASTNode> paramsTypes = new LinkedList();
+    List<ASTNode> paramsTypes = new LinkedList<ASTNode>();
     ASTNode type;
     Token t;
 }{
