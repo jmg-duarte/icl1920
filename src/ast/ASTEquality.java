@@ -25,7 +25,7 @@ public class ASTEquality implements ASTNode {
     }
 
     @Override
-    public IValue eval(Environment env) {
+    public IValue eval(Environment<IValue> env) {
         IValue v1 = left.eval(env);
         IValue v2 = right.eval(env);
         switch (op) {
@@ -39,7 +39,7 @@ public class ASTEquality implements ASTNode {
     }
 
     @Override
-    public Assembler compile(CoreCompiler compiler, Environment env) {
+    public Assembler compile(CoreCompiler compiler, Environment<IValue> env) {
         Assembler leftAssembly = left.compile(compiler, env);
         Assembler rightAssembly = right.compile(compiler, env);
 

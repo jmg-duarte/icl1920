@@ -26,12 +26,12 @@ public class ASTBool implements ASTNode {
     }
 
     @Override
-    public IValue eval(Environment env) throws TypeErrorException {
+    public IValue eval(Environment<IValue> env) throws TypeErrorException {
         return new VBool(exp1);
     }
 
     @Override
-    public Assembler compile(CoreCompiler compiler, Environment env) {
+    public Assembler compile(CoreCompiler compiler, Environment<IValue> env) {
         VBool result = VBool.check(eval(env));
         String code;
         if (result.getValue()) {

@@ -64,7 +64,7 @@ public class ASTFuncApp implements ASTNode {
         }
 
         for (ASTNode arg : args) {
-            IType argType = arg.typecheck(env);
+            arg.typecheck(env);
         }
         return expType.getType();
     }

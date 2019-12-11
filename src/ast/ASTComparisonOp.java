@@ -25,7 +25,7 @@ public class ASTComparisonOp implements ASTNode {
     }
 
     @Override
-    public IValue eval(Environment env) throws TypeErrorException {
+    public IValue eval(Environment<IValue> env) throws TypeErrorException {
         final VInt v1 = VInt.check(exp1.eval(env));
         final VInt v2 = VInt.check(exp2.eval(env));
         switch (op) {
@@ -43,7 +43,7 @@ public class ASTComparisonOp implements ASTNode {
     }
 
     @Override
-    public Assembler compile(CoreCompiler compiler, Environment env) {
+    public Assembler compile(CoreCompiler compiler, Environment<IValue> env) {
         Assembler leftAssembly = exp1.compile(compiler, env);
         Assembler rightAssembly = exp2.compile(compiler, env);
 

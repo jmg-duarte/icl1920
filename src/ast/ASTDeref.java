@@ -12,6 +12,8 @@ import value.IValue;
 import value.TypeErrorException;
 import value.VRef;
 
+import javax.crypto.spec.IvParameterSpec;
+
 public class ASTDeref implements ASTNode {
 
     private final ASTNode expression;
@@ -27,12 +29,12 @@ public class ASTDeref implements ASTNode {
     }
 
     @Override
-    public IValue eval(Environment env) {
+    public IValue eval(Environment<IValue> env) {
         return VRef.check(expression.eval(env)).get();
     }
 
     @Override
-    public Assembler compile(CoreCompiler compiler, Environment env) {
+    public Assembler compile(CoreCompiler compiler, Environment<IValue> env) {
         LineBuilder lb = new LineBuilder();
         Assembler expAsm = expression.compile(compiler, env);
         if (contentType instanceof TBool || contentType instanceof TInt) {

@@ -28,7 +28,7 @@ public class ASTFunc implements ASTNode {
     }
 
     @Override
-    public Assembler compile(CoreCompiler compiler, Environment env) {
+    public Assembler compile(CoreCompiler compiler, Environment<IValue> env) {
         Environment newEnv = env.startScope();
         //body.compile(newEnv, )
         return null;

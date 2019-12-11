@@ -21,7 +21,7 @@ public class ASTBinaryOp implements ASTNode {
         this.rhs = right;
     }
 
-    public IValue eval(Environment env) {
+    public IValue eval(Environment<IValue> env) {
         VInt o1 = VInt.check(lhs.eval(env));
         VInt o2 = VInt.check(rhs.eval(env));
 
@@ -42,7 +42,7 @@ public class ASTBinaryOp implements ASTNode {
     }
 
     @Override
-    public Assembler compile(CoreCompiler compiler, Environment env) {
+    public Assembler compile(CoreCompiler compiler, Environment<IValue> env) {
         Assembler leftAssembly = lhs.compile(compiler, env);
         Assembler rightAssembly = rhs.compile(compiler, env);
 
