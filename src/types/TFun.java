@@ -6,10 +6,10 @@ import java.util.Map;
 
 public class TFun implements IType {
 
-    private final Map<String, IType> paramTypes;
+    private final List<IType> paramTypes;
     private final IType bodyType;
 
-    public TFun(Map<String, IType> paramTypes, IType bodyType) {
+    public TFun(List<IType> paramTypes, IType bodyType) {
         this.paramTypes = paramTypes;
         this.bodyType = bodyType;
     }
@@ -18,19 +18,8 @@ public class TFun implements IType {
         return bodyType;
     }
 
-    @Override
-    public String toString() {
-        final StringBuilder result = new StringBuilder("(");
-        for (Map.Entry<String, IType> paramType : paramTypes.entrySet()) {
-            final String s = String.format("%s:%s", paramType.getKey(), paramType.getValue().toString());
-            result.append(s);
-        }
-        result.append(")").append(bodyType);
-        return result.toString();
-    }
-
     public List<IType> getParameters() {
-        return new ArrayList<>(paramTypes.values());
+        return paramTypes;
     }
 
     @Override
@@ -47,10 +36,23 @@ public class TFun implements IType {
             return false;
         }
         for (int i = 0; i < this.getParameters().size(); i++) {
-            if (!this.getParameters().get(i).equals(funParameters.get(i))) {
+            final IType f1Type = this.getParameters().get(i);
+            final IType f2Type = funParameters.get(i);
+            if (!f1Type.equals(f2Type)) {
                 return false;
             }
         }
         return true;
+    }
+
+    @Override
+    public String toString() {
+        final StringBuilder result = new StringBuilder("(");
+        for (IType paramType : paramTypes) {
+            final String s = String.format("%s", paramType.getType());
+            result.append(s);
+        }
+        result.append(")").append(bodyType);
+        return result.toString();
     }
 }

@@ -33,6 +33,6 @@ public class VRef implements IValue {
 
     @Override
     public String toString() {
-        return String.format("Ref[%s]", value.toString());
+        return String.format("Ref(%s)", value.toString());
     }
 }

@@ -1,7 +1,7 @@
 package types;
 
 public class TRef implements IType {
-    IType contentType; //content type
+    private final IType contentType; //content type
 
     public TRef(IType cellType) {
         this.contentType = cellType;

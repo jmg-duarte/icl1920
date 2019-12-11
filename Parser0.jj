@@ -254,7 +254,7 @@ ASTNode Type(): {
     Token t;
 }{
   ( t = <INT>   {type = new ASTIntType();}
-  | t = <BOOLEAN>  {type = new ASTBoolType();}
+  | t = <BOOLEAN>  {type = new ast.types.ASTBoolType();}
   | t = <REF> type=Type()  {type = new ASTRefType(type);}
   | t = <LPAR> type=Type() {paramsTypes.add(type);} (<COMMA> type=Type() {paramsTypes.add(type);})* <RPAR> type=Type() {type = new ASTFunType(paramsTypes,type);}
   )

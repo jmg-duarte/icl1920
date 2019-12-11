@@ -1,26 +1,20 @@
-package ast;
+package ast.types;
 
+import ast.ASTNode;
 import compiler.Assembler;
 import compiler.CoreCompiler;
 import env.Environment;
-import types.IType;
-import types.TBool;
 import value.IValue;
 
-public class ASTBoolType implements ASTNode {
+public abstract class ASTType implements ASTNode {
 
     @Override
     public IValue eval(Environment<IValue> env) {
-        return null;
+        throw new RuntimeException("eval called on type");
     }
 
     @Override
     public Assembler compile(CoreCompiler compiler, Environment<IValue> env) {
-        return null;
-    }
-
-    @Override
-    public IType typecheck(Environment<IType> env) {
-        return new TBool();
+        throw new RuntimeException("compile called on type");
     }
 }
