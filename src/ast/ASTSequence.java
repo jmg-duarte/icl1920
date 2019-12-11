@@ -2,6 +2,7 @@ package ast;
 
 import compiler.Assembler;
 import compiler.CoreCompiler;
+import compiler.LineBuilder;
 import env.Environment;
 import types.IType;
 import value.IValue;
@@ -23,7 +24,13 @@ public class ASTSequence implements ASTNode {
 
     @Override
     public Assembler compile(CoreCompiler compiler, Environment env) {
-        return null;
+        LineBuilder lb = new LineBuilder();
+        Assembler headComp = head.compile(compiler,env);
+        Assembler tailComp = tail.compile(compiler,env);
+        lb.append(headComp);
+        lb.appendLine("pop");
+        lb.append(tailComp);
+        return new Assembler(lb.toString(),headComp.getStack()+tailComp.getStack());
     }
 
     @Override
