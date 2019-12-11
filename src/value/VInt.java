@@ -8,10 +8,6 @@ public class VInt implements IValue {
         this.value = value;
     }
 
-    public int getValue() {
-        return value;
-    }
-
     public static VInt add(VInt v1, VInt v2) {
         return new VInt(v1.getValue() + v2.getValue());
     }
@@ -43,8 +39,9 @@ public class VInt implements IValue {
         return (VInt) value;
     }
 
-    @Override
-    public String toString() {return Integer.toString(value);}
+    public int getValue() {
+        return value;
+    }
 
     @Override
     public boolean equals(Object obj) {
@@ -52,5 +49,10 @@ public class VInt implements IValue {
             throw new TypeErrorException();
         }
         return value == ((VInt) obj).value;
+    }
+
+    @Override
+    public String toString() {
+        return Integer.toString(value);
     }
 }
