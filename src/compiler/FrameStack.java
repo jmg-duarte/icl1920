@@ -10,7 +10,7 @@ public class FrameStack {
     private int frameCounter = 0;
     private Frame oldFrame;
 
-    public FrameStack(){
+    public FrameStack() {
         oldFrame = new Frame("java/lang/Object");
         frameCounter = 0;
     }

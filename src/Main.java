@@ -55,7 +55,7 @@ public class Main {
 
     private static void run(String command, String cwd) throws IOException {
 
-        Process proc = Runtime.getRuntime().exec(command, new String[] {}, new File(cwd));
+        Process proc = Runtime.getRuntime().exec(command, new String[]{}, new File(cwd));
         InputStream stdout = proc.getInputStream();
         InputStream stderr = proc.getErrorStream();
 
@@ -78,25 +78,25 @@ public class Main {
         while (true) {
             try {
                 exp = Parser.Start();
-                System.out.println( exp.eval(globalScope) );
+                System.out.println(exp.eval(globalScope));
             } catch (Exception e) {
                 e.printStackTrace();
-                System.out.println ("Syntax Error!");
+                System.out.println("Syntax Error!");
                 Parser.ReInit(System.in);
             }
         }
     }
 
-   private static void typecheck() {
+    private static void typecheck() {
         new Parser(System.in);
         ASTNode exp;
         Environment globalScope = new Environment();
         try {
             exp = Parser.Start();
-            System.out.println( exp.typecheck(globalScope) );
+            System.out.println(exp.typecheck(globalScope));
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println ("Syntax Error!");
+            System.out.println("Syntax Error!");
             Parser.ReInit(System.in);
         }
     }

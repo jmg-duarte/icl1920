@@ -66,11 +66,11 @@ public class ASTIf implements ASTNode {
         IType ifTrueType = ifTrue.typecheck(env);
         IType ifFalseType = ifFalse.typecheck(env);
 
-        if (!(conditionalType instanceof TBool)){
+        if (!(conditionalType instanceof TBool)) {
             throw new TypeErrorException();
         }
 
-        if (!(ifTrueType.equals(ifFalseType))){
+        if (!(ifTrueType.equals(ifFalseType))) {
             throw new TypeErrorException();
         }
 

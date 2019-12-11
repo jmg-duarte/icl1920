@@ -14,7 +14,7 @@ import value.VBool;
 public class ASTNot implements ASTNode {
     private ASTNode exp;
 
-    public ASTNot(ASTNode exp){
+    public ASTNot(ASTNode exp) {
         this.exp = exp;
     }
 
@@ -43,10 +43,11 @@ public class ASTNot implements ASTNode {
 
         return new Assembler(lb.toString(), leftAssembly.getStack());
     }
+
     @Override
     public IType typecheck(Environment<IType> env) {
         IType type = exp.typecheck(env);
-        if(!(type instanceof TBool)){
+        if (!(type instanceof TBool)) {
             throw new TypeErrorException();
         }
         return new TBool();

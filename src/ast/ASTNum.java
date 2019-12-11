@@ -11,7 +11,7 @@ import value.VInt;
 public class ASTNum implements ASTNode {
     private int val;
 
-    public ASTNum(int val){
+    public ASTNum(int val) {
         this.val = val;
     }
 

@@ -12,7 +12,7 @@ public class TBool implements IType {
     }
 
     @Override
-    public boolean equals(Object object){
+    public boolean equals(Object object) {
         return object instanceof TBool;
     }
 

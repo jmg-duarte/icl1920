@@ -11,7 +11,7 @@ import value.VFunc;
 import java.util.*;
 
 public class ASTFunc implements ASTNode {
-    private final Map<String,ASTNode> parameters;
+    private final Map<String, ASTNode> parameters;
     private final Map<String, IType> paramTypes = new LinkedHashMap<>();
     private final ASTNode body;
     private IType bodyType;
@@ -40,10 +40,10 @@ public class ASTFunc implements ASTNode {
     public IType typecheck(Environment<IType> env) {
         Environment<IType> innerScope = env.startScope();
 
-        for(Map.Entry<String, ASTNode> param : parameters.entrySet()){
+        for (Map.Entry<String, ASTNode> param : parameters.entrySet()) {
             final IType paramType = param.getValue().typecheck(innerScope);
             final String key = param.getKey();
-            innerScope.associate(key,paramType);
+            innerScope.associate(key, paramType);
             paramTypes.put(key, paramType);
         }
         bodyType = body.typecheck(innerScope);

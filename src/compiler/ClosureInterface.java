@@ -12,7 +12,7 @@ public class ClosureInterface {
         this.interfaceType = interfaceType;
         this.functionType = functionType;
         lb.appendLine(".interface " + interfaceType);
-        lb.appendLine(".method call"+functionType);
+        lb.appendLine(".method call" + functionType);
         lb.appendLine(".end");
     }
 
@@ -25,7 +25,7 @@ public class ClosureInterface {
     }
 
     public void addField(String fieldID) {
-       // lb.appendLine(".field public _" + fieldID + " I");
+        // lb.appendLine(".field public _" + fieldID + " I");
     }
 
     public void dumpFrame() throws IOException {

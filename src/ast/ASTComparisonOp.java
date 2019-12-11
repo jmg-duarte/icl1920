@@ -54,18 +54,18 @@ public class ASTComparisonOp implements ASTNode {
         lb.append(leftAssembly, rightAssembly);
         lb.appendLine(Assembler.INTEGER_SUBTRACTION);
 
-        switch(op){
+        switch (op) {
             case ">":
                 lb.appendLine(Assembler.IF_GREATER + " " + labelTrue);
                 break;
             case "<":
-                lb.appendLine(Assembler.IF_LESS+ " " + labelTrue);
+                lb.appendLine(Assembler.IF_LESS + " " + labelTrue);
                 break;
             case ">=":
-                lb.appendLine(Assembler.IF_GREATER_EQ+ " " + labelTrue);
+                lb.appendLine(Assembler.IF_GREATER_EQ + " " + labelTrue);
                 break;
             case "<=":
-                lb.appendLine(Assembler.IF_LESS_EQ+ " " + labelTrue);
+                lb.appendLine(Assembler.IF_LESS_EQ + " " + labelTrue);
                 break;
             default:
                 throw new IllegalStateException("unexpected operator: " + op);
@@ -83,7 +83,7 @@ public class ASTComparisonOp implements ASTNode {
         IType o1 = exp1.typecheck(env);
         IType o2 = exp2.typecheck(env);
 
-        if(o1 instanceof TInt && o2 instanceof TInt || o1 instanceof TBool && o2 instanceof TBool){
+        if (o1 instanceof TInt && o2 instanceof TInt || o1 instanceof TBool && o2 instanceof TBool) {
             return new TBool();
         } else {
             throw new TypeErrorException(); //TODO confirmar

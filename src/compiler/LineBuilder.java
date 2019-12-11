@@ -8,8 +8,6 @@ import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 
 public class LineBuilder {
-    private final StringBuilder sb = new StringBuilder();
-
     private static final String HEADER =
             ".class public Main\n" +
                     ".super java/lang/Object\n" +
@@ -25,14 +23,14 @@ public class LineBuilder {
                     ".limit stack 256\n" +
                     "\n" +
                     "getstatic java/lang/System/out Ljava/io/PrintStream;\n" +
-                    "\n"+ "aconst_null\n" +
+                    "\n" + "aconst_null\n" +
                     "astore 4\n";
-
     private static final String FOOTER = "\n" +
             "invokestatic java/lang/String/valueOf(I)Ljava/lang/String;\n" +
             "invokevirtual java/io/PrintStream/println(Ljava/lang/String;)V\n" +
             "return\n" +
             ".end method\n";
+    private final StringBuilder sb = new StringBuilder();
 
     public void append(String line) {
         sb.append(line);

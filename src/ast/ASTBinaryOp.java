@@ -77,7 +77,7 @@ public class ASTBinaryOp implements ASTNode {
         IType o1 = lhs.typecheck(env);
         IType o2 = rhs.typecheck(env);
 
-        if(o1 instanceof TInt && o2 instanceof TInt){
+        if (o1 instanceof TInt && o2 instanceof TInt) {
             return new TInt();
         } else {
             throw new TypeErrorException(); //TODO confirmar

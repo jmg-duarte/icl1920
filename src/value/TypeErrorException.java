@@ -2,7 +2,7 @@ package value;
 
 public class TypeErrorException extends RuntimeException {
 
-    public TypeErrorException(){
+    public TypeErrorException() {
         super("illegal arguments");
     }
 }

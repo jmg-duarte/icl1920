@@ -10,7 +10,7 @@ import value.IValue;
 public class ASTPrint implements ASTNode {
     ASTNode exp;
 
-    public ASTPrint(ASTNode exp){
+    public ASTPrint(ASTNode exp) {
         this.exp = exp;
     }
 
@@ -23,7 +23,7 @@ public class ASTPrint implements ASTNode {
     @Override
     public Assembler compile(CoreCompiler compiler, Environment env) {
         LineBuilder lb = new LineBuilder();
-        Assembler printAsm = exp.compile(compiler,env);
+        Assembler printAsm = exp.compile(compiler, env);
         lb.appendLine("getstatic java/lang/System/out Ljava/io/PrintStream;");
         lb.append(printAsm);
         lb.appendLine("invokestatic java/lang/String/valueOf(I)Ljava/lang/String;");

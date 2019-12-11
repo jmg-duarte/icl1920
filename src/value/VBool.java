@@ -1,18 +1,12 @@
 package value;
 
-public class VBool implements IValue{
+public class VBool implements IValue {
 
     private final boolean value;
 
     public VBool(boolean value) {
         this.value = value;
     }
-
-    public boolean getValue() {
-        return value;
-    }
-
-    public String toString() {return Boolean.toString(value);}
 
     public static VBool and(VBool v1, VBool v2) {
         return new VBool(v1.value && v2.value);
@@ -29,6 +23,10 @@ public class VBool implements IValue{
         return (VBool) value;
     }
 
+    public boolean getValue() {
+        return value;
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (!(obj instanceof VBool)) {
@@ -36,4 +34,10 @@ public class VBool implements IValue{
         }
         return value == ((VBool) obj).value;
     }
+
+    @Override
+    public String toString() {
+        return Boolean.toString(value);
+    }
+
 }

@@ -10,7 +10,7 @@ import value.IValue;
 public class ASTRefType implements ASTNode {
     ASTNode contentType;
 
-    public ASTRefType(ASTNode type){
+    public ASTRefType(ASTNode type) {
         this.contentType = type;
     }
 

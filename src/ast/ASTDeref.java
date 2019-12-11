@@ -45,13 +45,13 @@ public class ASTDeref implements ASTNode {
             lb.appendLine("checkcast ref_class");
             lb.appendLine("getfield ref_class/v " + contentType.toString());
         }
-        return new Assembler(lb.toString(),expAsm.getStack());
+        return new Assembler(lb.toString(), expAsm.getStack());
     }
 
     @Override
     public IType typecheck(Environment<IType> env) {
         IType exprType = expression.typecheck(env);
-        if(!(exprType instanceof TRef)){
+        if (!(exprType instanceof TRef)) {
             throw new TypeErrorException();
         }
         //contentType = ((TRef)exprType).getType(); para o compile

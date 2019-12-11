@@ -50,7 +50,7 @@ public class ASTEquality implements ASTNode {
         lb.append(leftAssembly, rightAssembly);
         lb.appendLine(Assembler.INTEGER_SUBTRACTION);
 
-        switch(op){
+        switch (op) {
             case "==":
                 lb.appendLine(Assembler.IF_EQUALS + " " + labelTrue);
                 break;
@@ -75,7 +75,7 @@ public class ASTEquality implements ASTNode {
         IType o1 = left.typecheck(env);
         IType o2 = right.typecheck(env);
 
-        if(o1 instanceof TBool && o2 instanceof TBool || o1 instanceof TInt && o2 instanceof TInt){
+        if (o1 instanceof TBool && o2 instanceof TBool || o1 instanceof TInt && o2 instanceof TInt) {
             return new TBool();
         } else {
             throw new TypeErrorException(); //TODO confirmar

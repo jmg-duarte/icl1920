@@ -47,7 +47,7 @@ public class ASTBooleanOp implements ASTNode {
         LineBuilder lb = new LineBuilder();
         lb.append(leftAssembly, rightAssembly);
 
-        switch(op){
+        switch (op) {
             case AND:
                 lb.appendLine(Assembler.BOOLEAN_AND);
                 break;
@@ -66,7 +66,7 @@ public class ASTBooleanOp implements ASTNode {
         IType o1 = lhs.typecheck(env);
         IType o2 = rhs.typecheck(env);
 
-        if(o1 instanceof TBool && o2 instanceof TBool){
+        if (o1 instanceof TBool && o2 instanceof TBool) {
             return new TBool();
         } else {
             throw new TypeErrorException(); //TODO confirmar

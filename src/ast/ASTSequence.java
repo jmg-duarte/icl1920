@@ -10,7 +10,7 @@ public class ASTSequence implements ASTNode {
     private final ASTNode head;
     private final ASTNode tail;
 
-    public ASTSequence(ASTNode head, ASTNode tail){
+    public ASTSequence(ASTNode head, ASTNode tail) {
         this.head = head;
         this.tail = tail;
     }

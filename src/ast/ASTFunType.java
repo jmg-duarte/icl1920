@@ -4,7 +4,6 @@ import compiler.Assembler;
 import compiler.CoreCompiler;
 import env.Environment;
 import types.IType;
-import types.TFun;
 import value.IValue;
 
 import java.util.LinkedList;
@@ -14,7 +13,7 @@ public class ASTFunType implements ASTNode {
     private List<ASTNode> paramTypes;
     private ASTNode bodyType;
 
-    public ASTFunType(List<ASTNode> paramTypes, ASTNode bodyType){
+    public ASTFunType(List<ASTNode> paramTypes, ASTNode bodyType) {
         this.paramTypes = paramTypes;
         this.bodyType = bodyType;
     }
@@ -32,9 +31,10 @@ public class ASTFunType implements ASTNode {
     @Override
     public IType typecheck(Environment<IType> env) {
         List<IType> types = new LinkedList<IType>();
-        for (ASTNode param : paramTypes){
+        for (ASTNode param : paramTypes) {
             types.add(param.typecheck(env));
         }
-       return new TFun(types, bodyType.typecheck(env));
+        return null;
+        // return new TFun(types, bodyType.typecheck(env));
     }
 }

@@ -35,7 +35,7 @@ public class ASTAssign implements ASTNode {
     public Assembler compile(CoreCompiler compiler, Environment env) {
         LineBuilder lb = new LineBuilder();
         Assembler leftAsm = left.compile(compiler, env);
-        Assembler rightAsm = right.compile(compiler,env);
+        Assembler rightAsm = right.compile(compiler, env);
         if (contentType instanceof TBool || contentType instanceof TInt) {
             lb.append(leftAsm);
             lb.appendLine("checkcast ref_int");
@@ -49,17 +49,17 @@ public class ASTAssign implements ASTNode {
             right.compile(compiler, env);
             lb.appendLine("putfield ref_class/v " + contentType.toString());
         }
-        return new Assembler(lb.toString(),leftAsm.getStack()+rightAsm.getStack());
+        return new Assembler(lb.toString(), leftAsm.getStack() + rightAsm.getStack());
     }
 
     @Override
     public IType typecheck(Environment<IType> env) {
         IType leftType = left.typecheck(env);
-        if (!(leftType instanceof TRef)){
+        if (!(leftType instanceof TRef)) {
             throw new TypeErrorException();
         }
         contentType = right.typecheck(env);
-        if(!(contentType.equals(leftType.getType()))){
+        if (!(contentType.equals(leftType.getType()))) {
             throw new TypeErrorException(); //wrong type
         }
         return leftType;
