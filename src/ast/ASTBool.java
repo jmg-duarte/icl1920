@@ -11,10 +11,10 @@ import value.VBool;
 
 public class ASTBool implements ASTNode {
 
-    private final Boolean exp1;
+    private final Boolean exp;
 
-    public ASTBool(Boolean exp1) {
-        this.exp1 = exp1;
+    public ASTBool(Boolean exp) {
+        this.exp = exp;
     }
 
     public static ASTBool True() {
@@ -27,14 +27,13 @@ public class ASTBool implements ASTNode {
 
     @Override
     public IValue eval(Environment<IValue> env) throws TypeErrorException {
-        return new VBool(exp1);
+        return new VBool(exp);
     }
 
     @Override
-    public Assembler compile(CoreCompiler compiler, Environment<IValue> env) {
-        VBool result = VBool.check(eval(env));
+    public Assembler compile(CoreCompiler compiler, Environment<IType> env) {
         String code;
-        if (result.getValue()) {
+        if (exp) {
             code = "sipush 1";
         } else {
             code = "sipush 0";
