@@ -3,6 +3,7 @@ package ast;
 import compiler.Assembler;
 import compiler.CoreCompiler;
 import compiler.LineBuilder;
+import compiler.Reference;
 import env.Environment;
 import types.IType;
 import types.TBool;
@@ -30,15 +31,18 @@ public class ASTNew implements ASTNode {
     public Assembler compile(CoreCompiler compiler, Environment env) {
         LineBuilder lb = new LineBuilder();
         Assembler asm = num.compile(compiler, env);
+
         if (referenceType instanceof TBool || referenceType instanceof TInt) {
-            lb.appendLine("new ref_int");
+        Reference ref = compiler.newReference("ref_int");
+            lb.appendLine("new "+ref.getReferenceID());
             lb.appendLine("dup");
-            lb.appendLine("invokespecial ref_int/<init>()V");
+            lb.appendLine("invokespecial "+ref.getReferenceID()+"/<init>()V");
             lb.appendLine("dup");
             lb.append(asm);
-            lb.appendLine("putfield ref_int/v " + referenceType.toString());
+            lb.appendLine("putfield "+ref.getReferenceID()+"/v " + referenceType.toString());
         }
         if (referenceType instanceof TRef) {
+            Reference ref = compiler.newReference("ref_class");
             lb.appendLine("new ref_class");
             lb.appendLine("dup");
             lb.appendLine("invokespecial ref_class/<init>()V");

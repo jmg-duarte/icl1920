@@ -37,6 +37,7 @@ TOKEN :
   | < INT: "int" >
   | < BOOLEAN: "bool">
   | < REF : "ref">
+  | < PRINTLN: "println" >
   | < BOOL: ("true" | "false") >
   | < NOT: "~">
   | < AND: "&&" >
@@ -76,11 +77,20 @@ ASTNode Start(): {
 ASTNode Expression() : {
     ASTNode head, tail;
 } {
-    head = Assign() (
-        <SEQ> tail = Assign()
+    head = Print() (
+        <SEQ> tail = Print()
             {head = new ASTSequence(head, tail);}
         )*
     { return head; }
+}
+
+ASTNode Print() : {
+ASTNode t;
+} {
+        (<PRINTLN> t = Assign()
+        { t = new ASTPrint(t); }
+        | t = Assign())
+        { return t;}
 }
 
 ASTNode Assign() : {

@@ -26,8 +26,8 @@ public class LineBuilder {
                     "\n" + "aconst_null\n" +
                     "astore 4\n";
     private static final String FOOTER = "\n" +
-            "invokestatic java/lang/String/valueOf(I)Ljava/lang/String;\n" +
-            "invokevirtual java/io/PrintStream/println(Ljava/lang/String;)V\n" +
+          //  "invokestatic java/lang/String/valueOf(I)Ljava/lang/String;\n" +
+          //  "invokevirtual java/io/PrintStream/println(Ljava/lang/String;)V\n" +
             "return\n" +
             ".end method\n";
     private final StringBuilder sb = new StringBuilder();

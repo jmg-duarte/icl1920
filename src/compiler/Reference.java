@@ -18,11 +18,7 @@ public class Reference {
         return refID;
     }
 
-    public void addField(String fieldID) {
-        lb.appendLine(".field public _" + fieldID + " I");
-    }
-
-    public void dumpFrame() throws IOException {
+    public void dumpReference() throws IOException {
         lb.appendLine(".method public <init>()V");
         lb.appendLine("aload_0");
         lb.appendLine("invokenonvirtual java/lang/Object/<init>()V");
