@@ -21,7 +21,7 @@ public class ASTNum implements ASTNode {
     }
 
     @Override
-    public Assembler compile(CoreCompiler compiler, Environment env) {
+    public Assembler compile(CoreCompiler compiler, Environment<IType> env) {
         String code = "sipush " + val;
         return new Assembler(code, 1);
     }
