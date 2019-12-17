@@ -2,6 +2,8 @@ import ast.ASTNode;
 import compiler.CoreCompiler;
 import env.Environment;
 import parser.Parser;
+import types.IType;
+import value.IValue;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -37,7 +39,7 @@ public class Main {
         new Parser(new FileInputStream(arg));
         ASTNode exp = Parser.Start();
         CoreCompiler c = new CoreCompiler(exp);
-        Environment globalScope = new Environment();
+        Environment<IType> globalScope = new Environment<>();
         exp.typecheck(globalScope);
         c.compile(exp);
         try (Stream<Path> walk = Files.walk(Paths.get("./jout/"))) {
@@ -74,7 +76,7 @@ public class Main {
     private static void repl() {
         new Parser(System.in);
         ASTNode exp;
-        Environment globalScope = new Environment();
+        Environment<IValue> globalScope = new Environment<>();
         while (true) {
             try {
                 exp = Parser.Start();
@@ -90,7 +92,7 @@ public class Main {
     private static void typecheck() {
         new Parser(System.in);
         ASTNode exp;
-        Environment globalScope = new Environment();
+        Environment<IType> globalScope = new Environment<>();
         try {
             exp = Parser.Start();
             System.out.println(exp.typecheck(globalScope));
