@@ -4,6 +4,7 @@ import ast.ASTNode;
 import compiler.Assembler;
 import compiler.CoreCompiler;
 import env.Environment;
+import types.IType;
 import value.IValue;
 
 public abstract class ASTType implements ASTNode {
@@ -14,7 +15,7 @@ public abstract class ASTType implements ASTNode {
     }
 
     @Override
-    public Assembler compile(CoreCompiler compiler, Environment<IValue> env) {
+    public Assembler compile(CoreCompiler compiler, Environment<IType> env) {
         throw new RuntimeException("compile called on type");
     }
 }
