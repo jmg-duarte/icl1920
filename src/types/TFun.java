@@ -49,7 +49,7 @@ public class TFun implements IType {
     public String toString() {
         final StringBuilder result = new StringBuilder("(");
         for (IType paramType : paramTypes) {
-            final String s = String.format("%s", paramType.getType());
+            final String s = String.format("%s", paramType);
             result.append(s);
         }
         result.append(")").append(bodyType);

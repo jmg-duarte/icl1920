@@ -1,10 +1,8 @@
 package types;
 
 public class TBool implements IType {
-    @Override
-    public IType getType() {
-        return new TBool();
-    }
+
+    public static final TBool TYPE = new TBool();
 
     @Override
     public String toString() {

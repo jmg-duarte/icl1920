@@ -2,10 +2,7 @@ package types;
 
 public class TInt implements IType {
 
-    @Override
-    public IType getType() {
-        return new TInt();
-    }
+    public static final TInt TYPE = new TInt();
 
     @Override
     public String toString() {

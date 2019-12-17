@@ -1,5 +1,3 @@
 package types;
 
-public interface IType {
-    IType getType();
-}
+public interface IType { }

@@ -7,8 +7,7 @@ public class TRef implements IType {
         this.contentType = cellType;
     }
 
-    @Override
-    public IType getType() {
+    public IType getInnerType() {
         return contentType;
     }
 
@@ -20,7 +19,7 @@ public class TRef implements IType {
 
     @Override
     public boolean equals(Object object) {
-        return object instanceof TRef && contentType.equals(((TRef) object).getType());
+        return object instanceof TRef && contentType.equals(((TRef) object).contentType);
     }
 
 }
