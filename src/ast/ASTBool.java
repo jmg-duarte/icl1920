@@ -11,6 +11,7 @@ import value.VBool;
 
 public class ASTBool implements ASTNode {
 
+    private final TBool TYPE = new TBool();
     private final Boolean exp;
 
     public ASTBool(Boolean exp) {
@@ -38,12 +39,12 @@ public class ASTBool implements ASTNode {
         } else {
             code = "sipush 0";
         }
-        return new Assembler(code, 1);
+        return new Assembler(code, 1, TYPE);
     }
 
     @Override
     public IType typecheck(Environment<IType> env) {
-        return new TBool();
+        return TYPE;
     }
 
 }
