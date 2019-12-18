@@ -7,7 +7,9 @@ import env.Environment;
 import types.IType;
 import types.TBool;
 import types.TInt;
+import types.TUndef;
 import value.IValue;
+import value.VUndef;
 
 public class ASTPrint implements ASTNode {
 
@@ -21,7 +23,7 @@ public class ASTPrint implements ASTNode {
     @Override
     public IValue eval(Environment<IValue> env) {
         System.out.println(exp.eval(env));
-        return null;
+        return VUndef.UNDEFINED;
     }
 
     @Override
@@ -42,6 +44,6 @@ public class ASTPrint implements ASTNode {
     @Override
     public IType typecheck(Environment<IType> env) {
         type = exp.typecheck(env);
-        return type;
+        return TUndef.TYPE;
     }
 }
