@@ -80,10 +80,14 @@ public class ASTLetIn implements ASTNode {
     public IType typecheck(Environment<IType> env) {
         Environment<IType> innerScope = env.startScope();
         types = new LinkedHashMap<>();
-        for (Entry<String, ASTNode> e : expTypes.entrySet()) {
-            IType paramType = e.getValue().typecheck(env);
-            types.put(e.getKey(), paramType);
-            innerScope.associate(e.getKey(), paramType);
+        for (String id : expressions.keySet()) {
+            IType declaredType = expTypes.get(id).typecheck(env);
+            IType expression = expressions.get(id).typecheck(env);
+            if (!declaredType.equals(expression)) {
+                throw new TypeErrorException(String.format("type mismatch:\n\tdeclared type [%s]\n\texpression type: [%s]", declaredType.toString(), expression.toString()));
+            }
+            types.put(id, declaredType);
+            innerScope.associate(id, declaredType);
         }
         innerScope.endScope();
         type = body.typecheck(innerScope);
