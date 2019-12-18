@@ -14,7 +14,7 @@ public class TRef implements IType {
     @Override
     public String toString() {
         // return "Ref("+contentType.getType()+")";
-        return "LJava/lang/Object";
+        return "Ljava/lang/Object";
     }
 
     @Override

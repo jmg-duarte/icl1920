@@ -35,14 +35,15 @@ public class ASTAssign implements ASTNode {
     public Assembler compile(CoreCompiler compiler, Environment env) {
         LineBuilder lb = new LineBuilder();
         Assembler leftAsm = left.compile(compiler, env);
-        Assembler rightAsm = right.compile(compiler, env);
+        Assembler rightAsm = right.compile(compiler,env);
+
         if (contentType instanceof TBool || contentType instanceof TInt) {
             lb.append(leftAsm);
             lb.appendLine("checkcast ref_int");
             lb.append(rightAsm);
             lb.appendLine("putfield ref_int/v " + contentType.toString());
         }
-        if (contentType instanceof TRef) {
+        else if (contentType instanceof TRef) {
             lb.append(leftAsm);
             lb.appendLine("checkcast ref_class");
             lb.append(rightAsm);
