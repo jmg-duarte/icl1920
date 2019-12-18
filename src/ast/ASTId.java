@@ -36,10 +36,10 @@ public class ASTId implements ASTNode {
                 final String currEnvName = env.getName();
                 final Environment<IType> parentEnv = env.endScope();
                 final String parentEnvName = parentEnv.getName();
-                lb.appendLine(String.format("getfield %s /sl L%s;", currEnvName, parentEnvName));
+                lb.appendLine(String.format("getfield %s/sl L%s;", currEnvName, parentEnvName));
                 env = env.endScope();
             } else {
-                lb.appendLine(String.format("getfield %s /_%s %s", env.getName(), id, current.getCompiledType()));
+                lb.appendLine(String.format("getfield %s/_%s %s", env.getName(), id, current.getCompiledType()));
                 break;
             }
         }
