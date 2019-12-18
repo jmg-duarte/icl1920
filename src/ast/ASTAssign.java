@@ -33,24 +33,20 @@ public class ASTAssign implements ASTNode {
 
     @Override
     public Assembler compile(CoreCompiler compiler, Environment<IType> env) {
-        LineBuilder lb = new LineBuilder();
         Assembler leftAsm = leftNode.compile(compiler, env);
         Assembler rightAsm = rightNode.compile(compiler, env);
+        return new Assembler(getAssignAsm(leftAsm, rightAsm), leftAsm.getStack() + rightAsm.getStack(), leftAsm.getType());
+    }
 
-        if (rightType instanceof TBool || rightType instanceof TInt) {
-            lb.append(leftAsm);
-            lb.appendLine("checkcast ref_int");
-            lb.append(rightAsm);
-            lb.appendLine("putfield ref_int/v " + rightType.toString());
-        }
-        if (rightType instanceof TRef) {
-            lb.append(leftAsm);
-            lb.appendLine("checkcast ref_class");
-            lb.append(rightAsm);
-            rightNode.compile(compiler, env);
-            lb.appendLine("putfield ref_class/v " + rightType.toString());
-        }
-        return new Assembler(lb.toString(), leftAsm.getStack() + rightAsm.getStack(), leftAsm.getType());
+    private static String getAssignAsm(Assembler leftAsm, Assembler rightAsm) {
+        final IType rightType = rightAsm.getType();
+        final String ref = TRef.getReferenceClass(rightType);
+        final LineBuilder lb = new LineBuilder();
+        lb.append(leftAsm);
+        lb.appendLine(String.format("checkcast %s", ref));
+        lb.append(rightAsm);
+        lb.appendLine(String.format("putfield %s/v %s", ref, rightType.getCompiledType()));
+        return lb.toString();
     }
 
     @Override

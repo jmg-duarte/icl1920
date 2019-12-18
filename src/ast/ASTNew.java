@@ -28,28 +28,22 @@ public class ASTNew implements ASTNode {
 
     @Override
     public Assembler compile(CoreCompiler compiler, Environment<IType> env) {
-        LineBuilder lb = new LineBuilder();
-        Assembler asm = expression.compile(compiler, env);
-        IType refInnerType = reference.getInnerType();
-        Reference ref = compiler.newReference(reference.getInnerType());
-        if (refInnerType instanceof TBool || refInnerType instanceof TInt) {
-            lb.appendLine("new " + ref.getReferenceID());
-            lb.appendLine("dup");
-            lb.appendLine("invokespecial ref_int/<init>()V");
-            lb.appendLine("dup");
-            lb.append(asm);
-            lb.appendLine("putfield ref_int/v " + refInnerType.getCompiledType());
-        }
-        if (refInnerType instanceof TRef) {
-            lb.appendLine("new " + ref.getReferenceID());
-            lb.appendLine("dup");
-            lb.appendLine("invokespecial ref_class/<init>()V");
-            lb.appendLine("dup");
-            lb.append(asm);
-            lb.appendLine("putfield ref_class/v " + reference.getCompiledType());
-        }
+        final Assembler asm = expression.compile(compiler, env);
+        final IType refInnerType = reference.getInnerType();
+        final Reference ref = compiler.newReference(reference.getInnerType());
+        return new Assembler(getNewAsm(asm, ref, refInnerType), asm.getStack(), reference);
+    }
 
-        return new Assembler(lb.toString(), asm.getStack(), reference);
+    private static String getNewAsm(Assembler asm, Reference ref, IType refInnerType) {
+        final String r = TRef.getReferenceClass(refInnerType);
+        LineBuilder lb = new LineBuilder();
+        lb.appendLine("new " + ref.getReferenceID());
+        lb.appendLine("dup");
+        lb.appendLine(String.format("invokespecial %s/<init>()V", r));
+        lb.appendLine("dup");
+        lb.append(asm);
+        lb.appendLine(String.format("putfield %s/v %s", r, refInnerType.getCompiledType()));
+        return lb.toString();
     }
 
     @Override
