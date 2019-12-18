@@ -50,12 +50,12 @@ public class ASTFuncApp implements ASTNode {
             throw new TypeErrorException("Incorrect number of arguments");
         }
 
-        Iterator itParameters = params.iterator();
-        Iterator itArguments = args.iterator();
+        Iterator<IType> itParameters = params.iterator();
+        Iterator<ASTNode> itArguments = args.iterator();
 
         while (itParameters.hasNext()) {
-            ASTNode currArg = (ASTNode) itArguments.next();
-            IType currParam = (IType) itParameters.next();
+            ASTNode currArg = itArguments.next();
+            IType currParam = itParameters.next();
             if (!(currArg.typecheck(env).equals(currParam))) {
                 throw new TypeErrorException("Argument type does not match w/ param type");
             }

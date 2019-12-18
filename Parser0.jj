@@ -248,7 +248,7 @@ ASTNode While() : {
 
 ASTNode Func() : {
     Token id;
-    Map<String, ASTNode> parameters = new HashMap<String, ASTNode>();
+    Map<String, ASTNode> parameters = new LinkedHashMap<String, ASTNode>();
     ASTNode body; ASTNode type;
 } {
     <FUNC> id=<Id> <COL> type=Type() { parameters.put(id.image, type); }
