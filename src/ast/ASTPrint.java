@@ -30,7 +30,7 @@ public class ASTPrint implements ASTNode {
         Assembler printAsm = exp.compile(compiler, env);
         lb.appendLine("getstatic java/lang/System/out Ljava/io/PrintStream;");
         lb.append(printAsm);
-        if (expType instanceof TInt|| expType instanceof TBool){
+        if (type instanceof TInt|| type instanceof TBool){
             lb.appendLine("invokestatic java/lang/String/valueOf(I)Ljava/lang/String;");
         } else {
             lb.appendLine("invokestatic java/lang/String/valueOf(Ljava/lang/Object;)Ljava/lang/String;");

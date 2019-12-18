@@ -34,7 +34,7 @@ public class ASTNew implements ASTNode {
         if (refInnerType instanceof TBool || refInnerType instanceof TInt) {
             lb.appendLine("new ref_int");
             lb.appendLine("dup");
-            lb.appendLine("invokespecial "+ref.getReferenceID()+"/<init>()V");
+            lb.appendLine("invokespecial ref_int/<init>()V");
             lb.appendLine("dup");
             lb.append(asm);
             lb.appendLine("putfield ref_int/v " + refInnerType.toString());

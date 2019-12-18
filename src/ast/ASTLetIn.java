@@ -83,6 +83,7 @@ public class ASTLetIn implements ASTNode {
         for (Entry<String, ASTNode> e : expTypes.entrySet()) {
             IType paramType = e.getValue().typecheck(env);
             types.put(e.getKey(), paramType);
+            innerScope.associate(e.getKey(), paramType);
         }
         innerScope.endScope();
         type = body.typecheck(innerScope);

@@ -57,7 +57,7 @@ public class ASTAssign implements ASTNode {
     public IType typecheck(Environment<IType> env) {
         leftType = leftNode.typecheck(env);
         if (!(leftType instanceof TRef)) {
-            throw new TypeErrorException("assigned value must be of type \"ref\"");
+            throw new TypeErrorException("assigned value must be of type ref");
         }
         IType innerType = ((TRef) leftType).getInnerType();
         rightType = rightNode.typecheck(env);

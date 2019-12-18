@@ -17,6 +17,7 @@ public class ASTFunc implements ASTNode {
     private final ASTNode body;
     private final List<IType> paramTypes = new LinkedList<>();
     private IType bodyType;
+    private TFun functionType;
 
     public ASTFunc(Map<String, ASTNode> parameters, ASTNode body) {
         this.parameters = parameters;
@@ -30,7 +31,7 @@ public class ASTFunc implements ASTNode {
     }
 
     @Override
-    public Assembler compile(CoreCompiler compiler, Environment<IValue> env) {
+    public Assembler compile(CoreCompiler compiler, Environment<IType> env) {
         Environment innerScope = env.startScope();
         LineBuilder lb = new LineBuilder();
 
@@ -41,7 +42,7 @@ public class ASTFunc implements ASTNode {
         lb.appendLine(".implements");
         lb.appendLine(".field");
         lb.appendLine("method call");
-        return new Assembler(lb.toString(),0);
+        return new Assembler(lb.toString(),0, functionType);
     }
 
     @Override
@@ -55,7 +56,8 @@ public class ASTFunc implements ASTNode {
             paramTypes.add(paramType);
         }
         bodyType = body.typecheck(innerScope);
-        return new TFun(paramTypes, bodyType);
+        functionType = new TFun(paramTypes, bodyType);
+        return functionType;
     }
 
 }

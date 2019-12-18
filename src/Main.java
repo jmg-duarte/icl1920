@@ -77,9 +77,12 @@ public class Main {
         new Parser(System.in);
         ASTNode exp;
         Environment<IValue> globalScope = new Environment<>();
+
         while (true) {
             try {
                 exp = Parser.Start();
+                Environment<IType> typeEnvironment = new Environment<>();
+                exp.typecheck(typeEnvironment);
                 System.out.println(exp.eval(globalScope));
             } catch (Exception e) {
                 e.printStackTrace();
