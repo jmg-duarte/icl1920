@@ -15,7 +15,7 @@ import value.VRef;
 public class ASTDeref implements ASTNode {
 
     private final ASTNode expression;
-    private TRef type;
+    private IType type;
 
     public ASTDeref(ASTNode expression) {
         this.expression = expression;
@@ -34,12 +34,12 @@ public class ASTDeref implements ASTNode {
     public Assembler compile(CoreCompiler compiler, Environment<IType> env) {
         LineBuilder lb = new LineBuilder();
         Assembler expAsm = expression.compile(compiler, env);
-        if (type.getInnerType() instanceof TBool || type.getInnerType() instanceof TInt) {
+        if (type instanceof TBool || type instanceof TInt) {
             lb.append(expAsm);
             lb.appendLine("checkcast ref_int");
             lb.appendLine("getfield ref_int/v " + type.toString());
         }
-        if (type.getInnerType() instanceof TRef) {
+        if (type instanceof TRef) {
             lb.append(expAsm);
             lb.appendLine("checkcast ref_class");
             lb.appendLine("getfield ref_class/v " + type.toString());
@@ -51,9 +51,14 @@ public class ASTDeref implements ASTNode {
     public IType typecheck(Environment<IType> env) {
         IType exprType = expression.typecheck(env);
         if (!(exprType instanceof TRef)) {
-            throw new TypeErrorException("expression must be of type ref");
+            throw new TypeErrorException(String.format("expression must be of type ref, got: %s", exprType.toString()));
         }
-        type = ((TRef) exprType);
+        type = ((TRef) exprType).getInnerType();
         return type;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("!%s", expression.toString());
     }
 }
