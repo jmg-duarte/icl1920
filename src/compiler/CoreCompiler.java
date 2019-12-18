@@ -39,7 +39,7 @@ public class CoreCompiler {
 
     public void dumpReferences() throws IOException {
         for (Map.Entry<String, Reference> entry : references.entrySet()) {
-            entry.getValue().dumpReference();
+            entry.getValue().dump();
         }
     }
 

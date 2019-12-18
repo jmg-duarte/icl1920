@@ -31,7 +31,7 @@ public class FrameStack {
 
     public void dumpStack() throws IOException {
         for (Map.Entry<String, Frame> entry : frames.entrySet()) {
-            entry.getValue().dumpFrame();
+            entry.getValue().dump();
         }
     }
 }

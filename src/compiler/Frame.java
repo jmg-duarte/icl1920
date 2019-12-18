@@ -4,7 +4,7 @@ import types.IType;
 
 import java.io.IOException;
 
-public class Frame {
+public class Frame implements Dumpable{
 
     private final String frameID;
     // private final Frame parent;
@@ -34,7 +34,8 @@ public class Frame {
         lb.appendLine(String.format(".field public _%s %s", fieldID, type.getCompiledType()));
     }
 
-    public void dumpFrame() throws IOException {
+    @Override
+    public void dump() throws IOException {
         lb.appendLine(".method public <init>()V");
         lb.appendLine("aload_0");
         lb.appendLine("invokenonvirtual java/lang/Object/<init>()V");
