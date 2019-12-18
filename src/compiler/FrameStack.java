@@ -12,7 +12,6 @@ public class FrameStack {
 
     public FrameStack() {
         oldFrame = new Frame("java/lang/Object");
-        frameCounter = 0;
     }
 
     public int frameDepth() {

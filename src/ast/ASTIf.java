@@ -15,6 +15,7 @@ public class ASTIf implements ASTNode {
     private final ASTNode conditional;
     private final ASTNode ifTrue;
     private final ASTNode ifFalse;
+    private IType type;
 
     public ASTIf(ASTNode conditional, ASTNode ifTrue, ASTNode ifFalse) {
         this.conditional = conditional;
@@ -23,8 +24,8 @@ public class ASTIf implements ASTNode {
     }
 
     @Override
-    public IValue eval(Environment env) throws TypeErrorException {
-        Environment innerScope = env.startScope();
+    public IValue eval(Environment<IValue> env) throws TypeErrorException {
+        Environment<IValue> innerScope = env.startScope();
         IValue v1 = conditional.eval(env);
         if (!(v1 instanceof VBool)) {
             throw new TypeErrorException();
@@ -38,7 +39,7 @@ public class ASTIf implements ASTNode {
 
     //TODO ASTIf compile method
     @Override
-    public Assembler compile(CoreCompiler compiler, Environment env) {
+    public Assembler compile(CoreCompiler compiler, Environment<IType> env) {
         Assembler condAssembly = conditional.compile(compiler, env);
         Assembler trueAssembly = ifTrue.compile(compiler, env);
         Assembler falseAssembly = ifFalse.compile(compiler, env);
@@ -57,24 +58,23 @@ public class ASTIf implements ASTNode {
 
         return new Assembler(lb.toString(), condAssembly.getStack() +
                 trueAssembly.getStack() +
-                falseAssembly.getStack());
+                falseAssembly.getStack(), type);
     }
 
     @Override
     public IType typecheck(Environment<IType> env) {
-        IType conditionalType = conditional.typecheck(env);
-        IType ifTrueType = ifTrue.typecheck(env);
-        IType ifFalseType = ifFalse.typecheck(env);
-
+        final IType conditionalType = conditional.typecheck(env);
         if (!(conditionalType instanceof TBool)) {
-            throw new TypeErrorException();
+            throw new TypeErrorException("invalid conditional expression");
         }
 
+        final IType ifTrueType = ifTrue.typecheck(env);
+        final IType ifFalseType = ifFalse.typecheck(env);
         if (!(ifTrueType.equals(ifFalseType))) {
-            throw new TypeErrorException();
+            throw new TypeErrorException("if branches must be of the same type");
         }
-
-        return ifTrueType;
+        type = ifTrueType;
+        return type;
     }
 }
 

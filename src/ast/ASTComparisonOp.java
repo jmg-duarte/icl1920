@@ -43,7 +43,7 @@ public class ASTComparisonOp implements ASTNode {
     }
 
     @Override
-    public Assembler compile(CoreCompiler compiler, Environment<IValue> env) {
+    public Assembler compile(CoreCompiler compiler, Environment<IType> env) {
         Assembler leftAssembly = exp1.compile(compiler, env);
         Assembler rightAssembly = exp2.compile(compiler, env);
 
@@ -75,19 +75,20 @@ public class ASTComparisonOp implements ASTNode {
         lb.appendLine(Assembler.GO_TO + " " + labelFalse);
         lb.appendLine(labelTrue + ": " + Assembler.BOOLEAN_TRUE);
         lb.appendLine(labelFalse + ": ");
-        return new Assembler(lb.toString(), leftAssembly.getStack() + rightAssembly.getStack());
+        return new Assembler(lb.toString(), leftAssembly.getStack() + rightAssembly.getStack(), TBool.TYPE);
     }
 
     @Override
     public IType typecheck(Environment<IType> env) {
         IType o1 = exp1.typecheck(env);
-        IType o2 = exp2.typecheck(env);
-
-        if (o1 instanceof TInt && o2 instanceof TInt || o1 instanceof TBool && o2 instanceof TBool) {
-            return new TBool();
-        } else {
-            throw new TypeErrorException(); //TODO confirmar
+        if (!(o1 instanceof TInt)) {
+            throw new TypeErrorException("right hand expression must be of type int");
         }
+        IType o2 = exp2.typecheck(env);
+        if (!(o2 instanceof TInt)) {
+            throw new TypeErrorException("left hand expression must be of type int");
+        }
+        return TBool.TYPE;
     }
 
 }

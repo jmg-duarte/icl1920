@@ -34,22 +34,20 @@ public class ASTFuncApp implements ASTNode {
     }
 
     @Override
-    public Assembler compile(CoreCompiler compiler, Environment<IValue> env) {
-        return null;
+    public Assembler compile(CoreCompiler compiler, Environment<IType> env) {
+        throw new RuntimeException("not implemented");
     }
 
     @Override
     public IType typecheck(Environment<IType> env) {
         IType expType = expr.typecheck(env);
-
         if (!(expType instanceof TFun)) {
-            throw new TypeErrorException(); //"Not function type"
+            throw new TypeErrorException("Not function type");
         }
 
         List<IType> params = ((TFun) expType).getParameters();
-
         if (params.size() != args.size()) {
-            throw new TypeErrorException(); //"Incorrect number of arguments"
+            throw new TypeErrorException("Incorrect number of arguments");
         }
 
         Iterator itParameters = params.iterator();
@@ -59,14 +57,11 @@ public class ASTFuncApp implements ASTNode {
             ASTNode currArg = (ASTNode) itArguments.next();
             IType currParam = (IType) itParameters.next();
             if (!(currArg.typecheck(env).equals(currParam))) {
-                throw new TypeErrorException(); //"Argument type does not match w/ param type"
+                throw new TypeErrorException("Argument type does not match w/ param type");
             }
         }
 
-        for (ASTNode arg : args) {
-            arg.typecheck(env);
-        }
-        return expType.getType();
+        return expType;
     }
 
 }

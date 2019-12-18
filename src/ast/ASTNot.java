@@ -19,13 +19,13 @@ public class ASTNot implements ASTNode {
     }
 
     @Override
-    public IValue eval(Environment env) {
+    public IValue eval(Environment<IValue> env) {
         VBool result = VBool.check(exp.eval(env));
         return new VBool(!result.getValue());
     }
 
     @Override
-    public Assembler compile(CoreCompiler compiler, Environment env) {
+    public Assembler compile(CoreCompiler compiler, Environment<IType> env) {
         Assembler leftAssembly = exp.compile(compiler, env);
 
         String labelTrue = LabelMaker.getLabel();
@@ -41,7 +41,7 @@ public class ASTNot implements ASTNode {
         lb.appendLine(Assembler.BOOLEAN_TRUE);
         lb.appendLine(labelFalse + ": ");
 
-        return new Assembler(lb.toString(), leftAssembly.getStack());
+        return new Assembler(lb.toString(), leftAssembly.getStack(), TBool.TYPE);
     }
 
     @Override
@@ -50,6 +50,6 @@ public class ASTNot implements ASTNode {
         if (!(type instanceof TBool)) {
             throw new TypeErrorException();
         }
-        return new TBool();
+        return TBool.TYPE;
     }
 }

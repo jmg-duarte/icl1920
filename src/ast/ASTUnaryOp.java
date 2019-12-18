@@ -21,7 +21,7 @@ public class ASTUnaryOp implements ASTNode {
     }
 
     @Override
-    public IValue eval(Environment env) throws TypeErrorException {
+    public IValue eval(Environment<IValue> env) throws TypeErrorException {
         VInt v = VInt.check(expr.eval(env));
 
         switch (operator) {
@@ -34,7 +34,7 @@ public class ASTUnaryOp implements ASTNode {
     }
 
     @Override
-    public Assembler compile(CoreCompiler compiler, Environment env) {
+    public Assembler compile(CoreCompiler compiler, Environment<IType> env) {
         Assembler asm = expr.compile(compiler, env);
         LineBuilder lb = new LineBuilder();
         lb.append(asm);
@@ -49,12 +49,11 @@ public class ASTUnaryOp implements ASTNode {
             default:
                 throw new IllegalStateException("unexpected operator: " + operator);
         }
-        return new Assembler(lb.toString(), asm.getStack());
+        return new Assembler(lb.toString(), asm.getStack(), TInt.TYPE);
     }
 
     @Override
     public IType typecheck(Environment<IType> env) {
-        //TODO ver isto
-        return new TInt();
+        return TInt.TYPE;
     }
 }

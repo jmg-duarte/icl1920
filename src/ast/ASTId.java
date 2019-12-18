@@ -9,7 +9,8 @@ import value.IValue;
 
 public class ASTId implements ASTNode {
 
-    private String id;
+    private final String id;
+    private IType type;
 
     public ASTId(String id) {
         this.id = id;
@@ -25,11 +26,11 @@ public class ASTId implements ASTNode {
     }
 
     @Override
-    public Assembler compile(CoreCompiler compiler, Environment<IValue> env) {
+    public Assembler compile(CoreCompiler compiler, Environment<IType> env) {
         LineBuilder lb = new LineBuilder();
         lb.appendLine("aload 4");
         while (true) {
-            IValue current = env.findInScope(id);
+            IType current = env.findInScope(id);
             // int[] framePositions = env.findFrame(id); //TODO mudar aqui para ter o numero da frame e a posicao na frame
             if (current == null) {
                 lb.appendLine("getfield " +
@@ -46,11 +47,12 @@ public class ASTId implements ASTNode {
                 break;
             }
         }
-        return new Assembler(lb.toString(), 1);
+        return new Assembler(lb.toString(), 1, type);
     }
 
     @Override
     public IType typecheck(Environment<IType> env) {
-        return env.find(id);
+        type = env.find(id);
+        return type;
     }
 }

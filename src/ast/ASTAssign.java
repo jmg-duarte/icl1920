@@ -14,54 +14,55 @@ import value.VRef;
 
 public class ASTAssign implements ASTNode {
 
-    private final ASTNode left;
-    private final ASTNode right;
-    private IType contentType;
+    private final ASTNode leftNode;
+    private final ASTNode rightNode;
+    private IType leftType;
+    private IType rightType;
 
-    public ASTAssign(ASTNode left, ASTNode right) {
-        this.left = left;
-        this.right = right;
-        this.contentType = null;
+    public ASTAssign(ASTNode leftNode, ASTNode rightNode) {
+        this.leftNode = leftNode;
+        this.rightNode = rightNode;
     }
 
     @Override
     public IValue eval(Environment<IValue> env) {
-        VRef ref = VRef.check(left.eval(env));
-        ref.set(right.eval(env));
+        VRef ref = VRef.check(leftNode.eval(env));
+        ref.set(rightNode.eval(env));
         return ref;
     }
 
     @Override
-    public Assembler compile(CoreCompiler compiler, Environment env) {
+    public Assembler compile(CoreCompiler compiler, Environment<IType> env) {
         LineBuilder lb = new LineBuilder();
-        Assembler leftAsm = left.compile(compiler, env);
-        Assembler rightAsm = right.compile(compiler,env);
+        Assembler leftAsm = leftNode.compile(compiler, env);
+        Assembler rightAsm = rightNode.compile(compiler, env);
 
-        if (contentType instanceof TBool || contentType instanceof TInt) {
+        if (rightType instanceof TBool || rightType instanceof TInt) {
             lb.append(leftAsm);
             lb.appendLine("checkcast ref_int");
             lb.append(rightAsm);
-            lb.appendLine("putfield ref_int/v " + contentType.toString());
+            lb.appendLine("putfield ref_int/v " + rightType.toString());
         }
-        else if (contentType instanceof TRef) {
+        if (rightType instanceof TRef) {
             lb.append(leftAsm);
             lb.appendLine("checkcast ref_class");
             lb.append(rightAsm);
-            right.compile(compiler, env);
-            lb.appendLine("putfield ref_class/v " + contentType.toString());
+            rightNode.compile(compiler, env);
+            lb.appendLine("putfield ref_class/v " + rightType.toString());
         }
-        return new Assembler(lb.toString(), leftAsm.getStack() + rightAsm.getStack());
+        return new Assembler(lb.toString(), leftAsm.getStack() + rightAsm.getStack(), leftAsm.getType());
     }
 
     @Override
     public IType typecheck(Environment<IType> env) {
-        IType leftType = left.typecheck(env);
+        leftType = leftNode.typecheck(env);
         if (!(leftType instanceof TRef)) {
-            throw new TypeErrorException();
+            throw new TypeErrorException("assigned value must be of type \"ref\"");
         }
-        contentType = right.typecheck(env);
-        if (!(contentType.equals(leftType.getType()))) {
-            throw new TypeErrorException(); //wrong type
+        IType innerType = ((TRef) leftType).getInnerType();
+        rightType = rightNode.typecheck(env);
+        if (!(rightType.equals(innerType))) {
+            throw new TypeErrorException("right hand value type must match reference type");
         }
         return leftType;
     }

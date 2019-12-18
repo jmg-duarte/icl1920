@@ -21,8 +21,8 @@ public class ASTWhile implements ASTNode {
     }
 
     @Override
-    public IValue eval(Environment env) {
-        Environment loopEnv = env.startScope();
+    public IValue eval(Environment<IValue> env) {
+        Environment<IValue> loopEnv = env.startScope();
         VBool b = VBool.check(conditional.eval(loopEnv));
         IValue res = b;
         while (b.getValue()) {
@@ -33,7 +33,7 @@ public class ASTWhile implements ASTNode {
     }
 
     @Override
-    public Assembler compile(CoreCompiler compiler, Environment env) {
+    public Assembler compile(CoreCompiler compiler, Environment<IType> env) {
         Assembler condAssembly = conditional.compile(compiler, env);
         Assembler bodyAssembly = body.compile(compiler, env);
 
@@ -49,16 +49,16 @@ public class ASTWhile implements ASTNode {
         lb.appendLine(labelFalse + ":");
 
         return new Assembler(lb.toString(), condAssembly.getStack() +
-                bodyAssembly.getStack());
+                bodyAssembly.getStack(), TBool.TYPE);
     }
 
     @Override
     public IType typecheck(Environment<IType> env) {
         IType conditionalType = conditional.typecheck(env);
-        IType bodyType = body.typecheck(env);
         if (!(conditionalType instanceof TBool)) {
-            throw new TypeErrorException();
+            throw new TypeErrorException("while condition must be of type bool");
         }
-        return new TBool();
+        body.typecheck(env);
+        return TBool.TYPE;
     }
 }

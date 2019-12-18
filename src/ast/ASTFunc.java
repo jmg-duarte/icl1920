@@ -14,8 +14,8 @@ import java.util.Map;
 
 public class ASTFunc implements ASTNode {
     private final Map<String, ASTNode> parameters;
-    private final List<IType> paramTypes = new LinkedList<>();
     private final ASTNode body;
+    private final List<IType> paramTypes = new LinkedList<>();
     private IType bodyType;
 
     public ASTFunc(Map<String, ASTNode> parameters, ASTNode body) {
@@ -49,8 +49,8 @@ public class ASTFunc implements ASTNode {
         Environment<IType> innerScope = env.startScope();
 
         for (Map.Entry<String, ASTNode> param : parameters.entrySet()) {
-            final IType paramType = param.getValue().typecheck(innerScope);
             final String key = param.getKey();
+            final IType paramType = param.getValue().typecheck(innerScope);
             innerScope.associate(key, paramType);
             paramTypes.add(paramType);
         }

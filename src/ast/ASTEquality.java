@@ -39,7 +39,7 @@ public class ASTEquality implements ASTNode {
     }
 
     @Override
-    public Assembler compile(CoreCompiler compiler, Environment<IValue> env) {
+    public Assembler compile(CoreCompiler compiler, Environment<IType> env) {
         Assembler leftAssembly = left.compile(compiler, env);
         Assembler rightAssembly = right.compile(compiler, env);
 
@@ -67,18 +67,18 @@ public class ASTEquality implements ASTNode {
         lb.appendLine(Assembler.BOOLEAN_TRUE);
         lb.appendLine(labelFalse + ": ");
 
-        return new Assembler(lb.toString(), leftAssembly.getStack() + rightAssembly.getStack());
+        return new Assembler(lb.toString(), leftAssembly.getStack() + rightAssembly.getStack(), TBool.TYPE);
     }
 
     @Override
     public IType typecheck(Environment<IType> env) {
-        IType o1 = left.typecheck(env);
-        IType o2 = right.typecheck(env);
+        final IType o1 = left.typecheck(env);
+        final IType o2 = right.typecheck(env);
 
         if (o1 instanceof TBool && o2 instanceof TBool || o1 instanceof TInt && o2 instanceof TInt) {
-            return new TBool();
+            return TBool.TYPE;
         } else {
-            throw new TypeErrorException(); //TODO confirmar
+            throw new TypeErrorException("expressions do not have the same type");
         }
     }
 }

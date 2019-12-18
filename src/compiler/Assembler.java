@@ -1,5 +1,7 @@
 package compiler;
 
+import types.IType;
+
 public class Assembler {
 
     public static final String INTEGER_DIVISION = "idiv";
@@ -21,11 +23,17 @@ public class Assembler {
 
     private final String code;
     private final int stack;
+    private final IType type;
 
-    public Assembler(String code, int stack) {
+    public Assembler(String code, int stack, IType type) {
         // this.code = code.endsWith("\n") ? code : code + "\n";
         this.code = code;
         this.stack = stack;
+        this.type = type;
+    }
+
+    public IType getType() {
+        return type;
     }
 
     public String getCode() {

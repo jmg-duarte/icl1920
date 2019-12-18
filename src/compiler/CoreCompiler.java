@@ -14,7 +14,7 @@ import java.util.Map;
 public class CoreCompiler {
 
     private LineBuilder lineBuilder = new LineBuilder();
-    private Environment<IValue> globalEnvironment = new Environment();
+    private Environment<IType> globalEnvironment = new Environment<>();
     private FrameStack fStack = new FrameStack();
     private List<Closure> closures = new LinkedList<>();
     private Map<String, Reference> references = new LinkedHashMap<>();

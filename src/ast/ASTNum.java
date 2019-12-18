@@ -10,7 +10,6 @@ import value.VInt;
 
 public class ASTNum implements ASTNode {
 
-    private static final TInt TYPE = new TInt();
     private int val;
 
     public ASTNum(int val) {
@@ -25,11 +24,11 @@ public class ASTNum implements ASTNode {
     @Override
     public Assembler compile(CoreCompiler compiler, Environment<IType> env) {
         String code = "sipush " + val;
-        return new Assembler(code, 1, TYPE);
+        return new Assembler(code, 1, TInt.TYPE);
     }
 
     @Override
     public IType typecheck(Environment<IType> env) {
-        return TYPE;
+        return TInt.TYPE;
     }
 }

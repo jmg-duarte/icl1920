@@ -9,7 +9,7 @@ import value.IValue;
 public interface ASTNode {
     IValue eval(Environment<IValue> env);
 
-    Assembler compile(CoreCompiler compiler, Environment<IValue> env);
+    Assembler compile(CoreCompiler compiler, Environment<IType> env);
 
     IType typecheck(Environment<IType> env);
 }

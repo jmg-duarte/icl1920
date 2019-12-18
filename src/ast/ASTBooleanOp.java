@@ -40,7 +40,7 @@ public class ASTBooleanOp implements ASTNode {
     }
 
     @Override
-    public Assembler compile(CoreCompiler compiler, Environment<IValue> env) {
+    public Assembler compile(CoreCompiler compiler, Environment<IType> env) {
         Assembler leftAssembly = lhs.compile(compiler, env);
         Assembler rightAssembly = rhs.compile(compiler, env);
 
@@ -58,7 +58,7 @@ public class ASTBooleanOp implements ASTNode {
                 throw new IllegalStateException("unexpected operator: " + op);
         }
 
-        return new Assembler(lb.toString(), leftAssembly.getStack() + rightAssembly.getStack());
+        return new Assembler(lb.toString(), leftAssembly.getStack() + rightAssembly.getStack(), TBool.TYPE);
     }
 
     @Override
@@ -67,9 +67,9 @@ public class ASTBooleanOp implements ASTNode {
         IType o2 = rhs.typecheck(env);
 
         if (o1 instanceof TBool && o2 instanceof TBool) {
-            return new TBool();
+            return TBool.TYPE;
         } else {
-            throw new TypeErrorException(); //TODO confirmar
+            throw new TypeErrorException("both values must be of type bool");
         }
 
     }

@@ -11,6 +11,9 @@ import value.TypeErrorException;
 import value.VInt;
 
 public class ASTBinaryOp implements ASTNode {
+
+    private static final TInt TYPE = new TInt();
+
     private final String operator;
     private final ASTNode lhs;
     private final ASTNode rhs;
@@ -42,11 +45,11 @@ public class ASTBinaryOp implements ASTNode {
     }
 
     @Override
-    public Assembler compile(CoreCompiler compiler, Environment<IValue> env) {
-        Assembler leftAssembly = lhs.compile(compiler, env);
-        Assembler rightAssembly = rhs.compile(compiler, env);
+    public Assembler compile(CoreCompiler compiler, Environment<IType> env) {
+        final Assembler leftAssembly = lhs.compile(compiler, env);
+        final Assembler rightAssembly = rhs.compile(compiler, env);
 
-        LineBuilder lb = new LineBuilder();
+        final LineBuilder lb = new LineBuilder();
         lb.append(leftAssembly, rightAssembly);
 
         switch (operator) {
@@ -68,20 +71,17 @@ public class ASTBinaryOp implements ASTNode {
             default:
                 throw new IllegalStateException("unexpected operator: " + operator);
         }
-
-        return new Assembler(lb.toString(), leftAssembly.getStack() + rightAssembly.getStack());
+        return new Assembler(lb.toString(), leftAssembly.getStack() + rightAssembly.getStack(), TYPE);
     }
 
     @Override
     public IType typecheck(Environment<IType> env) {
-        IType o1 = lhs.typecheck(env);
-        IType o2 = rhs.typecheck(env);
-
+        final IType o1 = lhs.typecheck(env);
+        final IType o2 = rhs.typecheck(env);
         if (o1 instanceof TInt && o2 instanceof TInt) {
-            return new TInt();
+            return TYPE;
         } else {
-            throw new TypeErrorException(); //TODO confirmar
+            throw new TypeErrorException("both values must be of type int");
         }
-
     }
 }
