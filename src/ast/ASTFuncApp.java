@@ -39,7 +39,6 @@ public class ASTFuncApp implements ASTNode {
 
     @Override
     public IType typecheck(Environment<IType> env) {
-        System.out.println(expr.toString());
         TFun expType = TFun.check(expr, env);
         List<IType> params = expType.getParameters();
         if (params.size() != args.size()) {

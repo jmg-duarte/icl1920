@@ -12,20 +12,16 @@ import java.util.Map.Entry;
 
 public class ASTLetIn implements ASTNode {
 
-    // private String id;
-    //private ASTNode expression;
     private Map<String, ASTNode> expressions; //map with all the associations -> inits
     private Map<String, ASTNode> expTypes; //map with all the associations -> types
     private ASTNode body;
-    private Map<String, IType> types;
+    private Map<String, IType> types = new LinkedHashMap<>();
     private IType type;
 
     public ASTLetIn(Map<String, ASTNode> expressions, ASTNode body, Map<String, ASTNode> expTypes) {
-        //this.id = id;
         this.expressions = expressions;
         this.body = body;
         this.expTypes = expTypes;
-        this.types = null;
     }
 
     @Override
@@ -79,7 +75,6 @@ public class ASTLetIn implements ASTNode {
     @Override
     public IType typecheck(Environment<IType> env) {
         Environment<IType> innerScope = env.startScope();
-        types = new LinkedHashMap<>();
         for (String id : expressions.keySet()) {
             IType declaredType = expTypes.get(id).typecheck(env);
             IType expression = expressions.get(id).typecheck(env);

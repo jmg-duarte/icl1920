@@ -57,7 +57,6 @@ public class ASTFunc implements ASTNode {
         }
         bodyType = body.typecheck(innerScope);
         functionType = new TFun(paramTypes, bodyType);
-        System.out.println("->" + functionType);
         return functionType;
     }
 
