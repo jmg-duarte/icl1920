@@ -13,8 +13,7 @@ public class TRef implements IType {
 
     @Override
     public String toString() {
-        // return "Ref("+contentType.getType()+")";
-        return "Ljava/lang/Object";
+        return String.format("ref %s", contentType);
     }
 
     @Override
@@ -22,4 +21,8 @@ public class TRef implements IType {
         return object instanceof TRef && contentType.equals(((TRef) object).contentType);
     }
 
+    @Override
+    public String getCompiledType() {
+        return "Ljava/lang/Object";
+    }
 }

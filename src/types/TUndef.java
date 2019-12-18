@@ -8,4 +8,9 @@ public class TUndef implements IType {
     public boolean equals(Object obj) {
         return obj instanceof TUndef;
     }
+
+    @Override
+    public String getCompiledType() {
+        throw new RuntimeException("not implemented");
+    }
 }

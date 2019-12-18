@@ -6,11 +6,16 @@ public class TInt implements IType {
 
     @Override
     public String toString() {
-        return "I";
+        return "int";
     }
 
     @Override
     public boolean equals(Object object) {
         return object instanceof TInt;
+    }
+
+    @Override
+    public String getCompiledType() {
+        return "I";
     }
 }

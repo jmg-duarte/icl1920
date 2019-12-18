@@ -6,7 +6,7 @@ public class TBool implements IType {
 
     @Override
     public String toString() {
-        return "I";
+        return "bool";
     }
 
     @Override
@@ -14,4 +14,8 @@ public class TBool implements IType {
         return object instanceof TBool;
     }
 
+    @Override
+    public String getCompiledType() {
+        return "I";
+    }
 }

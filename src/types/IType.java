@@ -1,3 +1,5 @@
 package types;
 
-public interface IType { }
+public interface IType {
+    String getCompiledType();
+}

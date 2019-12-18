@@ -51,10 +51,19 @@ public class TFun implements IType {
 
     @Override
     public String toString() {
+        final StringBuilder result = new StringBuilder("fun (");
+        for (IType paramType : paramTypes) {
+            result.append(String.format("%s", paramType));
+        }
+        result.append(")").append(bodyType);
+        return result.toString();
+    }
+
+    @Override
+    public String getCompiledType() {
         final StringBuilder result = new StringBuilder("(");
         for (IType paramType : paramTypes) {
-            final String s = String.format("%s", paramType);
-            result.append(s);
+            result.append(String.format("%s", paramType.getCompiledType()));
         }
         result.append(")").append(bodyType);
         return result.toString();
