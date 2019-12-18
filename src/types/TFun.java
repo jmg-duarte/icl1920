@@ -1,5 +1,9 @@
 package types;
 
+import ast.ASTNode;
+import env.Environment;
+import value.TypeErrorException;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -54,5 +58,13 @@ public class TFun implements IType {
         }
         result.append(")").append(bodyType);
         return result.toString();
+    }
+
+    public static TFun check(ASTNode node, Environment<IType> env) {
+        IType expType = node.typecheck(env);
+        if (!(expType instanceof TFun)) {
+            throw new TypeErrorException(String.format("%s is not function type", node.toString()));
+        }
+        return ((TFun) expType);
     }
 }

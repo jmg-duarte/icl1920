@@ -16,7 +16,6 @@ import java.util.List;
 public class ASTFuncApp implements ASTNode {
     private final ASTNode expr;
     private final List<ASTNode> args;
-    private List<IType> parameterTypes;
 
     public ASTFuncApp(ASTNode expr, List<ASTNode> args) {
         this.expr = expr;
@@ -40,12 +39,9 @@ public class ASTFuncApp implements ASTNode {
 
     @Override
     public IType typecheck(Environment<IType> env) {
-        IType expType = expr.typecheck(env);
-        if (!(expType instanceof TFun)) {
-            throw new TypeErrorException("Not function type");
-        }
-
-        List<IType> params = ((TFun) expType).getParameters();
+        System.out.println(expr.toString());
+        TFun expType = TFun.check(expr, env);
+        List<IType> params = expType.getParameters();
         if (params.size() != args.size()) {
             throw new TypeErrorException("Incorrect number of arguments");
         }
@@ -61,8 +57,12 @@ public class ASTFuncApp implements ASTNode {
             }
         }
 
-        return expType;
+        return expType.getType();
     }
 
+    @Override
+    public String toString() {
+        return String.format("%s(%s)", expr.toString(), args.toString());
+    }
 }
 
