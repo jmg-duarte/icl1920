@@ -73,7 +73,7 @@ public class ASTComparisonOp implements ASTNode {
 
         lb.appendLine(Assembler.BOOLEAN_FALSE);
         lb.appendLine(Assembler.GO_TO + " " + labelFalse);
-        lb.appendLine(labelTrue + ": " + Assembler.BOOLEAN_TRUE);
+        lb.appendLine(labelTrue + ":\n" + Assembler.BOOLEAN_TRUE);
         lb.appendLine(labelFalse + ": ");
         return new Assembler(lb.toString(), leftAssembly.getStack() + rightAssembly.getStack(), TBool.TYPE);
     }
