@@ -16,6 +16,6 @@ public class TBool implements IType {
 
     @Override
     public String getCompiledType() {
-        return "I";
+        return "Z";
     }
 }

@@ -9,6 +9,7 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -36,9 +37,11 @@ public class Main {
     }
 
     private static void compile(String arg) throws Exception {
+        deleteDirectoryStream(Paths.get("./jout/"));
+        deleteDirectoryStream(Paths.get("./classes/"));
         new Parser(new FileInputStream(arg));
         ASTNode exp = Parser.Start();
-        CoreCompiler c = new CoreCompiler(exp);
+        CoreCompiler c = new CoreCompiler();
         Environment<IType> globalScope = new Environment<>();
         exp.typecheck(globalScope);
         c.compile(exp);
@@ -106,4 +109,11 @@ public class Main {
         }
     }
 
+    private static void deleteDirectoryStream(Path path) throws IOException {
+        if (Files.exists(path)) {
+        Files.walk(path)
+                .sorted(Comparator.reverseOrder())
+                .map(Path::toFile)
+                .forEach(File::delete);}
+    }
 }

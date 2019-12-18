@@ -1,17 +1,23 @@
 package compiler;
 
+import types.IType;
+import types.TBool;
+import types.TInt;
+import types.TRef;
+
 import java.io.IOException;
+
 
 public class Reference {
 
     private final String refID;
     private final LineBuilder lb = new LineBuilder();
 
-    public Reference(String refID, String type) {
-        this.refID = refID;
-        lb.appendLine(".class " + refID);
+    public Reference(IType type) {
+        this.refID = TRef.getReferenceClass(type);
+        lb.appendLine(".class public " + TRef.getReferenceClass(type));
         lb.appendLine(".super java/lang/Object");
-        lb.appendLine(".field public " + type + ";");
+        lb.appendLine(".field public v " + type.getCompiledType());
     }
 
     public String getReferenceID() {
@@ -31,4 +37,6 @@ public class Reference {
     public String toString() {
         return refID;
     }
+
+
 }

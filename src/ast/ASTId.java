@@ -33,17 +33,13 @@ public class ASTId implements ASTNode {
             IType current = env.findInScope(id);
             // int[] framePositions = env.findFrame(id); //TODO mudar aqui para ter o numero da frame e a posicao na frame
             if (current == null) {
-                lb.appendLine("getfield " +
-                        env.getName() +
-                        "/sl L" +
-                        env.endScope().getName() + ";");
+                final String currEnvName = env.getName();
+                final Environment<IType> parentEnv = env.endScope();
+                final String parentEnvName = parentEnv.getName();
+                lb.appendLine(String.format("getfield %s /sl L%s;", currEnvName, parentEnvName));
                 env = env.endScope();
             } else {
-                lb.appendLine("getfield " +
-                        env.getName() +
-                        "/_" +
-                        id +
-                        " I");
+                lb.appendLine(String.format("getfield %s /_%s %s", env.getName(), id, current.getCompiledType()));
                 break;
             }
         }

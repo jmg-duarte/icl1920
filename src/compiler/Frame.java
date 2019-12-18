@@ -1,5 +1,7 @@
 package compiler;
 
+import types.IType;
+
 import java.io.IOException;
 
 public class Frame {
@@ -28,8 +30,8 @@ public class Frame {
         return frameID;
     }
 
-    public void addField(String fieldID) {
-        lb.appendLine(".field public _" + fieldID + " I");
+    public void addField(String fieldID, IType type) {
+        lb.appendLine(String.format(".field public _%s %s", fieldID, type.getCompiledType()));
     }
 
     public void dumpFrame() throws IOException {

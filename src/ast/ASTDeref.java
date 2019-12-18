@@ -3,6 +3,7 @@ package ast;
 import compiler.Assembler;
 import compiler.CoreCompiler;
 import compiler.LineBuilder;
+import compiler.Reference;
 import env.Environment;
 import types.IType;
 import types.TBool;
@@ -32,19 +33,23 @@ public class ASTDeref implements ASTNode {
 
     @Override
     public Assembler compile(CoreCompiler compiler, Environment<IType> env) {
-        LineBuilder lb = new LineBuilder();
         Assembler expAsm = expression.compile(compiler, env);
-        if (type instanceof TBool || type instanceof TInt) {
-            lb.append(expAsm);
-            lb.appendLine("checkcast ref_int");
-            lb.appendLine("getfield ref_int/v " + type.toString());
-        }
-        if (type instanceof TRef) {
-            lb.append(expAsm);
-            lb.appendLine("checkcast ref_class");
-            lb.appendLine("getfield ref_class/v " + type.toString());
-        }
-        return new Assembler(lb.toString(), expAsm.getStack(), type);
+        return new Assembler(getAsm(expAsm), expAsm.getStack(), type);
+    }
+
+    private String getAsm(Assembler expAsm) {
+        LineBuilder lb = new LineBuilder();
+        lb.append(expAsm);
+        lb.append(getDerefAsm(type));
+        return lb.toString();
+    }
+
+    private static String getDerefAsm(IType type) {
+        LineBuilder lb = new LineBuilder();
+        String ref = TRef.getReferenceClass(type);
+        lb.appendLine("checkcast " + ref);
+        lb.appendLine(String.format("getfield %s/v %s", ref, type.getCompiledType()));
+        return lb.toString();
     }
 
     @Override

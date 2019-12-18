@@ -21,9 +21,9 @@ public class LineBuilder {
                     ".method public static main([Ljava/lang/String;)V\n" +
                     ".limit locals 10 \n" +
                     ".limit stack 256\n" +
-                    "\n" +
+                    "\n" /*+
                     "getstatic java/lang/System/out Ljava/io/PrintStream;\n" +
-                    "\n" + "aconst_null\n" +
+                    "\n"*/ + "aconst_null\n" +
                     "astore 4\n";
     private static final String FOOTER = "\n" +
           //  "invokestatic java/lang/String/valueOf(I)Ljava/lang/String;\n" +

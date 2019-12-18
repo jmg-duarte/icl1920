@@ -31,22 +31,24 @@ public class ASTNew implements ASTNode {
         LineBuilder lb = new LineBuilder();
         Assembler asm = expression.compile(compiler, env);
         IType refInnerType = reference.getInnerType();
+        Reference ref = compiler.newReference(reference.getInnerType());
         if (refInnerType instanceof TBool || refInnerType instanceof TInt) {
-            lb.appendLine("new ref_int");
+            lb.appendLine("new " + ref.getReferenceID());
             lb.appendLine("dup");
             lb.appendLine("invokespecial ref_int/<init>()V");
             lb.appendLine("dup");
             lb.append(asm);
-            lb.appendLine("putfield ref_int/v " + refInnerType.toString());
+            lb.appendLine("putfield ref_int/v " + refInnerType.getCompiledType());
         }
         if (refInnerType instanceof TRef) {
-            lb.appendLine("new ref_class");
+            lb.appendLine("new " + ref.getReferenceID());
             lb.appendLine("dup");
             lb.appendLine("invokespecial ref_class/<init>()V");
             lb.appendLine("dup");
             lb.append(asm);
-            lb.appendLine("putfield ref_class/v " + reference.toString());
+            lb.appendLine("putfield ref_class/v " + reference.getCompiledType());
         }
+
         return new Assembler(lb.toString(), asm.getStack(), reference);
     }
 

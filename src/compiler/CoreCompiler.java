@@ -20,11 +20,6 @@ public class CoreCompiler {
     private Map<String, Reference> references = new LinkedHashMap<>();
     private int closureCounter = 0;
     private int referenceCounter = 0;
-    private ASTNode root;
-
-    public CoreCompiler(ASTNode root) {
-        this.root = root;
-    }
 
     public void compile(ASTNode root) {
         Assembler a = root.compile(this, globalEnvironment);
@@ -48,18 +43,18 @@ public class CoreCompiler {
         }
     }
 
-    public Reference newReference(String refType){
+    public Reference newReference(IType refType) {
         referenceCounter++;
-        String refId = "ref"+referenceCounter;
-        Reference ref = new Reference(refId,refType);
-        references.put(refId,ref);
+        String refId = "ref" + referenceCounter;
+        Reference ref = new Reference(refType);
+        references.put(ref.getReferenceID(), ref);
         return ref;
     }
 
-    public ClosureInterface newClosure(List<IType> paramTypes, IType functionType, Environment env){
+    public ClosureInterface newClosure(List<IType> paramTypes, IType functionType, Environment env) {
         //closureCounter++:
         String interfaceName;
-        for (IType param : paramTypes){
+        for (IType param : paramTypes) {
             //interfaceName.concat(param.toString());
         }
         //return new ClosureInterface(interfaceName, functionType.toString());

@@ -55,13 +55,14 @@ public class ASTLetIn implements ASTNode {
         for (String field : expressions.keySet()) {
             final ASTNode exp = expressions.get(field);
             final Assembler assembly = exp.compile(compiler, compEnv);
+            final IType asmType =  assembly.getType();
 
-            // compEnv.associate(field, );
-            currentFrame.addField(field);
+            compEnv.associate(field, asmType);
+            currentFrame.addField(field, asmType);
 
             lb.appendLine("aload 4");
             lb.append(assembly);
-            lb.appendLine("putfield " + currentFrame + "/_" + field + " I");
+            lb.appendLine("putfield " + currentFrame + "/_" + field + " " + asmType.getCompiledType());
         }
 
         lb.append(body.compile(compiler, compEnv));

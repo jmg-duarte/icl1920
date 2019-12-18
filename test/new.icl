@@ -1,1 +1,1 @@
-new 3;;
+println !(new 3);;

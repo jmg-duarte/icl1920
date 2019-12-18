@@ -23,6 +23,16 @@ public class TRef implements IType {
 
     @Override
     public String getCompiledType() {
-        return "Ljava/lang/Object";
+        return "Ljava/lang/Object;";
+    }
+
+    public static String getReferenceClass(IType type) {
+        String result = "ref_class";
+        if (type instanceof TBool) {
+            result = "ref_bool";
+        } else if (type instanceof TInt) {
+            result = "ref_int";
+        }
+        return result;
     }
 }
