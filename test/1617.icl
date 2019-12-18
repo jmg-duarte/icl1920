@@ -18,11 +18,24 @@ let
             f(g(n))
         end
     end
+    fact: (int)int = fun n: int ->
+        let
+            result: ref int = new 1
+            counter: ref int = new n
+        in
+            while !counter > 0 do
+                result := !result * !counter;
+                counter := !counter - 1
+            end;
+            !result
+        end
+    end
 in
     let
         val:int = inc(double(pow(2, 3)))
     in
-        app(inc, inc)(val)
+        println app(inc, inc)(val) ;
+        println fact(10)
     end
 end
 ;;
