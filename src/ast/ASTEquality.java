@@ -81,4 +81,9 @@ public class ASTEquality implements ASTNode {
             throw new TypeErrorException("expressions do not have the same type");
         }
     }
+
+    @Override
+    public String toString() {
+        return String.format("%s %s %s", left.toString(), op, right.toString());
+    }
 }

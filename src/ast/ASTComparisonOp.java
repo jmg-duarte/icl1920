@@ -14,20 +14,20 @@ import value.VBool;
 import value.VInt;
 
 public class ASTComparisonOp implements ASTNode {
-    private final ASTNode exp1;
-    private final ASTNode exp2;
+    private final ASTNode lhs;
+    private final ASTNode rhs;
     private final String op;
 
-    public ASTComparisonOp(String op, ASTNode exp1, ASTNode exp2) {
-        this.exp1 = exp1;
-        this.exp2 = exp2;
+    public ASTComparisonOp(String op, ASTNode lhs, ASTNode rhs) {
+        this.lhs = lhs;
+        this.rhs = rhs;
         this.op = op;
     }
 
     @Override
     public IValue eval(Environment<IValue> env) throws TypeErrorException {
-        final VInt v1 = VInt.check(exp1.eval(env));
-        final VInt v2 = VInt.check(exp2.eval(env));
+        final VInt v1 = VInt.check(lhs.eval(env));
+        final VInt v2 = VInt.check(rhs.eval(env));
         switch (op) {
             case ">":
                 return new VBool(v1.getValue() > v2.getValue());
@@ -44,8 +44,8 @@ public class ASTComparisonOp implements ASTNode {
 
     @Override
     public Assembler compile(CoreCompiler compiler, Environment<IType> env) {
-        Assembler leftAssembly = exp1.compile(compiler, env);
-        Assembler rightAssembly = exp2.compile(compiler, env);
+        Assembler leftAssembly = lhs.compile(compiler, env);
+        Assembler rightAssembly = rhs.compile(compiler, env);
 
         String labelTrue = LabelMaker.getLabel();
         String labelFalse = LabelMaker.getLabel();
@@ -80,15 +80,19 @@ public class ASTComparisonOp implements ASTNode {
 
     @Override
     public IType typecheck(Environment<IType> env) {
-        IType o1 = exp1.typecheck(env);
-        if (!(o1 instanceof TInt)) {
-            throw new TypeErrorException("right hand expression must be of type int");
+        IType leftType = lhs.typecheck(env);
+        if (!(leftType instanceof TInt)) {
+            throw new TypeErrorException(String.format("left hand (%s) expression must be of type int, got type %s", lhs.toString(), leftType.toString()));
         }
-        IType o2 = exp2.typecheck(env);
-        if (!(o2 instanceof TInt)) {
-            throw new TypeErrorException("left hand expression must be of type int");
+        IType rightType = rhs.typecheck(env);
+        if (!(rightType instanceof TInt)) {
+            throw new TypeErrorException(String.format("right hand (%s) expression must be of type int, got type %s", rhs.toString(), rightType.toString()));
         }
         return TBool.TYPE;
     }
 
+    @Override
+    public String toString() {
+        return String.format("%s %s %s", lhs.toString(), op, rhs.toString());
+    }
 }

@@ -84,4 +84,9 @@ public class ASTBinaryOp implements ASTNode {
             throw new TypeErrorException("both values must be of type int");
         }
     }
+
+    @Override
+    public String toString() {
+        return String.format("%s %s %s", lhs.toString(), operator, rhs.toString());
+    }
 }

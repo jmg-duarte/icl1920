@@ -31,4 +31,9 @@ public class ASTNum implements ASTNode {
     public IType typecheck(Environment<IType> env) {
         return TInt.TYPE;
     }
+
+    @Override
+    public String toString() {
+        return Integer.toString(val);
+    }
 }

@@ -55,4 +55,9 @@ public class ASTId implements ASTNode {
         type = env.find(id);
         return type;
     }
+
+    @Override
+    public String toString() {
+        return id;
+    }
 }

@@ -65,13 +65,15 @@ public class ASTBooleanOp implements ASTNode {
     public IType typecheck(Environment<IType> env) {
         IType o1 = lhs.typecheck(env);
         IType o2 = rhs.typecheck(env);
-
         if (o1 instanceof TBool && o2 instanceof TBool) {
             return TBool.TYPE;
         } else {
             throw new TypeErrorException("both values must be of type bool");
         }
-
     }
 
+    @Override
+    public String toString() {
+        return String.format("%s %s %s", lhs.toString(), op, rhs.toString());
+    }
 }
