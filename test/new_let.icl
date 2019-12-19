@@ -1,1 +1,1 @@
-println let v: ref int = new 5 in !v end;;
+println let v: ref int = new 5 in !v + 5 end;;
