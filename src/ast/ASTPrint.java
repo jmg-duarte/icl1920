@@ -28,17 +28,17 @@ public class ASTPrint implements ASTNode {
 
     @Override
     public Assembler compile(CoreCompiler compiler, Environment<IType> env) {
-        LineBuilder lb = new LineBuilder();
         Assembler printAsm = exp.compile(compiler, env);
+        return new Assembler(getPrintAsm(printAsm), printAsm.getStack(), type);
+    }
+
+    private String getPrintAsm(Assembler asm) {
+        LineBuilder lb = new LineBuilder();
         lb.appendLine("getstatic java/lang/System/out Ljava/io/PrintStream;");
-        lb.append(printAsm);
-        if (type instanceof TInt|| type instanceof TBool){
-            lb.appendLine("invokestatic java/lang/String/valueOf(I)Ljava/lang/String;");
-        } else {
-            lb.appendLine("invokestatic java/lang/String/valueOf(Ljava/lang/Object;)Ljava/lang/String;");
-        }
+        lb.append(asm);
+        lb.appendLine(String.format("invokestatic java/lang/String/valueOf(%s)Ljava/lang/String;", type.getCompiledType()));
         lb.appendLine("invokevirtual java/io/PrintStream/println(Ljava/lang/String;)V");
-        return new Assembler(lb.toString(), printAsm.getStack(), type);
+        return lb.toString();
     }
 
     @Override
