@@ -18,4 +18,9 @@ public class TBool implements IType {
     public String getCompiledType() {
         return "Z";
     }
+
+    @Override
+    public String getClosureType() {
+        return "BOOL";
+    }
 }

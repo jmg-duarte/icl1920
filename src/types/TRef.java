@@ -26,6 +26,11 @@ public class TRef implements IType {
         return "Ljava/lang/Object;";
     }
 
+    @Override
+    public String getClosureType() {
+        return String.format("REF_%s", contentType.getClosureType());
+    }
+
     public static String getReferenceClass(IType type) {
         String result = "ref_class";
         if (type instanceof TBool) {

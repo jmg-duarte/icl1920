@@ -3,6 +3,7 @@ package compiler;
 import ast.ASTNode;
 import env.Environment;
 import types.IType;
+import types.TFun;
 import value.IValue;
 
 import java.io.IOException;
@@ -16,10 +17,10 @@ public class CoreCompiler {
     private LineBuilder lineBuilder = new LineBuilder();
     private Environment<IType> globalEnvironment = new Environment<>();
     private FrameStack fStack = new FrameStack();
+    private Map<String, ClosureInterface> closureInterfaces = new LinkedHashMap<>();
     private List<Closure> closures = new LinkedList<>();
     private Map<String, Reference> references = new LinkedHashMap<>();
     private int closureCounter = 0;
-    private int referenceCounter = 0;
 
     public void compile(ASTNode root) {
         Assembler a = root.compile(this, globalEnvironment);
@@ -30,7 +31,6 @@ public class CoreCompiler {
             lineBuilder.writeToFile("Main.j");
             fStack.dumpStack();
             dumpReferences();
-
         } catch (IOException e) {
             e.printStackTrace();
             System.exit(1);
@@ -44,21 +44,17 @@ public class CoreCompiler {
     }
 
     public Reference newReference(IType refType) {
-        referenceCounter++;
-        String refId = "ref" + referenceCounter;
         Reference ref = new Reference(refType);
         references.put(ref.getReferenceID(), ref);
         return ref;
     }
 
-    public ClosureInterface newClosure(List<IType> paramTypes, IType functionType, Environment env) {
-        //closureCounter++:
-        String interfaceName;
-        for (IType param : paramTypes) {
-            //interfaceName.concat(param.toString());
+    public ClosureInterface newClosureInterface(TFun functionType) {
+        final String cType = functionType.getClosureType();
+        if (closureInterfaces.containsKey(cType)) {
+            closureInterfaces.put(cType, new ClosureInterface(functionType));
         }
-        //return new ClosureInterface(interfaceName, functionType.toString());
-        return null;
+        return closureInterfaces.get(cType);
     }
 
     public FrameStack getfStack() {

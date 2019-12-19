@@ -7,16 +7,17 @@ import java.io.IOException;
 public class Frame implements Dumpable{
 
     private final String frameID;
-    // private final Frame parent;
+    private final Frame parent;
     private final LineBuilder lb = new LineBuilder();
 
     public Frame(String frameID) {
         this.frameID = frameID;
+        this.parent = null;
     }
 
     public Frame(String frameID, Frame parent) {
-        this(frameID);
-        // this.parent = parent;
+        this.frameID = frameID;
+        this.parent = parent;
         lb.appendLine(".class " + frameID);
         lb.appendLine(".super java/lang/Object");
         lb.appendLine(".field public sl L" + parent.frameID + ";");
@@ -32,6 +33,10 @@ public class Frame implements Dumpable{
 
     public void addField(String fieldID, IType type) {
         lb.appendLine(String.format(".field public _%s %s", fieldID, type.getCompiledType()));
+    }
+
+    public Frame getParent() {
+        return parent;
     }
 
     @Override

@@ -69,6 +69,17 @@ public class TFun implements IType {
         return result.toString();
     }
 
+    @Override
+    public String getClosureType() {
+        final StringBuilder res = new StringBuilder();
+        for (IType paramType : paramTypes) {
+            res.append(paramType.getClosureType());
+            res.append("x");
+        }
+        res.append(bodyType.getClosureType());
+        return res.toString();
+    }
+
     public static TFun check(ASTNode node, Environment<IType> env) {
         IType expType = node.typecheck(env);
         if (!(expType instanceof TFun)) {

@@ -7,22 +7,18 @@ import types.TFun;
 import value.IValue;
 import value.VFunc;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class ASTFunc implements ASTNode {
     private final Map<String, ASTNode> parameters;
     private final ASTNode body;
+    private final Map<String, IType> namedTypes = new LinkedHashMap<>();
     private final List<IType> paramTypes = new LinkedList<>();
-    private IType bodyType;
     private TFun functionType;
 
     public ASTFunc(Map<String, ASTNode> parameters, ASTNode body) {
         this.parameters = parameters;
         this.body = body;
-        bodyType = null;
     }
 
     @Override
@@ -32,17 +28,20 @@ public class ASTFunc implements ASTNode {
 
     @Override
     public Assembler compile(CoreCompiler compiler, Environment<IType> env) {
-        Environment innerScope = env.startScope();
-        LineBuilder lb = new LineBuilder();
+        FrameStack frameStack = compiler.getfStack();
+        Frame currentFrame = frameStack.newFrame();
 
-        //ClosureInterface funClosure = compiler.newClosure();
-      //  Closure newClosure = funClosure.createClosure(paramsTypes,bodyType,env);
+        ClosureInterface closureInterface = compiler.newClosureInterface(functionType);
+        Closure closure = new Closure(currentFrame, closureInterface, namedTypes);
 
-       // lb.appendLine(".class " + newClosure.getClosureId());
-        lb.appendLine(".implements");
-        lb.appendLine(".field");
-        lb.appendLine("method call");
-        return new Assembler(lb.toString(),0, functionType);
+        Environment<IType> innerScope = env.startScope(currentFrame.getFrameID());
+        for (Map.Entry<String, IType> stringITypeEntry : namedTypes.entrySet()) {
+            innerScope.associate(stringITypeEntry.getKey(), stringITypeEntry.getValue());
+        }
+
+        Assembler asm = body.compile(compiler, innerScope);
+
+        return asm;
     }
 
     @Override
@@ -53,9 +52,10 @@ public class ASTFunc implements ASTNode {
             final String key = param.getKey();
             final IType paramType = param.getValue().typecheck(innerScope);
             innerScope.associate(key, paramType);
+            namedTypes.put(key, paramType);
             paramTypes.add(paramType);
         }
-        bodyType = body.typecheck(innerScope);
+        IType bodyType = body.typecheck(innerScope);
         functionType = new TFun(paramTypes, bodyType);
         return functionType;
     }

@@ -1,44 +1,43 @@
 package compiler;
 
+import types.TFun;
+
 import java.io.IOException;
 
-public class ClosureInterface {
+public class ClosureInterface implements Dumpable {
 
-    private final String interfaceType;
-    private final String functionType;
     private final LineBuilder lb = new LineBuilder();
+    private final TFun functionType;
+    private final String closureTypeStr;
+    private final String callTypeStr;
 
-    public ClosureInterface(String interfaceType, String functionType) {
-        this.interfaceType = interfaceType;
-        this.functionType = functionType;
-        lb.appendLine(".interface " + interfaceType);
-        lb.appendLine(".method call" + functionType);
+    public ClosureInterface(TFun type) {
+        functionType = type;
+        closureTypeStr = "closure_interface_type_" + type.getClosureType();
+        callTypeStr = "call" + type.getCompiledType();
+        setInterface(type);
+    }
+
+    private void setInterface(TFun type) {
+        lb.appendLine(String.format(".interface %s", closureTypeStr));
+        lb.appendLine(String.format(".method %s", callTypeStr));
         lb.appendLine(".end");
     }
 
-    public String getInterfaceType() {
-        return interfaceType;
+    public String getClosureTypeStr() {
+        return closureTypeStr;
     }
 
-    public String getFunctionType() {
+    public String getCallTypeStr() {
+        return callTypeStr;
+    }
+
+    public TFun getFunctionType() {
         return functionType;
     }
 
-    public void addField(String fieldID) {
-        // lb.appendLine(".field public _" + fieldID + " I");
-    }
-
-    public void dumpFrame() throws IOException {
-        /*lb.appendLine(".method public <init>()V");
-        lb.appendLine("aload_0");
-        lb.appendLine("invokenonvirtual java/lang/Object/<init>()V");
-        lb.appendLine("return");
-        lb.appendLine(".end method");
-        lb.writeToFile(interfaceType + ".j");*/
-    }
-
     @Override
-    public String toString() {
-        return interfaceType;
+    public void dump() throws IOException {
+        lb.writeToFile(String.format("IClosure_%s.j", closureTypeStr));
     }
 }

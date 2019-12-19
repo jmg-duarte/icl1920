@@ -13,4 +13,9 @@ public class TUndef implements IType {
     public String getCompiledType() {
         throw new RuntimeException("not implemented");
     }
+
+    @Override
+    public String getClosureType() {
+        throw new RuntimeException("not implemented");
+    }
 }

@@ -8,11 +8,7 @@ public class FrameStack {
 
     private Map<String, Frame> frames = new HashMap<>();
     private int frameCounter = 0;
-    private Frame oldFrame;
-
-    public FrameStack() {
-        oldFrame = new Frame("java/lang/Object");
-    }
+    private Frame oldFrame = new Frame("java/lang/Object");
 
     public int frameDepth() {
         return frameCounter;

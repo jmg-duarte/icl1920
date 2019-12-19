@@ -18,4 +18,9 @@ public class TInt implements IType {
     public String getCompiledType() {
         return "I";
     }
+
+    @Override
+    public String getClosureType() {
+        return "INT";
+    }
 }
