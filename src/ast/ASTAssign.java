@@ -5,8 +5,6 @@ import compiler.CoreCompiler;
 import compiler.LineBuilder;
 import env.Environment;
 import types.IType;
-import types.TBool;
-import types.TInt;
 import types.TRef;
 import value.IValue;
 import value.TypeErrorException;
@@ -35,11 +33,14 @@ public class ASTAssign implements ASTNode {
     public Assembler compile(CoreCompiler compiler, Environment<IType> env) {
         Assembler leftAsm = leftNode.compile(compiler, env);
         Assembler rightAsm = rightNode.compile(compiler, env);
-        return new Assembler(getAssignAsm(leftAsm, rightAsm), leftAsm.getStack() + rightAsm.getStack(), leftAsm.getType());
+        return new Assembler(
+                getAssignAsm(leftAsm, rightAsm),
+                leftAsm.getStack() + rightAsm.getStack(),
+                leftType);
     }
 
-    private static String getAssignAsm(Assembler leftAsm, Assembler rightAsm) {
-        final IType rightType = rightAsm.getType();
+    private String getAssignAsm(Assembler leftAsm, Assembler rightAsm) {
+        // final IType rightType = rightAsm.getType();
         final String ref = TRef.getReferenceClass(rightType);
         final LineBuilder lb = new LineBuilder();
         lb.append(leftAsm);

@@ -55,7 +55,7 @@ public class ASTLetIn implements ASTNode {
         for (String field : expressions.keySet()) {
             final ASTNode exp = expressions.get(field);
             final Assembler assembly = exp.compile(compiler, compEnv);
-            final IType asmType =  assembly.getType();
+            final IType asmType =  types.get(field);
 
             compEnv.associate(field, asmType);
             currentFrame.addField(field, asmType);
