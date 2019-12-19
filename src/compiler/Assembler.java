@@ -13,7 +13,7 @@ public class Assembler {
     public static final String BOOLEAN_OR = "ior";
     public static final String IF_EQUALS = "ifeq";
     public static final String IF_NOT_EQUALS = "ifne";
-    public static final String IF_GREATER_EQ = "ifeq";
+    public static final String IF_GREATER_EQ = "ifge";
     public static final String IF_GREATER = "ifgt";
     public static final String IF_LESS = "iflt";
     public static final String IF_LESS_EQ = "ifle";
