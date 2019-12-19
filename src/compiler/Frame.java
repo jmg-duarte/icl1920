@@ -31,6 +31,10 @@ public class Frame implements Dumpable{
         return frameID;
     }
 
+    public void addField(String fieldId, String type) {
+        lb.appendLine(String.format(".field public _%s %s", fieldId, type));
+    }
+
     public void addField(String fieldID, IType type) {
         lb.appendLine(String.format(".field public _%s %s", fieldID, type.getCompiledType()));
     }

@@ -65,7 +65,7 @@ public class TFun implements IType {
         for (IType paramType : paramTypes) {
             result.append(String.format("%s", paramType.getCompiledType()));
         }
-        result.append(")").append(bodyType);
+        result.append(")").append(bodyType.getCompiledType());
         return result.toString();
     }
 

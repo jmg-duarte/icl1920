@@ -1,6 +1,8 @@
 package types;
 
 public class TRef implements IType {
+
+    public static final TRef TYPE = new TRef(new TUndef());
     private final IType contentType; //content type
 
     public TRef(IType cellType) {

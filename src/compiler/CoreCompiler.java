@@ -4,7 +4,6 @@ import ast.ASTNode;
 import env.Environment;
 import types.IType;
 import types.TFun;
-import value.IValue;
 
 import java.io.IOException;
 import java.util.LinkedHashMap;
@@ -17,10 +16,7 @@ public class CoreCompiler {
     private LineBuilder lineBuilder = new LineBuilder();
     private Environment<IType> globalEnvironment = new Environment<>();
     private FrameStack fStack = new FrameStack();
-    private Map<String, ClosureInterface> closureInterfaces = new LinkedHashMap<>();
-    private List<Closure> closures = new LinkedList<>();
-    private Map<String, Reference> references = new LinkedHashMap<>();
-    private int closureCounter = 0;
+    private Map<String, Dumpable> dumpables = new LinkedHashMap<>();
 
     public void compile(ASTNode root) {
         Assembler a = root.compile(this, globalEnvironment);
@@ -30,31 +26,36 @@ public class CoreCompiler {
             lineBuilder.addFooter();
             lineBuilder.writeToFile("Main.j");
             fStack.dumpStack();
-            dumpReferences();
+            dump();
         } catch (IOException e) {
             e.printStackTrace();
             System.exit(1);
         }
     }
 
-    public void dumpReferences() throws IOException {
-        for (Map.Entry<String, Reference> entry : references.entrySet()) {
+    private void dump() throws IOException {
+        for (Map.Entry<String, Dumpable> entry : dumpables.entrySet()) {
             entry.getValue().dump();
         }
     }
 
     public Reference newReference(IType refType) {
         Reference ref = new Reference(refType);
-        references.put(ref.getReferenceID(), ref);
+        dumpables.put(ref.getReferenceID(), ref);
         return ref;
     }
 
     public ClosureInterface newClosureInterface(TFun functionType) {
         final String cType = functionType.getClosureType();
-        if (closureInterfaces.containsKey(cType)) {
-            closureInterfaces.put(cType, new ClosureInterface(functionType));
-        }
-        return closureInterfaces.get(cType);
+        ClosureInterface closureInterface = new ClosureInterface(functionType);
+        dumpables.putIfAbsent(cType, closureInterface);
+        return closureInterface;
+    }
+
+    public Closure newClosure(Frame closureFrame, ClosureInterface closureInterface, Map<String, IType> namedTypes) {
+        Closure closure = new Closure(closureFrame, closureInterface, namedTypes);
+        dumpables.put(closure.getClosureId(), closure);
+        return closure;
     }
 
     public FrameStack getfStack() {

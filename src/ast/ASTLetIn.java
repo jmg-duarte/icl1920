@@ -50,7 +50,6 @@ public class ASTLetIn implements ASTNode {
         lb.appendLine("astore 4");
 
         Environment<IType> compEnv = env.startScope(currentFrame.getFrameID());
-        int counter = 0;
         for (String field : expressions.keySet()) {
             final ASTNode exp = expressions.get(field);
             final Assembler assembly = exp.compile(compiler, compEnv);

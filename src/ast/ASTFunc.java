@@ -4,9 +4,11 @@ import compiler.*;
 import env.Environment;
 import types.IType;
 import types.TFun;
+import types.TRef;
 import value.IValue;
 import value.VFunc;
 
+import javax.sound.sampled.Line;
 import java.util.*;
 
 public class ASTFunc implements ASTNode {
@@ -30,18 +32,26 @@ public class ASTFunc implements ASTNode {
     public Assembler compile(CoreCompiler compiler, Environment<IType> env) {
         FrameStack frameStack = compiler.getfStack();
         Frame currentFrame = frameStack.newFrame();
+        LineBuilder lb = new LineBuilder();
+        lb.appendLine("new " + currentFrame);
+        lb.appendLine("dup");
+        lb.appendLine("invokespecial " + currentFrame + "/<init>()V");
+        lb.appendLine("dup");
+        lb.appendLine("aload 4");
+        lb.appendLine("putfield " + currentFrame + "/sl L" + currentFrame.getParent().getFrameID() + ";");
+        lb.appendLine("astore 4");
 
         ClosureInterface closureInterface = compiler.newClosureInterface(functionType);
-        Closure closure = new Closure(currentFrame, closureInterface, namedTypes);
-
-        Environment<IType> innerScope = env.startScope(currentFrame.getFrameID());
+        Closure closure = compiler.newClosure(currentFrame, closureInterface, namedTypes);
+        currentFrame.addField(closure.getClosureId(), "L" + closure.getClosureId() + ";");
+        Environment<IType> innerScope = env.startScope(closure.getClosureId());
         for (Map.Entry<String, IType> stringITypeEntry : namedTypes.entrySet()) {
             innerScope.associate(stringITypeEntry.getKey(), stringITypeEntry.getValue());
         }
 
         Assembler asm = body.compile(compiler, innerScope);
-
-        return asm;
+        lb.append(asm);
+        return new Assembler(lb.toString(), asm.getStack(), asm.getType());
     }
 
     @Override

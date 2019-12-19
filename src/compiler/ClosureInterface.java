@@ -15,13 +15,15 @@ public class ClosureInterface implements Dumpable {
         functionType = type;
         closureTypeStr = "closure_interface_type_" + type.getClosureType();
         callTypeStr = "call" + type.getCompiledType();
-        setInterface(type);
+        setInterface();
     }
 
-    private void setInterface(TFun type) {
+    private void setInterface() {
         lb.appendLine(String.format(".interface %s", closureTypeStr));
-        lb.appendLine(String.format(".method %s", callTypeStr));
-        lb.appendLine(".end");
+        lb.appendLine(".super java/lang/Object");
+        lb.appendLine(String.format(".method public abstract %s", callTypeStr));
+        lb.appendLine("return");
+        lb.appendLine(".end method");
     }
 
     public String getClosureTypeStr() {
@@ -38,6 +40,6 @@ public class ClosureInterface implements Dumpable {
 
     @Override
     public void dump() throws IOException {
-        lb.writeToFile(String.format("IClosure_%s.j", closureTypeStr));
+        lb.writeToFile(String.format("%s.j", closureTypeStr));
     }
 }
