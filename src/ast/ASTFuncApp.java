@@ -1,7 +1,9 @@
 package ast;
 
 import compiler.Assembler;
+import compiler.ClosureInterface;
 import compiler.CoreCompiler;
+import compiler.LineBuilder;
 import env.Environment;
 import types.IType;
 import types.TFun;
@@ -11,11 +13,13 @@ import value.VFunc;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
 public class ASTFuncApp implements ASTNode {
     private final ASTNode expr;
     private final List<ASTNode> args;
+    private TFun expType;
 
     public ASTFuncApp(ASTNode expr, List<ASTNode> args) {
         this.expr = expr;
@@ -34,12 +38,23 @@ public class ASTFuncApp implements ASTNode {
 
     @Override
     public Assembler compile(CoreCompiler compiler, Environment<IType> env) {
-        throw new RuntimeException("not implemented");
+        LineBuilder lb = new LineBuilder();
+        ClosureInterface closureInterface = compiler.newClosureInterface(expType);
+        expr.compile(compiler, env);
+        lb.appendLine("checkcast " + closureInterface.getClosureTypeStr() + "\n");
+        int stackSize = 0;
+        for (ASTNode arg : args) {
+            Assembler asm = arg.compile(compiler, env);
+            lb.append(asm);
+            stackSize += asm.getStack();
+        }
+        lb.appendLine("invokeinterface " + closureInterface.getClosureTypeStr() + "/" + closureInterface.getCallTypeStr());
+        return new Assembler(lb.toString(), stackSize, expType.getType());
     }
 
     @Override
     public IType typecheck(Environment<IType> env) {
-        TFun expType = TFun.check(expr, env);
+        expType = TFun.check(expr, env);
         List<IType> params = expType.getParameters();
         if (params.size() != args.size()) {
             throw new TypeErrorException("Incorrect number of arguments");
