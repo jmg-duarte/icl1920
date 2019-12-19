@@ -43,7 +43,6 @@ public class ASTLetIn implements ASTNode {
 
         lb.appendLine("new " + currentFrame);
         lb.appendLine("dup");
-
         lb.appendLine("invokespecial " + currentFrame + "/<init>()V");
         lb.appendLine("dup");
         lb.appendLine("aload 4");
