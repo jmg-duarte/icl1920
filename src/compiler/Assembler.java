@@ -36,10 +36,6 @@ public class Assembler {
         return type;
     }
 
-    public String getCode() {
-        return code;
-    }
-
     public int getStack() {
         return stack;
     }

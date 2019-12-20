@@ -3,58 +3,80 @@ package compiler;
 import types.IType;
 
 import java.io.IOException;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class Frame implements Dumpable{
 
-    private final String frameID;
-    private final Frame parent;
-    private final LineBuilder lb = new LineBuilder();
+    final String frameId;
+    final String frameFileName;
+    Frame parent;
+    Map<String, String> fields = new LinkedHashMap<>();
 
-    public Frame(String frameID) {
-        this.frameID = frameID;
+    public Frame(String frameId) {
+        this.frameId = frameId;
         this.parent = null;
+        frameFileName = frameId + ".j";
     }
 
-    public Frame(String frameID, Frame parent) {
-        this.frameID = frameID;
+    public Frame(String frameId, Frame parent) {
+        this.frameId = frameId;
+        this.frameFileName = frameId + ".j";
+        addParent(parent);
+    }
+
+    public String getFrameId() {
+        return frameId;
+    }
+
+    public void addParent(Frame parent) {
         this.parent = parent;
-        lb.appendLine(".class " + frameID);
-        lb.appendLine(".super java/lang/Object");
-        lb.appendLine(".field public sl L" + parent.frameID + ";");
-    }
-
-    public Frame(int counter, Frame parent) {
-        this("f" + counter, parent);
-    }
-
-    public String getFrameID() {
-        return frameID;
+        addField("sl", String.format("L%s;", parent.frameId));
     }
 
     public void addField(String fieldId, String type) {
-        lb.appendLine(String.format(".field public _%s %s", fieldId, type));
+        fields.putIfAbsent(fieldId, type);
     }
 
-    public void addField(String fieldID, IType type) {
-        lb.appendLine(String.format(".field public _%s %s", fieldID, type.getCompiledType()));
+    public void addField(String fieldId, IType type) {
+        fields.putIfAbsent(fieldId, type.getCompiledType());
     }
 
     public Frame getParent() {
         return parent;
     }
 
-    @Override
-    public void dump() throws IOException {
+    void writeHeader(LineBuilder lb) {
+        lb.appendLine(".class " + frameId);
+        lb.appendLine(".super java/lang/Object");
+    }
+
+    void writeFields(LineBuilder lb) {
+        for (Map.Entry<String, String> e : fields.entrySet()) {
+            lb.appendLine(String.format(".field public %s %s", e.getKey(), e.getValue()));
+        }
+    }
+
+    void writeInit(LineBuilder lb) {
         lb.appendLine(".method public <init>()V");
         lb.appendLine("aload_0");
         lb.appendLine("invokenonvirtual java/lang/Object/<init>()V");
         lb.appendLine("return");
         lb.appendLine(".end method");
-        lb.writeToFile(frameID + ".j");
+    }
+
+    @Override
+    public void dump() throws IOException {
+        final LineBuilder lb = new LineBuilder();
+        writeHeader(lb);
+        writeFields(lb);
+        writeInit(lb);
+        lb.writeToFile(frameFileName);
     }
 
     @Override
     public String toString() {
-        return frameID;
+        return frameId;
     }
+
 }

@@ -40,16 +40,16 @@ public class ASTFuncApp implements ASTNode {
     public Assembler compile(CoreCompiler compiler, Environment<IType> env) {
         LineBuilder lb = new LineBuilder();
         ClosureInterface closureInterface = compiler.newClosureInterface(expType);
-        expr.compile(compiler, env);
-        lb.appendLine("checkcast " + closureInterface.getClosureTypeStr() + "\n");
+        lb.append(expr.compile(compiler, env));
+        // lb.appendLine("checkcast " + closureInterface.getClosureTypeStr() + "\n");
         int stackSize = 0;
         for (ASTNode arg : args) {
             Assembler asm = arg.compile(compiler, env);
             lb.append(asm);
             stackSize += asm.getStack();
         }
-        lb.appendLine("invokeinterface " + closureInterface.getClosureTypeStr() + "/" + closureInterface.getCallTypeStr());
-        return new Assembler(lb.toString(), stackSize, expType.getType());
+        lb.appendLine("invokeinterface " + closureInterface.getClosureTypeStr() + "/" + closureInterface.getCallTypeStr()); // TODO
+        return  new Assembler(lb.toString(), stackSize, expType.getType());
     }
 
     @Override

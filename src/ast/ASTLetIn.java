@@ -3,6 +3,7 @@ package ast;
 import compiler.*;
 import env.Environment;
 import types.IType;
+import types.TFun;
 import value.IValue;
 import value.TypeErrorException;
 
@@ -49,18 +50,16 @@ public class ASTLetIn implements ASTNode {
         lb.appendLine("putfield " + currentFrame + "/sl L" + oldFrame + ";");
         lb.appendLine("astore 4");
 
-        Environment<IType> compEnv = env.startScope(currentFrame.getFrameID());
+        Environment<IType> compEnv = env.startScope(currentFrame.getFrameId());
         for (String field : expressions.keySet()) {
             final ASTNode exp = expressions.get(field);
             final Assembler assembly = exp.compile(compiler, compEnv);
-            final IType asmType =  types.get(field);
-
+            final IType asmType = assembly.getType();
             compEnv.associate(field, asmType);
             currentFrame.addField(field, asmType);
-
             lb.appendLine("aload 4");
             lb.append(assembly);
-            lb.appendLine("putfield " + currentFrame + "/_" + field + " " + asmType.getCompiledType());
+            lb.appendLine("putfield " + currentFrame + "/" + field + " " + asmType.getCompiledType());
         }
 
         lb.append(body.compile(compiler, compEnv));

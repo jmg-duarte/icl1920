@@ -4,11 +4,9 @@ import compiler.*;
 import env.Environment;
 import types.IType;
 import types.TFun;
-import types.TRef;
 import value.IValue;
 import value.VFunc;
 
-import javax.sound.sampled.Line;
 import java.util.*;
 
 public class ASTFunc implements ASTNode {
@@ -16,7 +14,9 @@ public class ASTFunc implements ASTNode {
     private final ASTNode body;
     private final Map<String, IType> namedTypes = new LinkedHashMap<>();
     private final List<IType> paramTypes = new LinkedList<>();
+
     private TFun functionType;
+    private Closure closure;
 
     public ASTFunc(Map<String, ASTNode> parameters, ASTNode body) {
         this.parameters = parameters;
@@ -30,8 +30,20 @@ public class ASTFunc implements ASTNode {
 
     @Override
     public Assembler compile(CoreCompiler compiler, Environment<IType> env) {
-        FrameStack frameStack = compiler.getfStack();
-        Frame currentFrame = frameStack.newFrame();
+        ClosureInterface closureInterface = compiler.newClosureInterface(functionType);
+        Closure closure = compiler.newClosure(closureInterface);
+        Frame closureFrame = closure.getClosureFrame();
+        Environment<IType> innerScope = env.startScope(closure.getFrameId());
+        for (Map.Entry<String, IType> e : namedTypes.entrySet()) {
+            closureFrame.addField(e.getKey(), e.getValue().getCompiledType());
+            innerScope.associate(e.getKey(), e.getValue());
+        }
+        String funcAsm = generateFunctionAsm(closure);
+        Assembler asm = body.compile(compiler, innerScope);
+        closure.addBody(asm.toString());
+        /*
+        Frame currentFrame = frameStack.newClosureFrame(closureInterface);
+
         LineBuilder lb = new LineBuilder();
         lb.appendLine("new " + currentFrame);
         lb.appendLine("dup");
@@ -41,17 +53,30 @@ public class ASTFunc implements ASTNode {
         lb.appendLine("putfield " + currentFrame + "/sl L" + currentFrame.getParent().getFrameID() + ";");
         lb.appendLine("astore 4");
 
-        ClosureInterface closureInterface = compiler.newClosureInterface(functionType);
-        Closure closure = compiler.newClosure(currentFrame, closureInterface, namedTypes);
+        // Closure closure = compiler.newClosure(currentFrame, closureInterface, namedTypes);
+
         currentFrame.addField(closure.getClosureId(), "L" + closure.getClosureId() + ";");
+
         Environment<IType> innerScope = env.startScope(closure.getClosureId());
-        for (Map.Entry<String, IType> stringITypeEntry : namedTypes.entrySet()) {
-            innerScope.associate(stringITypeEntry.getKey(), stringITypeEntry.getValue());
+        for (Map.Entry<String, IType> e : namedTypes.entrySet()) {
+            innerScope.associate(e.getKey(), e.getValue());
         }
 
         Assembler asm = body.compile(compiler, innerScope);
         lb.append(asm);
-        return new Assembler(lb.toString(), asm.getStack(), asm.getType());
+        */
+        return new Assembler(funcAsm, asm.getStack(), new TFun(functionType, closure.getFrameId()));
+    }
+
+    private String generateFunctionAsm(Frame frame) {
+        LineBuilder lb = new LineBuilder();
+        lb.appendLine("new " + frame);
+        lb.appendLine("dup");
+        lb.appendLine("invokespecial " + frame + "/<init>()V");
+        lb.appendLine("dup");
+        lb.appendLine("aload 4");
+        lb.appendLine("putfield " + frame + "/sl L" + frame.getParent().getFrameId() + ";");
+        return lb.toString();
     }
 
     @Override

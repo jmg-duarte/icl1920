@@ -7,8 +7,6 @@ import types.TFun;
 
 import java.io.IOException;
 import java.util.LinkedHashMap;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 
 public class CoreCompiler {
@@ -41,7 +39,7 @@ public class CoreCompiler {
 
     public Reference newReference(IType refType) {
         Reference ref = new Reference(refType);
-        dumpables.put(ref.getReferenceID(), ref);
+        dumpables.putIfAbsent(ref.getReferenceID(), ref);
         return ref;
     }
 
@@ -52,11 +50,20 @@ public class CoreCompiler {
         return closureInterface;
     }
 
-    public Closure newClosure(Frame closureFrame, ClosureInterface closureInterface, Map<String, IType> namedTypes) {
-        Closure closure = new Closure(closureFrame, closureInterface, namedTypes);
-        dumpables.put(closure.getClosureId(), closure);
+    public Closure newClosure(ClosureInterface closureInterface) {
+        final Closure closure = fStack.newClosureFrame(closureInterface);
+        dumpables.putIfAbsent(closure.getFrameId(), closure);
+        final Frame closureFrame = closure.getClosureFrame();
+        dumpables.putIfAbsent(closureFrame.frameId, closureFrame);
         return closure;
     }
+
+    public Closure newClosure(TFun type) {
+        final ClosureInterface closureInterface = newClosureInterface(type);
+        final Closure closure = newClosure(closureInterface);
+        return closure;
+    }
+
 
     public FrameStack getfStack() {
         return fStack;

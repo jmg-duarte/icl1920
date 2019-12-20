@@ -39,7 +39,7 @@ public class ASTId implements ASTNode {
                 lb.appendLine(String.format("getfield %s/sl L%s;", currEnvName, parentEnvName));
                 env = env.endScope();
             } else {
-                lb.appendLine(String.format("getfield %s/_%s %s", env.getName(), id, current.getCompiledType()));
+                lb.appendLine(String.format("getfield %s/%s %s", env.getName(), id, current.getCompiledType()));
                 break;
             }
         }

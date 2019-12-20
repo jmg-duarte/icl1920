@@ -4,18 +4,34 @@ import ast.ASTNode;
 import env.Environment;
 import value.TypeErrorException;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class TFun implements IType {
 
     private final List<IType> paramTypes;
     private final IType bodyType;
+    private String name;
 
     public TFun(List<IType> paramTypes, IType bodyType) {
         this.paramTypes = paramTypes;
         this.bodyType = bodyType;
+    }
+
+    public TFun(TFun tFun, String name) {
+        this(tFun.paramTypes, tFun.bodyType);
+        this.name = name;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public static TFun check(ASTNode node, Environment<IType> env) {
+        IType expType = node.typecheck(env);
+        if (!(expType instanceof TFun)) {
+            throw new TypeErrorException(String.format("%s is not function type", node.toString()));
+        }
+        return ((TFun) expType);
     }
 
     public IType getType() {
@@ -24,6 +40,31 @@ public class TFun implements IType {
 
     public List<IType> getParameters() {
         return paramTypes;
+    }
+
+    public String getCallType() {
+        final StringBuilder result = new StringBuilder("(");
+        for (IType paramType : paramTypes) {
+            result.append(String.format("%s", paramType.getCompiledType()));
+        }
+        result.append(")").append(bodyType.getCompiledType());
+        return result.toString();
+    }
+
+    @Override
+    public String getCompiledType() {
+        return String.format("L%s;", this.name);
+    }
+
+    @Override
+    public String getClosureType() {
+        final StringBuilder res = new StringBuilder();
+        for (IType paramType : paramTypes) {
+            res.append(paramType.getClosureType());
+            res.append("x");
+        }
+        res.append(bodyType.getClosureType());
+        return res.toString();
     }
 
     @Override
@@ -57,34 +98,5 @@ public class TFun implements IType {
         }
         result.append(")").append(bodyType);
         return result.toString();
-    }
-
-    @Override
-    public String getCompiledType() {
-        final StringBuilder result = new StringBuilder("(");
-        for (IType paramType : paramTypes) {
-            result.append(String.format("%s", paramType.getCompiledType()));
-        }
-        result.append(")").append(bodyType.getCompiledType());
-        return result.toString();
-    }
-
-    @Override
-    public String getClosureType() {
-        final StringBuilder res = new StringBuilder();
-        for (IType paramType : paramTypes) {
-            res.append(paramType.getClosureType());
-            res.append("x");
-        }
-        res.append(bodyType.getClosureType());
-        return res.toString();
-    }
-
-    public static TFun check(ASTNode node, Environment<IType> env) {
-        IType expType = node.typecheck(env);
-        if (!(expType instanceof TFun)) {
-            throw new TypeErrorException(String.format("%s is not function type", node.toString()));
-        }
-        return ((TFun) expType);
     }
 }

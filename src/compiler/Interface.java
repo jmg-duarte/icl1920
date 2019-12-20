@@ -6,9 +6,9 @@ import java.util.List;
 
 public class Interface implements Dumpable {
 
-    public final String interfaceName;
-    public final String interfaceFileName;
-    public final List<String> methods = new LinkedList<>();
+    final String interfaceName;
+    final String interfaceFileName;
+    final List<String> methods = new LinkedList<>();
 
     public Interface(String interfaceName) {
         this.interfaceName = interfaceName;
