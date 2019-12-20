@@ -2,44 +2,23 @@ package compiler;
 
 import types.TFun;
 
-import java.io.IOException;
-
-public class ClosureInterface implements Dumpable {
-
-    private final LineBuilder lb = new LineBuilder();
-    private final TFun functionType;
-    private final String closureTypeStr;
-    private final String callTypeStr;
+public class ClosureInterface extends Interface {
 
     public ClosureInterface(TFun type) {
-        functionType = type;
-        closureTypeStr = "closure_interface_type_" + type.getClosureType();
-        callTypeStr = "call" + type.getCompiledType();
-        setInterface();
+        super("closure_interface_type_" + type.getClosureType());
+        this.addMethod("call" + type.getCallType());
     }
 
-    private void setInterface() {
-        lb.appendLine(String.format(".interface %s", closureTypeStr));
-        lb.appendLine(".super java/lang/Object");
-        lb.appendLine(String.format(".method public abstract %s", callTypeStr));
-        lb.appendLine("return");
-        lb.appendLine(".end method");
+    private static String getClosureInterfaceName(String name) {
+        return "closure_interface_type_" + name;
     }
 
     public String getClosureTypeStr() {
-        return closureTypeStr;
+        return this.interfaceName;
     }
 
     public String getCallTypeStr() {
-        return callTypeStr;
+        return this.methods.get(0);
     }
 
-    public TFun getFunctionType() {
-        return functionType;
-    }
-
-    @Override
-    public void dump() throws IOException {
-        lb.writeToFile(String.format("%s.j", closureTypeStr));
-    }
 }
