@@ -20,12 +20,6 @@ public class Frame implements Dumpable{
         this.frameFileName = this.frameId + ".j";
     }
 
-    public Frame(String frameId) {
-        this.frameId = frameId;
-        this.parent = null;
-        this.frameFileName = this.frameId + ".j";
-    }
-
     public Frame(String frameId, Frame parent) {
         this.frameId = frameId;
         this.frameFileName = this.frameId + ".j";

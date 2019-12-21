@@ -15,6 +15,7 @@ public class TFun implements IType {
     public TFun(List<IType> paramTypes, IType bodyType) {
         this.paramTypes = paramTypes;
         this.bodyType = bodyType;
+        this.name = "java/lang/Object";
     }
 
     public TFun(TFun tFun, String name) {

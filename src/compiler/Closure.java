@@ -13,12 +13,6 @@ public class Closure extends Frame {
     private final ClosureInterface closureInterface;
     private String closureBody;
 
-    public Closure(String frameID, ClosureInterface closureInterface) {
-        super(frameID);
-        this.closureFrame = new Frame("f" + frameID);
-        this.closureInterface = closureInterface;
-    }
-
     public Closure(String frameID, ClosureInterface closureInterface, Frame parent) {
         super(frameID, parent);
         this.closureFrame = new Frame("f" + frameID, parent);

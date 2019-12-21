@@ -1,4 +1,4 @@
-let
+println let
     f: (int, int) int = fun p: int, y: int ->
         p + y
     end
