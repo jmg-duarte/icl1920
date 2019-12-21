@@ -33,7 +33,7 @@ public class ASTFunc implements ASTNode {
         ClosureInterface closureInterface = compiler.newClosureInterface(functionType);
         Closure closure = compiler.newClosure(closureInterface);
         Frame closureFrame = closure.getClosureFrame();
-        Environment<IType> innerScope = env.startScope(closure.getFrameId());
+        Environment<IType> innerScope = env.startScope(closureFrame.getFrameId());
         for (Map.Entry<String, IType> e : namedTypes.entrySet()) {
             closureFrame.addField(e.getKey(), e.getValue().getCompiledType());
             innerScope.associate(e.getKey(), e.getValue());

@@ -9,7 +9,8 @@ run_javacc() {
 }
 
 run_jasmin() {
-  java -jar jasmin.jar ./jout/* -d ./classes &&
+  rm ./classes/* && 
+  java -jar jasmin.jar ./"$1"/*.j -d ./classes &&
   cd ./classes &&
   java Main
 }
@@ -20,7 +21,7 @@ case "$1" in
   run_javacc "$@"
   ;;
 "jasmin")
-  # shift
-  run_jasmin
+  shift
+  run_jasmin "$@"
   ;;
 esac

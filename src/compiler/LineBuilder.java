@@ -18,7 +18,7 @@ public class LineBuilder {
                     "return\n" +
                     ".end method\n" +
                     "\n" +
-                    ".method public static main([Ljava/lang/String;)V\n" +
+                    ".method public static main([Ljava/lang/String;)V\n\n" +
                     ".limit locals 10 \n" +
                     ".limit stack 256\n" +
                     "\n" /*+
@@ -54,6 +54,13 @@ public class LineBuilder {
 
     public void appendLine(String line) {
         sb.append(line);
+        sb.append("\n");
+    }
+
+    public void appendLine(String line, String comment) {
+        sb.append(line);
+        sb.append("\t; ");
+        sb.append(comment);
         sb.append("\n");
     }
 

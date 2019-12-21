@@ -1,4 +1,4 @@
-let 
+println let
     x : int = 1 
 in 
     let y : int = 2 + x

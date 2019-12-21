@@ -41,14 +41,14 @@ public class ASTFuncApp implements ASTNode {
         LineBuilder lb = new LineBuilder();
         ClosureInterface closureInterface = compiler.newClosureInterface(expType);
         lb.append(expr.compile(compiler, env));
-        // lb.appendLine("checkcast " + closureInterface.getClosureTypeStr() + "\n");
+        lb.appendLine("checkcast " + closureInterface.getClosureTypeStr());
         int stackSize = 0;
         for (ASTNode arg : args) {
             Assembler asm = arg.compile(compiler, env);
             lb.append(asm);
             stackSize += asm.getStack();
         }
-        lb.appendLine("invokeinterface " + closureInterface.getClosureTypeStr() + "/" + closureInterface.getCallTypeStr()); // TODO
+        lb.appendLine(String.format("invokeinterface %s/%s %d", closureInterface.getClosureTypeStr(), closureInterface.getCallTypeStr(), args.size() + 1)); // TODO
         return  new Assembler(lb.toString(), stackSize, expType.getType());
     }
 

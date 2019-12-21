@@ -29,7 +29,7 @@ public class Interface implements Dumpable {
     }
 
     private void writeHeader(LineBuilder lb) {
-        lb.appendLine(String.format(".interface %s", interfaceName));
+        lb.appendLine(String.format(".interface public %s", interfaceName));
         lb.appendLine(".super java/lang/Object");
     }
 

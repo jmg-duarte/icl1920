@@ -2,15 +2,16 @@ package compiler;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class FrameStack {
 
-    private Map<String, Frame> frames = new HashMap<>();
+    private Map<String, Frame> frames = new LinkedHashMap<>();
     private int frameCounter = 0;
     private int closureCounter = 0;
 
-    private Frame oldFrame = new Frame("java/lang/Object");
+    private Frame oldFrame = Frame.ROOT;
 
     public Frame getOldFrame() {
         return oldFrame;

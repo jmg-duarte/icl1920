@@ -45,7 +45,7 @@ public class ASTAssign implements ASTNode {
         final LineBuilder lb = new LineBuilder();
         lb.append(leftAsm);
         lb.appendLine(String.format("checkcast %s", ref));
-        lb.appendLine("dup ");
+        lb.appendLine("dup");
         lb.append(rightAsm);
         lb.appendLine(String.format("putfield %s/v %s", ref, rightType.getCompiledType()));
         return lb.toString();

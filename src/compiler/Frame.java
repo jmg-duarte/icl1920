@@ -8,20 +8,27 @@ import java.util.Map;
 
 public class Frame implements Dumpable{
 
+    public static final Frame ROOT = new Frame();
+
     final String frameId;
     final String frameFileName;
     Frame parent;
     Map<String, String> fields = new LinkedHashMap<>();
 
+    private Frame() {
+        this.frameId = "java/lang/Object";
+        this.frameFileName = this.frameId + ".j";
+    }
+
     public Frame(String frameId) {
         this.frameId = frameId;
         this.parent = null;
-        frameFileName = frameId + ".j";
+        this.frameFileName = this.frameId + ".j";
     }
 
     public Frame(String frameId, Frame parent) {
         this.frameId = frameId;
-        this.frameFileName = frameId + ".j";
+        this.frameFileName = this.frameId + ".j";
         addParent(parent);
     }
 
@@ -29,7 +36,7 @@ public class Frame implements Dumpable{
         return frameId;
     }
 
-    public void addParent(Frame parent) {
+    private void addParent(Frame parent) {
         this.parent = parent;
         addField("sl", String.format("L%s;", parent.frameId));
     }
@@ -47,7 +54,7 @@ public class Frame implements Dumpable{
     }
 
     void writeHeader(LineBuilder lb) {
-        lb.appendLine(".class " + frameId);
+        lb.appendLine(".class public " + frameId);
         lb.appendLine(".super java/lang/Object");
     }
 

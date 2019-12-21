@@ -69,6 +69,8 @@ public class Closure extends Frame {
                     break;
             }
             lb.appendLine(String.format("putfield %s/%s %s", closureFrame.frameId, e.getKey(), e.getValue()));
+            // lb.appendLine("dup");
+            idx++;
         }
     }
 
