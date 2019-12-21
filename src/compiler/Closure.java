@@ -51,6 +51,7 @@ public class Closure extends Frame {
         lb.appendLine(String.format("putfield %s/sl L%s;", closureFrame.frameId, parent.frameId));
         lb.appendLine("astore 4");
         lb.appendLine("aload 4");
+        lb.appendLine("dup");
     }
 
     private void writeParameterFetch(LineBuilder lb) {
