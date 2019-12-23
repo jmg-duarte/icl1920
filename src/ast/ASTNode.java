@@ -12,4 +12,6 @@ public interface ASTNode {
     Assembler compile(CoreCompiler compiler, Environment<IType> env);
 
     IType typecheck(Environment<IType> env);
+
+    IType getType();
 }

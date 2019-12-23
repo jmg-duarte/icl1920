@@ -111,9 +111,10 @@ public class Main {
 
     private static void deleteDirectoryStream(Path path) throws IOException {
         if (Files.exists(path)) {
-        Files.walk(path)
-                .sorted(Comparator.reverseOrder())
-                .map(Path::toFile)
-                .forEach(File::delete);}
+            Files.walk(path)
+                    .sorted(Comparator.reverseOrder())
+                    .map(Path::toFile)
+                    .forEach(File::delete);
+        }
     }
 }

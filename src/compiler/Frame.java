@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class Frame implements Dumpable{
+public class Frame implements Dumpable {
 
     public static final Frame ROOT = new Frame();
 

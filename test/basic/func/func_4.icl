@@ -1,14 +1,9 @@
-println let
-    adder: ((int)int, int)int =
-        fun f: (int)int,
-            n: int ->
-            f(n)
-        end
-    inc : (int)int =
-    fun x : int ->
-        x + 1
-    end
+let x: (int)int = fun a: int ->
+    a + 5 end
 in
-    adder(inc, 1)
-end
-;;
+    let y: (int)int = fun b: int ->
+        b + 7 end
+    in
+        println(x(y(2)))
+    end
+end;;

@@ -25,6 +25,7 @@ public class ASTFunc implements ASTNode {
 
     @Override
     public IValue eval(Environment<IValue> env) {
+
         return new VFunc(new ArrayList<>(parameters.keySet()), body, env);
     }
 
@@ -56,7 +57,6 @@ public class ASTFunc implements ASTNode {
         // Closure closure = compiler.newClosure(currentFrame, closureInterface, namedTypes);
 
         currentFrame.addField(closure.getClosureId(), "L" + closure.getClosureId() + ";");
-
         Environment<IType> innerScope = env.startScope(closure.getClosureId());
         for (Map.Entry<String, IType> e : namedTypes.entrySet()) {
             innerScope.associate(e.getKey(), e.getValue());
@@ -65,7 +65,9 @@ public class ASTFunc implements ASTNode {
         Assembler asm = body.compile(compiler, innerScope);
         lb.append(asm);
         */
-        return new Assembler(funcAsm, asm.getStack(), new TFun(functionType, closure.getFrameId()));
+        functionType.setName(closure.getFrameId());
+
+        return new Assembler(funcAsm, asm.getStack(), functionType);
     }
 
     private String generateFunctionAsm(Frame frame) {
@@ -82,7 +84,6 @@ public class ASTFunc implements ASTNode {
     @Override
     public IType typecheck(Environment<IType> env) {
         Environment<IType> innerScope = env.startScope();
-
         for (Map.Entry<String, ASTNode> param : parameters.entrySet()) {
             final String key = param.getKey();
             final IType paramType = param.getValue().typecheck(innerScope);
@@ -92,6 +93,11 @@ public class ASTFunc implements ASTNode {
         }
         IType bodyType = body.typecheck(innerScope);
         functionType = new TFun(paramTypes, bodyType);
+        return functionType;
+    }
+
+    @Override
+    public IType getType() {
         return functionType;
     }
 

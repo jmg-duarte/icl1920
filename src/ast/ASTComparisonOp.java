@@ -92,6 +92,11 @@ public class ASTComparisonOp implements ASTNode {
     }
 
     @Override
+    public IType getType() {
+        return TBool.TYPE;
+    }
+
+    @Override
     public String toString() {
         return String.format("%s %s %s", lhs.toString(), op, rhs.toString());
     }

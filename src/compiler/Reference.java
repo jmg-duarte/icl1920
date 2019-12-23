@@ -1,8 +1,6 @@
 package compiler;
 
 import types.IType;
-import types.TBool;
-import types.TInt;
 import types.TRef;
 
 import java.io.IOException;

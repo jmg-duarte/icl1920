@@ -13,7 +13,6 @@ import value.VFunc;
 
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 
 public class ASTFuncApp implements ASTNode {
@@ -49,7 +48,7 @@ public class ASTFuncApp implements ASTNode {
             stackSize += asm.getStack();
         }
         lb.appendLine(String.format("invokeinterface %s/%s %d", closureInterface.getClosureTypeStr(), closureInterface.getCallTypeStr(), args.size() + 1)); // TODO
-        return  new Assembler(lb.toString(), stackSize, expType.getType());
+        return new Assembler(lb.toString(), stackSize, expType.getType());
     }
 
     @Override
@@ -71,6 +70,11 @@ public class ASTFuncApp implements ASTNode {
             }
         }
 
+        return expType.getType();
+    }
+
+    @Override
+    public IType getType() {
         return expType.getType();
     }
 

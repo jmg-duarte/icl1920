@@ -86,6 +86,11 @@ public class ASTBinaryOp implements ASTNode {
     }
 
     @Override
+    public IType getType() {
+        return TYPE;
+    }
+
+    @Override
     public String toString() {
         return String.format("%s %s %s", lhs.toString(), operator, rhs.toString());
     }

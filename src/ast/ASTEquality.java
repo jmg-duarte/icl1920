@@ -83,6 +83,11 @@ public class ASTEquality implements ASTNode {
     }
 
     @Override
+    public IType getType() {
+        return TBool.TYPE;
+    }
+
+    @Override
     public String toString() {
         return String.format("%s %s %s", left.toString(), op, right.toString());
     }

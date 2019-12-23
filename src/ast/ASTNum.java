@@ -33,6 +33,11 @@ public class ASTNum implements ASTNode {
     }
 
     @Override
+    public IType getType() {
+        return TInt.TYPE;
+    }
+
+    @Override
     public String toString() {
         return Integer.toString(val);
     }

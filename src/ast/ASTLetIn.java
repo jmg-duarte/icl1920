@@ -52,13 +52,13 @@ public class ASTLetIn implements ASTNode {
         Environment<IType> compEnv = env.startScope(currentFrame.getFrameId());
         for (String field : expressions.keySet()) {
             final ASTNode exp = expressions.get(field);
+            final IType expType = exp.getType();
+            compEnv.associate(field, expType);
             final Assembler assembly = exp.compile(compiler, compEnv);
-            final IType asmType = assembly.getType();
-            compEnv.associate(field, asmType);
-            currentFrame.addField(field, asmType);
+            currentFrame.addField(field, expType);
             lb.appendLine("aload 4");
             lb.append(assembly);
-            lb.appendLine("putfield " + currentFrame + "/" + field + " " + asmType.getCompiledType());
+            lb.appendLine("putfield " + currentFrame + "/" + field + " " + expType.getCompiledType());
         }
 
         lb.append(body.compile(compiler, compEnv));
@@ -83,6 +83,11 @@ public class ASTLetIn implements ASTNode {
         }
         innerScope.endScope();
         type = body.typecheck(innerScope);
+        return type;
+    }
+
+    @Override
+    public IType getType() {
         return type;
     }
 }

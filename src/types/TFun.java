@@ -23,16 +23,20 @@ public class TFun implements IType {
         this.name = name;
     }
 
-    public String getName() {
-        return name;
-    }
-
     public static TFun check(ASTNode node, Environment<IType> env) {
         IType expType = node.typecheck(env);
         if (!(expType instanceof TFun)) {
             throw new TypeErrorException(String.format("%s is not function type", node.toString()));
         }
         return ((TFun) expType);
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public IType getType() {

@@ -3,11 +3,8 @@ package ast;
 import compiler.Assembler;
 import compiler.CoreCompiler;
 import compiler.LineBuilder;
-import compiler.Reference;
 import env.Environment;
 import types.IType;
-import types.TBool;
-import types.TInt;
 import types.TRef;
 import value.IValue;
 import value.TypeErrorException;
@@ -20,6 +17,14 @@ public class ASTDeref implements ASTNode {
 
     public ASTDeref(ASTNode expression) {
         this.expression = expression;
+    }
+
+    private static String getDerefAsm(IType type) {
+        LineBuilder lb = new LineBuilder();
+        String ref = TRef.getReferenceClass(type);
+        lb.appendLine("checkcast " + ref);
+        lb.appendLine(String.format("getfield %s/v %s", ref, type.getCompiledType()));
+        return lb.toString();
     }
 
     public ASTNode getExpression() {
@@ -44,14 +49,6 @@ public class ASTDeref implements ASTNode {
         return lb.toString();
     }
 
-    private static String getDerefAsm(IType type) {
-        LineBuilder lb = new LineBuilder();
-        String ref = TRef.getReferenceClass(type);
-        lb.appendLine("checkcast " + ref);
-        lb.appendLine(String.format("getfield %s/v %s", ref, type.getCompiledType()));
-        return lb.toString();
-    }
-
     @Override
     public IType typecheck(Environment<IType> env) {
         IType exprType = expression.typecheck(env);
@@ -59,6 +56,11 @@ public class ASTDeref implements ASTNode {
             throw new TypeErrorException(String.format("expression must be of type ref, got: %s", exprType.toString()));
         }
         type = ((TRef) exprType).getInnerType();
+        return type;
+    }
+
+    @Override
+    public IType getType() {
         return type;
     }
 

@@ -52,4 +52,9 @@ public class ASTNot implements ASTNode {
         }
         return TBool.TYPE;
     }
+
+    @Override
+    public IType getType() {
+        return TBool.TYPE;
+    }
 }

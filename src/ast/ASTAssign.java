@@ -66,6 +66,11 @@ public class ASTAssign implements ASTNode {
     }
 
     @Override
+    public IType getType() {
+        return leftType;
+    }
+
+    @Override
     public String toString() {
         return String.format("%s := %s", leftNode.toString(), rightNode.toString());
     }

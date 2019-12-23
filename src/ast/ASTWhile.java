@@ -61,4 +61,9 @@ public class ASTWhile implements ASTNode {
         body.typecheck(env);
         return TBool.TYPE;
     }
+
+    @Override
+    public IType getType() {
+        return TBool.TYPE;
+    }
 }

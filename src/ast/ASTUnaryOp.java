@@ -56,4 +56,9 @@ public class ASTUnaryOp implements ASTNode {
     public IType typecheck(Environment<IType> env) {
         return TInt.TYPE;
     }
+
+    @Override
+    public IType getType() {
+        return TInt.TYPE;
+    }
 }

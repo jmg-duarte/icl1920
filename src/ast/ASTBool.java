@@ -47,6 +47,11 @@ public class ASTBool implements ASTNode {
     }
 
     @Override
+    public IType getType() {
+        return TBool.TYPE;
+    }
+
+    @Override
     public String toString() {
         return exp.toString();
     }

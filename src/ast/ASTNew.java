@@ -6,8 +6,6 @@ import compiler.LineBuilder;
 import compiler.Reference;
 import env.Environment;
 import types.IType;
-import types.TBool;
-import types.TInt;
 import types.TRef;
 import value.IValue;
 import value.VRef;
@@ -18,6 +16,18 @@ public class ASTNew implements ASTNode {
 
     public ASTNew(ASTNode expression) {
         this.expression = expression;
+    }
+
+    private static String getNewAsm(Assembler asm, Reference ref, IType refInnerType) {
+        final String r = TRef.getReferenceClass(refInnerType);
+        LineBuilder lb = new LineBuilder();
+        lb.appendLine("new " + ref.getReferenceID());
+        lb.appendLine("dup");
+        lb.appendLine(String.format("invokespecial %s/<init>()V", r));
+        lb.appendLine("dup");
+        lb.append(asm);
+        lb.appendLine(String.format("putfield %s/v %s", r, refInnerType.getCompiledType()));
+        return lb.toString();
     }
 
     @Override
@@ -34,21 +44,14 @@ public class ASTNew implements ASTNode {
         return new Assembler(getNewAsm(asm, ref, refInnerType), asm.getStack(), reference);
     }
 
-    private static String getNewAsm(Assembler asm, Reference ref, IType refInnerType) {
-        final String r = TRef.getReferenceClass(refInnerType);
-        LineBuilder lb = new LineBuilder();
-        lb.appendLine("new " + ref.getReferenceID());
-        lb.appendLine("dup");
-        lb.appendLine(String.format("invokespecial %s/<init>()V", r));
-        lb.appendLine("dup");
-        lb.append(asm);
-        lb.appendLine(String.format("putfield %s/v %s", r, refInnerType.getCompiledType()));
-        return lb.toString();
-    }
-
     @Override
     public IType typecheck(Environment<IType> env) {
         reference = new TRef(expression.typecheck(env));
+        return reference;
+    }
+
+    @Override
+    public IType getType() {
         return reference;
     }
 }

@@ -5,8 +5,6 @@ import compiler.CoreCompiler;
 import compiler.LineBuilder;
 import env.Environment;
 import types.IType;
-import types.TBool;
-import types.TInt;
 import types.TUndef;
 import value.IValue;
 import value.VUndef;
@@ -44,6 +42,11 @@ public class ASTPrint implements ASTNode {
     @Override
     public IType typecheck(Environment<IType> env) {
         type = exp.typecheck(env);
+        return TUndef.TYPE;
+    }
+
+    @Override
+    public IType getType() {
         return TUndef.TYPE;
     }
 }

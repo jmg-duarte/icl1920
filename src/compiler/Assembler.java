@@ -18,8 +18,8 @@ public class Assembler {
     public static final String IF_LESS = "iflt";
     public static final String IF_LESS_EQ = "ifle";
     public static final String GO_TO = "goto";
-    public static final String BOOLEAN_FALSE = "sipush 0";
-    public static final String BOOLEAN_TRUE = "sipush 1";
+    public static final String BOOLEAN_FALSE = "iconst_0";
+    public static final String BOOLEAN_TRUE = "iconst_1";
 
     private final String code;
     private final int stack;

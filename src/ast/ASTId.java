@@ -53,6 +53,11 @@ public class ASTId implements ASTNode {
     }
 
     @Override
+    public IType getType() {
+        return type;
+    }
+
+    @Override
     public String toString() {
         return id;
     }

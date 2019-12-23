@@ -51,7 +51,7 @@ public class Closure extends Frame {
     private void writeParameterFetch(LineBuilder lb) {
         int idx = 1;
         for (Map.Entry<String, String> e : closureFrame.fields.entrySet()) {
-            if ("sl".equals(e.getKey())){
+            if ("sl".equals(e.getKey())) {
                 continue;
             }
             switch (e.getValue()) {

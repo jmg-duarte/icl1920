@@ -76,6 +76,11 @@ public class ASTIf implements ASTNode {
         type = ifTrueType;
         return type;
     }
+
+    @Override
+    public IType getType() {
+        return type;
+    }
 }
 
 

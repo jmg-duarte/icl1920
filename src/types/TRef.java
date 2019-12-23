@@ -9,6 +9,16 @@ public class TRef implements IType {
         this.contentType = cellType;
     }
 
+    public static String getReferenceClass(IType type) {
+        String result = "ref_class";
+        if (type instanceof TBool) {
+            result = "ref_bool";
+        } else if (type instanceof TInt) {
+            result = "ref_int";
+        }
+        return result;
+    }
+
     public IType getInnerType() {
         return contentType;
     }
@@ -31,15 +41,5 @@ public class TRef implements IType {
     @Override
     public String getClosureType() {
         return String.format("REF_%s", contentType.getClosureType());
-    }
-
-    public static String getReferenceClass(IType type) {
-        String result = "ref_class";
-        if (type instanceof TBool) {
-            result = "ref_bool";
-        } else if (type instanceof TInt) {
-            result = "ref_int";
-        }
-        return result;
     }
 }

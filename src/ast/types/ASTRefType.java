@@ -1,15 +1,13 @@
 package ast.types;
 
 import ast.ASTNode;
-import compiler.Assembler;
-import compiler.CoreCompiler;
 import env.Environment;
 import types.IType;
 import types.TRef;
-import value.IValue;
 
 public class ASTRefType extends ASTType {
     private final ASTNode contentType;
+    private TRef type;
 
     public ASTRefType(ASTNode type) {
         this.contentType = type;
@@ -17,6 +15,12 @@ public class ASTRefType extends ASTType {
 
     @Override
     public IType typecheck(Environment<IType> env) {
-        return new TRef(contentType.typecheck(env));
+        type = new TRef(contentType.typecheck(env));
+        return type;
+    }
+
+    @Override
+    public IType getType() {
+        return type;
     }
 }
