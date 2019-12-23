@@ -3,7 +3,6 @@ package ast;
 import compiler.*;
 import env.Environment;
 import types.IType;
-import types.TFun;
 import value.IValue;
 import value.TypeErrorException;
 
@@ -29,7 +28,7 @@ public class ASTLetIn implements ASTNode {
     public IValue eval(Environment<IValue> env) throws TypeErrorException {
         Environment<IValue> innerScope = env.startScope();
         for (Entry<String, ASTNode> e : expressions.entrySet()) {
-            innerScope.associate(e.getKey(), e.getValue().eval(env));
+            innerScope.associate(e.getKey(), e.getValue().eval(innerScope));
         }
         innerScope.endScope();
         return body.eval(innerScope);
@@ -75,12 +74,12 @@ public class ASTLetIn implements ASTNode {
         Environment<IType> innerScope = env.startScope();
         for (String id : expressions.keySet()) {
             IType declaredType = expTypes.get(id).typecheck(env);
-            IType expression = expressions.get(id).typecheck(env);
+            innerScope.associate(id, declaredType);
+            IType expression = expressions.get(id).typecheck(innerScope);
             if (!declaredType.equals(expression)) {
                 throw new TypeErrorException(String.format("type mismatch:\n\tdeclared type [%s]\n\texpression type: [%s]", declaredType.toString(), expression.toString()));
             }
             types.put(id, declaredType);
-            innerScope.associate(id, declaredType);
         }
         innerScope.endScope();
         type = body.typecheck(innerScope);
